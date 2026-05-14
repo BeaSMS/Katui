@@ -1,0 +1,46 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: katui-postgres
+
+    environment:
+      POSTGRES_DB: katui
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+      - "5435:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: katui-pgadmin
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@katui.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+
+    ports:
+      - "5055:80"
+
+    depends_on:
+      - postgres
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
+    container_name: katui-backend
+
+    ports:
+      - "8085:8080"
+
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

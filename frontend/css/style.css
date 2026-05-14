@@ -1,0 +1,531 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+/*Header | Nav*/
+.cabecalho {
+    background-color: #31a79d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+
+.cabecalhoKatui h1 {
+    color: white;
+    margin: 0;
+}
+.cabecalhoKatui p {
+    color: white;
+    margin: 0;
+    font-size: 18px;
+}
+
+.cabecalhoMenu button {
+    background-color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 15px;
+} 
+.cabecalhoMenu button:hover {
+    background-color: #f0f0f0;
+}
+.cabecalhoMenu ul {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 70px;
+    background-color: white;
+    list-style: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+.cabecalhoMenu.ativo ul {
+    display: block;
+}
+.cabecalhoMenu ul li {
+    margin: 8px 0;
+}
+.cabecalhoMenu ul li a {
+    text-decoration: none;
+    color: #333;
+}
+.cabecalhoMenu ul li a:hover {
+    color: #31a79d;
+}
+
+
+/*Footer | Rodape/*/
+.rodape {
+    background-color: #f5f5f5;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.rodapeSecoes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+    margin-bottom: 50px;
+}
+.rodapeSecoes h3 {
+    color: #31a79d;
+    font-size: 22px;
+}
+.rodapeSecoes p {
+    color: black;
+}
+.rodapeSecoes a {
+    text-decoration: none;
+    color: #6FCFC2;
+    
+}
+.rodapeSecoes a:hover {
+    color: #31a79d;
+    font-size: 17px;
+}
+
+.rodapeCopyright {
+    text-align: center;
+    color: #666;
+    font-size: 13px
+}
+
+/*Páginas Main*/
+
+/*Perfil*/
+
+.perfil {
+    max-width: 500px;
+    margin: 60px auto;
+    background: #f5f5f5;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.perfil h2 {
+    text-align: center;
+    color: #31a79d;
+    margin-bottom: 25px;
+}
+
+#visualizacao p {
+    margin: 10px 0;
+    font-size: 15px;
+    color: #333;
+}
+#visualizacao strong {
+    color: #333;
+}
+
+#edicao {
+    display: flex;
+    flex-direction: column;
+}
+#edicao label {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+}
+#edicao input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    transition: 0.2s;
+}
+#edicao input:focus {
+    border-color: #2aa198;
+    outline: none;
+    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+}
+
+.perfil button {
+    margin-top: 15px;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+/* Botão editar */
+#btnEditar {
+    background-color: #2aa198;
+    color: white;
+}
+#btnEditar:hover {
+    background-color: #238b82;
+}
+
+#btnSalvar {
+    background-color: #27ae60;
+    color: white;
+}
+#btnSalvar:hover {
+    background-color: #219150;
+}
+
+#btnCancelar {
+    background-color: #e74c3c;
+    color: white;
+}
+#btnCancelar:hover {
+    background-color: #c0392b;
+}
+
+/* Mensagem */
+#msg {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* dashbpard */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+#btnAtualizar {
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    background: #2aa198;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* consultas */
+.form-consulta {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.form-consulta input {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.lista-consultas {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.consulta {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.consulta button {
+    margin-top: 10px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* exames */
+.exames {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.exames h2 {
+    color: #31a79d;
+    margin-bottom: 20px;
+}
+
+.form-exame {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.form-exame input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.form-exame input:focus {
+    border-color: #2aa198;
+    outline: none;
+}
+
+#btnAddExame {
+    background-color: #2aa198;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#btnAddExame:hover {
+    background-color: #238b82;
+}
+
+.lista-exames {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.exame {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.exame button {
+    margin-top: 10px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.exame button:hover {
+    background: #c0392b;
+}
+
+/* medicacao */
+.medicamentos {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.medicamentos h2 {
+    color: #31a79d;
+    margin-bottom: 20px;
+}
+
+.form-med {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.form-med input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.form-med input:focus {
+    border-color: #2aa198;
+    outline: none;
+}
+
+#btnAddMed {
+    background-color: #2aa198;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#btnAddMed:hover {
+    background-color: #238b82;
+}
+
+.lista-meds {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.med {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: 0.2s;
+}
+
+/* quando marcado como tomado */
+.med.tomado {
+    background: #d4edda;
+}
+
+.med button {
+    margin-top: 10px;
+    margin-right: 5px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* botão tomar */
+.tomar {
+    background: #27ae60;
+    color: white;
+}
+
+.tomar:hover {
+    background: #219150;
+}
+
+/* botão remover */
+.remover {
+    background: #e74c3c;
+    color: white;
+}
+
+.remover:hover {
+    background: #c0392b;
+}
+
+/* sintomas */
+.sintomas {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.sintomas h2 {
+    color: #31a79d;
+    margin-bottom: 20px;
+}
+
+.form-sintoma {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.form-sintoma input,
+.form-sintoma select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.form-sintoma input:focus,
+.form-sintoma select:focus {
+    border-color: #2aa198;
+    outline: none;
+}
+
+#btnAddSintoma {
+    background-color: #2aa198;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#btnAddSintoma:hover {
+    background-color: #238b82;
+}
+
+.lista-sintomas {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sintoma {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 6px solid gray;
+}
+
+/* intensidade */
+.sintoma.leve {
+    border-left-color: #27ae60;
+}
+
+.sintoma.medio {
+    border-left-color: #f39c12;
+}
+
+.sintoma.grave {
+    border-left-color: #e74c3c;
+}
+
+/* resolvido */
+.sintoma.resolvido {
+    opacity: 0.6;
+    text-decoration: line-through;
+}
+
+.sintoma button {
+    margin-top: 10px;
+    margin-right: 5px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* botão resolver */
+.resolver {
+    background: #3498db;
+    color: white;
+}
+
+.resolver:hover {
+    background: #2980b9;
+}
+
+/* remover */
+.remover {
+    background: #e74c3c;
+    color: white;
+}
+
+.remover:hover {
+    background: #c0392b;
+}
+
+.alerta {
+    color: #e74c3c;
+    font-weight: bold;
+}
