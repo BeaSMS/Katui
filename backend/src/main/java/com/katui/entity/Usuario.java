@@ -47,7 +47,7 @@ public class Usuario implements UserDetails {
     getAuthorities() {
 
         return List.of(
-                new SimpleGrantedAuthority("USER")
+                new SimpleGrantedAuthority("ROLE_USER")
         );
     }
 
