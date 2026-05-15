@@ -1,6 +1,7 @@
 package com.katui.service;
 
 import com.katui.entity.Sintoma;
+import com.katui.entity.Usuario;
 import com.katui.repository.SintomaRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -17,29 +18,28 @@ public class SintomaService {
     private final SintomaRepository repository;
 
     // Salvar sintoma
-    public Sintoma salvar(Sintoma sintoma) {
-
+    public Sintoma salvar(Sintoma sintoma, Usuario usuario) {
+        sintoma.setUsuario(usuario);
         return repository.save(sintoma);
     }
 
-    // Listar todos os sintomas
-    public List<Sintoma> listar() {
-
-        return repository.findAll();
+    public List<Sintoma> listar(Usuario usuario) {
+        return repository.findByUsuario(usuario);
     }
 
-    // Buscar sintoma por ID
-    public Sintoma buscar(Long id) {
+    public Sintoma buscar(Long id, Usuario usuario) {
+        Sintoma sintoma = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sintoma não encontrado"));
 
-        return repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Sintoma não encontrado"));
+        if (!sintoma.getUsuario().getId().equals(usuario.getId())) {
+            throw new RuntimeException("Acesso negado");
+        }
+
+        return sintoma;
     }
 
-    // Atualizar sintoma
-    public Sintoma atualizar(Long id, Sintoma sintoma) {
-
-        Sintoma existente = buscar(id);
+    public Sintoma atualizar(Long id, Sintoma sintoma, Usuario usuario) {
+        Sintoma existente = buscar(id, usuario);
 
         existente.setDescricao(sintoma.getDescricao());
         existente.setCategoria(sintoma.getCategoria());
@@ -50,9 +50,8 @@ public class SintomaService {
         return repository.save(existente);
     }
 
-    // Deletar sintoma
-    public void deletar(Long id) {
-
+    public void deletar(Long id, Usuario usuario) {
+        buscar(id, usuario);
         repository.deleteById(id);
     }
 }

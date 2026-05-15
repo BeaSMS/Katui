@@ -1,11 +1,13 @@
 package com.katui.controller;
 
 import com.katui.entity.Receita;
+import com.katui.entity.Usuario;
 import com.katui.service.OCRService;
 import com.katui.service.ReceitaService;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,35 +24,34 @@ public class ReceitaController {
 
     @PostMapping
     public Receita salvar(
-            @RequestBody Receita receita
+            @RequestBody Receita receita,
+            Authentication authentication
     ) {
-
-        return service.salvar(receita);
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+        return service.salvar(receita, usuario);
     }
 
     @GetMapping
-    public List<Receita> listar() {
-
-        return service.listar();
+    public List<Receita> listar(Authentication authentication) {
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+        return service.listar(usuario);
     }
 
     @GetMapping("/{id}")
-    public Receita buscar(@PathVariable Long id) {
-
-        return service.buscar(id);
+    public Receita buscar(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+        return service.buscar(id, usuario);
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-
-        service.deletar(id);
-    }
-
-    @GetMapping("/ocr")
-    public String lerReceita(
-            @RequestParam String imagemUrl
+    public void deletar(
+            @PathVariable Long id,
+            Authentication authentication
     ) {
-
-        return ocrService.lerReceita(imagemUrl);
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+        service.deletar(id, usuario);
     }
 }

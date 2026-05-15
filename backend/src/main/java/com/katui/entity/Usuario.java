@@ -1,5 +1,7 @@
 package com.katui.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -25,11 +27,14 @@ public class Usuario implements UserDetails {
 
     private String nome;
 
+    @JsonIgnore
     @Column(unique = true)
     private String email;
 
+    @JsonIgnore
     private String senha;
 
+    @JsonIgnore
     private String telefone;
 
     private Double peso;
@@ -43,47 +48,44 @@ public class Usuario implements UserDetails {
     // =========================
 
     @Override
-    public Collection<? extends GrantedAuthority>
-    getAuthorities() {
-
-        return List.of(
-                new SimpleGrantedAuthority("ROLE_USER")
-        );
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
+    @JsonIgnore
     public String getPassword() {
-
         return senha;
     }
 
     @Override
+    @JsonIgnore
     public String getUsername() {
-
         return email;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
-
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
-
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
-
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
-
         return true;
     }
 }

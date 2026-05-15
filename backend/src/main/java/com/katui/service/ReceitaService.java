@@ -1,6 +1,7 @@
 package com.katui.service;
 
 import com.katui.entity.Receita;
+import com.katui.entity.Usuario;
 import com.katui.repository.ReceitaRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -16,40 +17,28 @@ public class ReceitaService {
 
     private final ReceitaRepository repository;
 
-    // Salvar receita
-    public Receita salvar(Receita receita) {
-
+    public Receita salvar(Receita receita, Usuario usuario) {
+        receita.setUsuario(usuario);
         return repository.save(receita);
     }
 
-    // Listar todas as receitas
-    public List<Receita> listar() {
-
-        return repository.findAll();
+    public List<Receita> listar(Usuario usuario) {
+        return repository.findByUsuario(usuario);
     }
 
-    // Buscar receita por ID
-    public Receita buscar(Long id) {
+    public Receita buscar(Long id, Usuario usuario) {
+        Receita receita = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Receita não encontrada"));
 
-        return repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Receita não encontrada"));
+        if (!receita.getUsuario().getId().equals(usuario.getId())) {
+            throw new RuntimeException("Acesso negado");
+        }
+
+        return receita;
     }
 
-    // Atualizar receita
-    public Receita atualizar(Long id, Receita receita) {
-
-        Receita existente = buscar(id);
-
-        existente.setObservacao(receita.getObservacao());
-        existente.setImagem(receita.getImagem());
-
-        return repository.save(existente);
-    }
-
-    // Deletar receita
-    public void deletar(Long id) {
-
+    public void deletar(Long id, Usuario usuario) {
+        buscar(id, usuario);
         repository.deleteById(id);
     }
 }
