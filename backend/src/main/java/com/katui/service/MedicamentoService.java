@@ -1,6 +1,7 @@
 package com.katui.service;
 
 import com.katui.entity.Medicamento;
+import com.katui.entity.Usuario;
 import com.katui.repository.MedicamentoRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -23,42 +24,35 @@ public class MedicamentoService {
     }
 
     // Listar todos os medicamentos
-    public List<Medicamento> listar() {
-
-        return repository.findAll();
+    public List<Medicamento> listar(Usuario usuario) {
+        return repository.findByUsuario(usuario);
     }
 
     // Buscar medicamento por ID
-    public Medicamento buscar(Long id) {
+    public Medicamento buscar(Long id, Usuario usuario) {
+        Medicamento medicamento = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Medicamento não encontrado"));
 
-        return repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Medicamento não encontrado"));
+        if (!medicamento.getUsuario().getId().equals(usuario.getId())) {
+            throw new RuntimeException("Acesso negado");
+        }
+
+        return medicamento;
     }
 
-    // Atualizar medicamento
-    public Medicamento atualizar(
-            Long id,
-            Medicamento medicamento
-    ) {
-
-        Medicamento existente = buscar(id);
+    public Medicamento atualizar(Long id, Medicamento medicamento, Usuario usuario) {
+        Medicamento existente = buscar(id, usuario);
 
         existente.setNome(medicamento.getNome());
         existente.setHorario(medicamento.getHorario());
-        existente.setTipoFrequencia(
-                medicamento.getTipoFrequencia()
-        );
-        existente.setValorFrequencia(
-                medicamento.getValorFrequencia()
-        );
+        existente.setTipoFrequencia(medicamento.getTipoFrequencia());
+        existente.setValorFrequencia(medicamento.getValorFrequencia());
 
         return repository.save(existente);
     }
 
-    // Deletar medicamento
-    public void deletar(Long id) {
-
+    public void deletar(Long id, Usuario usuario) {
+        buscar(id, usuario); // já valida o dono
         repository.deleteById(id);
     }
 }
