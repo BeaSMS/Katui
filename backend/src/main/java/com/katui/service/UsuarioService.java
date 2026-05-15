@@ -2,8 +2,10 @@ package com.katui.service;
 
 import com.katui.entity.Usuario;
 import com.katui.repository.UsuarioRepository;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +16,10 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository repository;
-
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
     public Usuario salvar(Usuario usuario) {
-        usuario.setSenha(encoder.encode(usuario.getSenha()));
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         return repository.save(usuario);
     }
 
@@ -27,7 +28,9 @@ public class UsuarioService {
     }
 
     public Usuario buscar(Long id) {
-        return repository.findById(id).orElseThrow();
+        return repository.findById(id).orElseThrow(
+                () -> new RuntimeException("Usuário não encontrado")
+        );
     }
 
     public Usuario atualizar(Long id, Usuario usuario) {

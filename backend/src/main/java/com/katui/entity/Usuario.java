@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -88,4 +89,16 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @Enumerated(EnumType.STRING)
+    private TipoUsuario tipo;
+
+    @ManyToMany
+    @JoinTable(
+            name = "cuidador_paciente",
+            joinColumns = @JoinColumn(name = "cuidador_id"),
+            inverseJoinColumns = @JoinColumn(name = "paciente_id")
+    )
+    @JsonIgnore
+    private List<Usuario> pacientes = new ArrayList<>();
 }
