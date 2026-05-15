@@ -1,6 +1,8 @@
 package com.katui.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.*;
 
@@ -9,7 +11,6 @@ import lombok.Setter;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -27,14 +28,13 @@ public class Usuario implements UserDetails {
 
     private String nome;
 
-    @JsonIgnore
+    @JsonProperty(access = Access.WRITE_ONLY)
     @Column(unique = true)
     private String email;
 
-    @JsonIgnore
+    @JsonProperty(access = Access.WRITE_ONLY)
     private String senha;
 
-    @JsonIgnore
     private String telefone;
 
     private Double peso;
