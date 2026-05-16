@@ -477,18 +477,6 @@ Contribuições são bem-vindas! Para contribuir:
 
 ---
 
-## 🐛 Reportar Bugs
-
-Encontrou um bug? Abra uma issue no repositório com:
-
-- Descrição clara do problema
-- Passos para reproduzir
-- Comportamento esperado vs atual
-- Screenshots/logs relevantes
-- Ambiente (SO, navegador, versão)
-
----
-
 ## 📚 Documentação Adicional
 
 - [Spring Boot Documentation](https://spring.io/projects/spring-boot)
@@ -497,16 +485,6 @@ Encontrou um bug? Abra uma issue no repositório com:
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
 - [JWT Introduction](https://jwt.io/)
 - [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
-
----
-
-## 📞 Suporte
-
-Para dúvidas ou suporte:
-
-- 📧 Email: [Adicionar email de contato]
-- 💬 Issues: Abra uma issue no GitHub
-- 📖 Wiki: Consulte a wiki do repositório
 
 ---
 
@@ -538,17 +516,6 @@ Desenvolvido em parceria com a **FATEC Cotia** como projeto acadêmico.
 - ✅ API: Documentada
 - 🔄 Testes: Em andamento
 - 📋 Deploy: Pronto para produção
-
----
-
-## 🎉 Agradecimentos
-
-Agradecimentos especiais a:
-
-- Spring Boot Team
-- PostgreSQL Community
-- Docker Community
-- Todos os contribuidores
 
 ---
 
