@@ -1,11 +1,9 @@
 package com.katui.controller;
 
-import com.katui.entity.Alarme;
-import com.katui.entity.Medicamento;
+import com.katui.entity.Consulta;
 import com.katui.entity.Usuario;
-import com.katui.service.AlarmeService;
+import com.katui.service.ConsultaService;
 import com.katui.service.CuidadorService;
-import com.katui.service.MedicamentoService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,19 +13,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/medicamentos")
+@RequestMapping("/consultas")
 @RequiredArgsConstructor
+public class ConsultaController {
 
-public class MedicamentoController {
-
-    private final MedicamentoService service;
+    private final ConsultaService service;
     private final CuidadorService cuidadorService;
-    private final AlarmeService alarmeService;
 
     @PostMapping
-    public Medicamento salvar(
-            @RequestBody Medicamento medicamento,
-            @RequestParam(value = "gerarAlarmes", defaultValue = "false") boolean gerarAlarmes,
+    public Consulta salvar(
+            @RequestBody Consulta consulta,
             @RequestParam(value = "pacienteId", required = false) Long pacienteId,
             Authentication authentication
     ) {
@@ -37,18 +32,11 @@ public class MedicamentoController {
             usuario = cuidadorService.verificarAcesso(usuario, pacienteId);
         }
 
-        medicamento.setUsuario(usuario);
-        Medicamento salvo = service.salvar(medicamento);
-
-        if (gerarAlarmes) {
-            alarmeService.gerarAlarmes(salvo, usuario);
-        }
-
-        return salvo;
+        return service.salvar(consulta, usuario);
     }
 
     @GetMapping
-    public List<Medicamento> listar(
+    public List<Consulta> listar(
             @RequestParam(value = "pacienteId", required = false) Long pacienteId,
             Authentication authentication
     ) {
@@ -62,7 +50,7 @@ public class MedicamentoController {
     }
 
     @GetMapping("/{id}")
-    public Medicamento buscar(
+    public Consulta buscar(
             @PathVariable Long id,
             @RequestParam(value = "pacienteId", required = false) Long pacienteId,
             Authentication authentication
@@ -77,10 +65,9 @@ public class MedicamentoController {
     }
 
     @PutMapping("/{id}")
-    public Medicamento atualizar(
+    public Consulta atualizar(
             @PathVariable Long id,
-            @RequestBody Medicamento medicamento,
-            @RequestParam(value = "gerarAlarmes", defaultValue = "false") boolean gerarAlarmes,
+            @RequestBody Consulta consulta,
             @RequestParam(value = "pacienteId", required = false) Long pacienteId,
             Authentication authentication
     ) {
@@ -90,13 +77,7 @@ public class MedicamentoController {
             usuario = cuidadorService.verificarAcesso(usuario, pacienteId);
         }
 
-        Medicamento atualizado = service.atualizar(id, medicamento, usuario);
-
-        if (gerarAlarmes) {
-            alarmeService.gerarAlarmes(atualizado, usuario);
-        }
-
-        return atualizado;
+        return service.atualizar(id, consulta, usuario);
     }
 
     @DeleteMapping("/{id}")
@@ -112,21 +93,5 @@ public class MedicamentoController {
         }
 
         service.deletar(id, usuario);
-    }
-
-    @PostMapping("/{id}/alarmes")
-    public List<Alarme> gerarAlarmes(
-            @PathVariable Long id,
-            @RequestParam(value = "pacienteId", required = false) Long pacienteId,
-            Authentication authentication
-    ) {
-        Usuario usuario = (Usuario) authentication.getPrincipal();
-
-        if (pacienteId != null) {
-            usuario = cuidadorService.verificarAcesso(usuario, pacienteId);
-        }
-
-        Medicamento medicamento = service.buscar(id, usuario);
-        return alarmeService.gerarAlarmes(medicamento, usuario);
     }
 }

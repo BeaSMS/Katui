@@ -11,22 +11,22 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Alarme {
+public class Consulta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime horario;
+    private String medico;
 
-    private Boolean tomado;
+    private String especialidade;
 
-    @ManyToOne
-    private Medicamento medicamento;
+    private String local;
+
+    private LocalDateTime dataHora;
+
+    private String observacao;
 
     @ManyToOne
     private Usuario usuario;
-
-    public static class Consulta {
-    }
 }
