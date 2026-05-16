@@ -1,0 +1,972 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: My first collection
+meta:
+  id: wrk_96ba33c522e4420cb3d34037ce866af2
+  created: 1778868771613
+  modified: 1778868771613
+  description: ""
+collection:
+  - url: http://localhost:8085/auth/register
+    name: Register User
+    meta:
+      id: req_393c57b25dc1499b8732f28d5264ea9c
+      created: 1778868771682
+      modified: 1778886431515
+      isPrivate: false
+      description: ""
+      sortKey: -1778868771682
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "nome": "Maria Cuidadora",
+          "email": "maria@email.com",
+          "senha": "123456",
+          "tipo": "CUIDADOR"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.5.0
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8085/auth/login
+    name: Login
+    meta:
+      id: req_5f97ed811bd84c5094e18751b3ad994e
+      created: 1778871157684
+      modified: 1778886443596
+      isPrivate: false
+      description: ""
+      sortKey: -1778868771632
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "email": "maria@email.com",
+          "senha": "123456"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.5.0
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8085/usuarios/me/pacientes
+    name: Cuidador Vincula Paciente
+    meta:
+      id: req_2e18f09a71db4e04a0bf833ae63cfd37
+      created: 1778886479212
+      modified: 1778886756141
+      isPrivate: false
+      description: ""
+      sortKey: -1778868771582
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "email": "joao@email.com"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.5.0
+        description: ""
+        disabled: false
+    authentication:
+      type: bearer
+      token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYXJpYUBlbWFpbC5jb20iLCJpYXQiOjE3Nzg4ODY3NDUsImV4cCI6MTc3ODk3MzE0NX0.lpmEf0I8TTlOsqdcP8jO-7WTS-Q1pQ_3rmSp4OQTcSg
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8085/usuarios/me/pacientes
+    name: Cuidador Lista Paciente
+    meta:
+      id: req_c6aed4752fd34c5581968d8703cd038a
+      created: 1778886871684
+      modified: 1778888722635
+      isPrivate: false
+      description: ""
+      sortKey: -1778868771532
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/12.5.0
+        description: ""
+        disabled: false
+    authentication:
+      type: bearer
+      token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYXJpYUBlbWFpbC5jb20iLCJpYXQiOjE3Nzg4ODg2NTYsImV4cCI6MTc3ODk3NTA1Nn0.9bKSNerfBr3WJJmws-8qmagFxRIw8lG7J0m53Qx8jKM
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8085/usuarios/me
+    name: "Cuidador Atualizar Paciente "
+    meta:
+      id: req_e6347acdf909409a882e1cd30ef85aea
+      created: 1778886990534
+      modified: 1778887030632
+      isPrivate: false
+      description: ""
+      sortKey: -1778868771482
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "nome": "Maria Cuidadora",
+          "telefone": "11999999999",
+          "peso": 65.0,
+          "altura": 1.70,
+          "alergias": "Penicilina"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.5.0
+        description: ""
+        disabled: false
+    authentication:
+      type: bearer
+      token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYXJpYUBlbWFpbC5jb20iLCJpYXQiOjE3Nzg4ODY3NDUsImV4cCI6MTc3ODk3MzE0NX0.lpmEf0I8TTlOsqdcP8jO-7WTS-Q1pQ_3rmSp4OQTcSg
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8085/usuarios/me/pacientes/7
+    name: Atualizar Usuario
+    meta:
+      id: req_e8a759dc6c87499c9df702c869e9f723
+      created: 1778888642731
+      modified: 1778888737223
+      isPrivate: false
+      description: ""
+      sortKey: -1778868771432
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "nome": "João Paciente",
+          "telefone": "11988888888",
+          "peso": 70.0,
+          "altura": 1.75,
+          "alergias": "Nenhuma"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.5.0
+        description: ""
+        disabled: false
+    authentication:
+      type: bearer
+      token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYXJpYUBlbWFpbC5jb20iLCJpYXQiOjE3Nzg4ODg2NTYsImV4cCI6MTc3ODk3NTA1Nn0.9bKSNerfBr3WJJmws-8qmagFxRIw8lG7J0m53Qx8jKM
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - name: Medicamentos
+    meta:
+      id: fld_d76d0902bb4f469fb4e94e6fb663d233
+      created: 1778875195779
+      modified: 1778875195779
+      sortKey: -1778875195779
+      description: ""
+    children:
+      - url: http://localhost:8085/medicamentos
+        name: Registrar medicamento
+        meta:
+          id: req_0e1b21ee6d994cc6bc71ba99d0ca949a
+          created: 1778871316056
+          modified: 1778875201515
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201488
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "cloridrato de atomoxetina",
+              "horario": "10:00",
+              "tipoFrequencia": "diariamente",
+              "valorFrequencia": 24
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODc0NTI1LCJleHAiOjE3Nzg5NjA5MjV9.Bh6MwXubsS8XmcAhrPT27Qz4SZwV3rDB2--pHS5bo00
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/medicamentos
+        name: Listar todos Medicamentos
+        meta:
+          id: req_2c153bc6c778425883dd91e04059800c
+          created: 1778871938736
+          modified: 1778875206525
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201588
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODcyNzQ1LCJleHAiOjE3Nzg5NTkxNDV9.DkbwsFns3lnY8oSp1z9fj9OLIcLzDfB7XSAGAerh60E
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/medicamentos/9
+        name: Buscar Medicamentos por ID
+        meta:
+          id: req_23e24da2ff2b4ab0a034766a1b86fb2d
+          created: 1778871988947
+          modified: 1778875210948
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201550.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODc0NTI1LCJleHAiOjE3Nzg5NjA5MjV9.Bh6MwXubsS8XmcAhrPT27Qz4SZwV3rDB2--pHS5bo00
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/medicamentos/10
+        name: Atualizar Medicamentos
+        meta:
+          id: req_95df72b0474e40608987b0afe8d9a74c
+          created: 1778872022217
+          modified: 1778875208112
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201538
+        method: PUT
+        body:
+          mimeType: application/json
+          text: '{ "nome": "Paracetamol", "horario": "12:00", "tipoFrequencia": "diario",
+            "valorFrequencia": 1 }'
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODc0NTI1LCJleHAiOjE3Nzg5NjA5MjV9.Bh6MwXubsS8XmcAhrPT27Qz4SZwV3rDB2--pHS5bo00
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/medicamentos/10
+        name: Deletar Medicamentos
+        meta:
+          id: req_af0a4f4cf76b49e68306b18144f2d0a7
+          created: 1778872091855
+          modified: 1778875209452
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201563
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODc0NTI1LCJleHAiOjE3Nzg5NjA5MjV9.Bh6MwXubsS8XmcAhrPT27Qz4SZwV3rDB2--pHS5bo00
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Sintomas
+    meta:
+      id: fld_e079c96c48754719babc7bae20fc27e6
+      created: 1778875300779
+      modified: 1778876116806
+      sortKey: -1778875195729
+      description: ""
+    children:
+      - url: http://localhost:8085/sintomas/7
+        name: Buscar Sintomas por ID
+        meta:
+          id: req_00ace9abeace463f9d27298216f05540
+          created: 1778875300779
+          modified: 1778878407042
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201575.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWEyQGVtYWlsLmNvbSIsImlhdCI6MTc3ODg3NzczNSwiZXhwIjoxNzc4OTY0MTM1fQ.zCFgPZNgPbQMhTRZulN_xoZhpSxGAhyoa6IdqaUETDM
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/sintomas
+        name: Registrar Sintomas
+        meta:
+          id: req_25ceb4785feb40d9a4b11f339be858db
+          created: 1778875300779
+          modified: 1778878333078
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201688
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "descricao": "Dor de cabeça",
+              "categoria": "Neurologico",
+              "intensidade": "Alta",
+              "tipo": "Agudo",
+              "data": "2026-05-15T08:00:00"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWEyQGVtYWlsLmNvbSIsImlhdCI6MTc3ODg3NzczNSwiZXhwIjoxNzc4OTY0MTM1fQ.zCFgPZNgPbQMhTRZulN_xoZhpSxGAhyoa6IdqaUETDM
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/sintomas/7
+        name: Deletar Sintomas
+        meta:
+          id: req_98ddb294a5834452850752c490700236
+          created: 1778875300779
+          modified: 1778878416974
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201563
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWEyQGVtYWlsLmNvbSIsImlhdCI6MTc3ODg3NzczNSwiZXhwIjoxNzc4OTY0MTM1fQ.zCFgPZNgPbQMhTRZulN_xoZhpSxGAhyoa6IdqaUETDM
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/sintomas/7
+        name: Atualizar Sintomas
+        meta:
+          id: req_b3bdb4e5e4814a6c98753d32b5e505e7
+          created: 1778875300779
+          modified: 1778878364110
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201638
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "descricao": "Dor de cabeça leve",
+              "categoria": "Neurologico",
+              "intensidade": "Baixa",
+              "tipo": "Cronico",
+              "data": "2026-05-15T10:00:00"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWEyQGVtYWlsLmNvbSIsImlhdCI6MTc3ODg3NzczNSwiZXhwIjoxNzc4OTY0MTM1fQ.zCFgPZNgPbQMhTRZulN_xoZhpSxGAhyoa6IdqaUETDM
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/sintomas
+        name: Listar todos Sintomas
+        meta:
+          id: req_c8d7fb8fb6f1485999c8a08c92a96581
+          created: 1778875300779
+          modified: 1778878379000
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201588
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWEyQGVtYWlsLmNvbSIsImlhdCI6MTc3ODg3NzczNSwiZXhwIjoxNzc4OTY0MTM1fQ.zCFgPZNgPbQMhTRZulN_xoZhpSxGAhyoa6IdqaUETDM
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Exames
+    meta:
+      id: fld_dcd16a671a2c426384622da3d23ca970
+      created: 1778878556931
+      modified: 1778878556931
+      sortKey: -1778875195679
+      description: ""
+    children:
+      - url: http://localhost:8085/exames/1
+        name: Atualizar Exames
+        meta:
+          id: req_46418add9fb1499b984fd66124e08630
+          created: 1778878556931
+          modified: 1778880369927
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201638
+        method: PUT
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: nome
+              value: Exame de sangue
+            - name: observacao
+              value: att
+              description: ""
+              disabled: false
+            - name: arquivo
+              value: ""
+              description: ""
+              disabled: false
+              fileName: A:\Home\Downloads\character-heart-struck-1778033590297.png
+              type: file
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODgwMzI2LCJleHAiOjE3Nzg5NjY3MjZ9.8m9NWjjtMsMmAKDKyraGTVJgh3WCny6XjihkxDk5_74
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/exames
+        name: Listar todos Exames
+        meta:
+          id: req_93614102b1ff41a2a362533fca3ce21c
+          created: 1778878556931
+          modified: 1778881017702
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201588
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODgwODQxLCJleHAiOjE3Nzg5NjcyNDF9.-6ZWEun7SRF_hqQYSddHqdJTJjgy3vXypeuFNyRVRQE
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/exames
+        name: Registrar Exames
+        meta:
+          id: req_b26bfa7308674293b45e8f8492221474
+          created: 1778878556931
+          modified: 1778880358422
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201688
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: nome
+              value: Hemograma
+              multiline: false
+              type: text
+            - name: observacao
+              value: Exame de rotina
+              description: ""
+              disabled: false
+            - name: arquivo
+              value: ""
+              description: ""
+              disabled: false
+              fileName: A:\Home\Downloads\character-my-head-hurts-1778033678044.png
+              type: file
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODgwMzI2LCJleHAiOjE3Nzg5NjY3MjZ9.8m9NWjjtMsMmAKDKyraGTVJgh3WCny6XjihkxDk5_74
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/exames/1
+        name: Buscar Exames por ID
+        meta:
+          id: req_eee5b6503aca47079ab20a597c242f8b
+          created: 1778878556931
+          modified: 1778886075019
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201575.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODgwODQxLCJleHAiOjE3Nzg5NjcyNDF9.-6ZWEun7SRF_hqQYSddHqdJTJjgy3vXypeuFNyRVRQE
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/exames/2
+        name: Deletar Exames
+        meta:
+          id: req_fc855605fbbb42e597b3f34e2a2a7025
+          created: 1778878556931
+          modified: 1778881010984
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201563
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODgwODQxLCJleHAiOjE3Nzg5NjcyNDF9.-6ZWEun7SRF_hqQYSddHqdJTJjgy3vXypeuFNyRVRQE
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/exames/1/download
+        name: Download Exames por ID
+        meta:
+          id: req_18cd67a1f0ab42a9adc7077bf47e1c5f
+          created: 1778886068496
+          modified: 1778886068496
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201569.25
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODgwODQxLCJleHAiOjE3Nzg5NjcyNDF9.-6ZWEun7SRF_hqQYSddHqdJTJjgy3vXypeuFNyRVRQE
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Receitas
+    meta:
+      id: fld_69eda30c8f064ff9a7517dda713391fc
+      created: 1778882874734
+      modified: 1778882874734
+      sortKey: -1778875195629
+      description: ""
+    children:
+      - url: http://localhost:8085/receitas
+        name: Listar todos Receitas
+        meta:
+          id: req_18dfc34fb5214918ac4ab0e1d08f8e37
+          created: 1778882874734
+          modified: 1778885883481
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201588
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODg1NzM1LCJleHAiOjE3Nzg5NzIxMzV9.q76QXkCEUM9UkQTtd_XDjo3ST8CJGqyIiby950EjfBY
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/receitas
+        name: Registrar Receitas
+        meta:
+          id: req_1a1ef2f134124e41b9da742b98b3da39
+          created: 1778882874734
+          modified: 1778885616123
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201688
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: observacao
+              value: receita 12/31
+              description: ""
+              disabled: false
+            - name: arquivo
+              value: ""
+              description: ""
+              disabled: false
+              fileName: A:\Home\Downloads\2f436d9f-0a2b-4c1c-b5de-7cf890fe7451.jpeg
+              type: file
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODg1NjA2LCJleHAiOjE3Nzg5NzIwMDZ9.MPgxLDvLrLH8NQx0EYYSmVzzuyAYxBgIz0W5cUkCRG4
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/receitas/1
+        name: Atualizar Receitas
+        meta:
+          id: req_cb95fb0a1d8248bf9f3a6c291cf65647
+          created: 1778882874734
+          modified: 1778882983114
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201638
+        method: PUT
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: nome
+              value: Exame de sangue
+            - name: observacao
+              value: att
+              description: ""
+              disabled: false
+            - name: arquivo
+              value: ""
+              description: ""
+              disabled: false
+              fileName: A:\Home\Downloads\character-heart-struck-1778033590297.png
+              type: file
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODgwMzI2LCJleHAiOjE3Nzg5NjY3MjZ9.8m9NWjjtMsMmAKDKyraGTVJgh3WCny6XjihkxDk5_74
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/receitas/12
+        name: Deletar Receitas
+        meta:
+          id: req_d16e479491464e849e8bad903d0e1356
+          created: 1778882874734
+          modified: 1778885911239
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201563
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODg1NzM1LCJleHAiOjE3Nzg5NzIxMzV9.q76QXkCEUM9UkQTtd_XDjo3ST8CJGqyIiby950EjfBY
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/receitas/9
+        name: Buscar Receitas por ID
+        meta:
+          id: req_fe75156bf46c4026a4a9254d15cf1bb0
+          created: 1778882874734
+          modified: 1778885979064
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201575.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODg1NzM1LCJleHAiOjE3Nzg5NzIxMzV9.q76QXkCEUM9UkQTtd_XDjo3ST8CJGqyIiby950EjfBY
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/receitas/15/processar
+        name: Processar Receitas
+        meta:
+          id: req_a1cd70033f2c4edd9965a8d7178dac2a
+          created: 1778885697273
+          modified: 1778885742782
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201663
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: ""
+              value: ""
+              description: ""
+              disabled: false
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODg1NzM1LCJleHAiOjE3Nzg5NzIxMzV9.q76QXkCEUM9UkQTtd_XDjo3ST8CJGqyIiby950EjfBY
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8085/receitas/9/download
+        name: Download Receitas por ID
+        meta:
+          id: req_c35130d5497c410b92f087a61510e8aa
+          created: 1778886120450
+          modified: 1778886163857
+          isPrivate: false
+          description: ""
+          sortKey: -1778875201572.375
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWFAZW1haWwuY29tIiwiaWF0IjoxNzc4ODg2MTQ4LCJleHAiOjE3Nzg5NzI1NDh9.zzovT-67hzt9HZaE74ibAdcchozWUC04F62TafCQC3w
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_a0b7c48e33cbde19a60155342f4cce72d0b51e10
+    created: 1778868771615
+    modified: 1778868771615
+environments:
+  name: Base Environment
+  meta:
+    id: env_a0b7c48e33cbde19a60155342f4cce72d0b51e10
+    created: 1778868771614
+    modified: 1778868771614
+    isPrivate: false
