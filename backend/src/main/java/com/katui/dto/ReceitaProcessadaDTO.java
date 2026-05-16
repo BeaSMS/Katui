@@ -22,7 +22,10 @@ public class ReceitaProcessadaDTO {
     @NoArgsConstructor
     public static class MedicamentoExtratoDTO {
         private String nome;
-        private String dias;
-        private String periodo;
+        private Integer dias;
+        private String tipoFrequencia;
+        private Integer valorFrequencia;
+        private String horarioInicial;
+        private List<Integer> diasSemana; // 1=Segunda ... 7=Domingo
     }
 }

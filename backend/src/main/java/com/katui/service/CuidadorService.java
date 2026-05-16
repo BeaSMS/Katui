@@ -15,10 +15,18 @@ public class CuidadorService {
 
     private final UsuarioRepository usuarioRepository;
 
+    // Recarrega o cuidador do banco garantindo sessão ativa
+    private Usuario recarregar(Usuario cuidador) {
+        return usuarioRepository.findById(cuidador.getId())
+                .orElseThrow(() -> new RuntimeException("Cuidador não encontrado"));
+    }
+
     // Adicionar paciente pelo email
     public void adicionarPaciente(Usuario cuidador, String emailPaciente) {
 
-        if (cuidador.getTipo() != TipoUsuario.CUIDADOR) {
+        Usuario cuidadorAtualizado = recarregar(cuidador);
+
+        if (cuidadorAtualizado.getTipo() != TipoUsuario.CUIDADOR) {
             throw new RuntimeException("Usuário não é um cuidador");
         }
 
@@ -29,38 +37,44 @@ public class CuidadorService {
             throw new RuntimeException("Usuário alvo não é um paciente");
         }
 
-        if (cuidador.getPacientes().contains(paciente)) {
+        if (cuidadorAtualizado.getPacientes().contains(paciente)) {
             throw new RuntimeException("Paciente já vinculado");
         }
 
-        cuidador.getPacientes().add(paciente);
-        usuarioRepository.save(cuidador);
+        cuidadorAtualizado.getPacientes().add(paciente);
+        usuarioRepository.save(cuidadorAtualizado);
     }
 
     // Listar pacientes do cuidador
     public List<Usuario> listarPacientes(Usuario cuidador) {
 
-        if (cuidador.getTipo() != TipoUsuario.CUIDADOR) {
+        Usuario cuidadorAtualizado = recarregar(cuidador);
+
+        if (cuidadorAtualizado.getTipo() != TipoUsuario.CUIDADOR) {
             throw new RuntimeException("Usuário não é um cuidador");
         }
 
-        return cuidador.getPacientes();
+        return cuidadorAtualizado.getPacientes();
     }
 
     // Remover vínculo
     public void removerPaciente(Usuario cuidador, Long pacienteId) {
 
+        Usuario cuidadorAtualizado = recarregar(cuidador);
+
         Usuario paciente = usuarioRepository.findById(pacienteId)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
-        cuidador.getPacientes().remove(paciente);
-        usuarioRepository.save(cuidador);
+        cuidadorAtualizado.getPacientes().remove(paciente);
+        usuarioRepository.save(cuidadorAtualizado);
     }
 
     // Verifica se cuidador tem acesso ao paciente
     public Usuario verificarAcesso(Usuario cuidador, Long pacienteId) {
 
-        return cuidador.getPacientes().stream()
+        Usuario cuidadorAtualizado = recarregar(cuidador);
+
+        return cuidadorAtualizado.getPacientes().stream()
                 .filter(p -> p.getId().equals(pacienteId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Acesso negado"));

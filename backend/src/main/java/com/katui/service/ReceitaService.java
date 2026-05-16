@@ -1,6 +1,5 @@
 package com.katui.service;
 
-import com.katui.dto.ReceitaProcessadaDTO;
 import com.katui.dto.ReceitaProcessadaDTO.MedicamentoExtratoDTO;
 import com.katui.entity.Receita;
 import com.katui.entity.Usuario;
@@ -27,7 +26,7 @@ public class ReceitaService {
     private final ReceitaRepository repository;
     private final OCRService ocrService;
 
-    public ReceitaProcessadaDTO salvar(
+    public Receita salvar(
             String observacao,
             MultipartFile arquivo,
             Usuario usuario
@@ -44,12 +43,14 @@ public class ReceitaService {
         receita.setObservacao(observacao);
         receita.setImagem(caminho.toString());
         receita.setUsuario(usuario);
-        repository.save(receita);
 
-        List<MedicamentoExtratoDTO> medicamentos =
-                ocrService.extrairMedicamentos(caminho);
+        return repository.save(receita);
+    }
 
-        return new ReceitaProcessadaDTO(receita, medicamentos);
+    public List<MedicamentoExtratoDTO> processar(Long id, Usuario usuario) {
+        Receita receita = buscar(id, usuario);
+        Path caminho = Paths.get(receita.getImagem());
+        return ocrService.extrairMedicamentos(caminho);
     }
 
     public List<Receita> listar(Usuario usuario) {

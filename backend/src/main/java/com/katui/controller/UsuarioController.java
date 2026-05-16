@@ -87,4 +87,15 @@ public class UsuarioController {
     public void deletar(@PathVariable Long id) {
         service.deletar(id);
     }
+
+    @PutMapping("/me/pacientes/{pacienteId}")
+    public Usuario atualizarPaciente(
+            @PathVariable Long pacienteId,
+            @RequestBody Usuario usuario,
+            Authentication authentication
+    ) {
+        Usuario cuidador = (Usuario) authentication.getPrincipal();
+        cuidadorService.verificarAcesso(cuidador, pacienteId);
+        return service.atualizar(pacienteId, usuario);
+    }
 }

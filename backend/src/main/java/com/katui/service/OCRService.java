@@ -43,8 +43,24 @@ public class OCRService {
                                     }
                                 },
                                 {
-                                    "text": "Leia esta receita médica e retorne SOMENTE um array JSON, sem nenhum texto adicional, sem markdown, sem blocos de código. Formato: [{\\"nome\\": \\"nome do medicamento\\", \\"dias\\": \\"quantidade de dias\\", \\"periodo\\": \\"periodo de tratamento\\"}]. Se nao encontrar algum campo, use null."
-                                }
+                                    "text": "Leia esta receita médica e retorne SOMENTE um array JSON, sem nenhum texto adicional, sem markdown, sem blocos de código. " +
+                                       "Formato: [{" +
+                                       "\\\\"nome\\\\": \\\\"nome do medicamento\\\\", " +
+                                       "\\\\"dias\\\\": 7, " +
+                                       "\\\\"tipoFrequencia\\\\": \\\\"INTERVALO_HORAS\\\\", " +
+                                       "\\\\"valorFrequencia\\\\": 8, " +
+                                       "\\\\"horarioInicial\\\\": \\\\"08:00\\\\", " +
+                                       "\\\\"diasSemana\\\\": null" +
+                                       "}]. " +
+                                       "Para tipoFrequencia use APENAS estes valores: " +
+                                       "INTERVALO_HORAS (ex: a cada 8 horas -> valorFrequencia: 8, diasSemana: null), " +
+                                       "VEZES_DIA (ex: 3x ao dia -> valorFrequencia: 3, diasSemana: null), " +
+                                       "DIAS_ESPECIFICOS (ex: segunda e sexta -> valorFrequencia: null, diasSemana: [1,5]). " +
+                                       "Dias da semana: 1=Segunda, 2=Terca, 3=Quarta, 4=Quinta, 5=Sexta, 6=Sabado, 7=Domingo. " +
+                                       "Para horarioInicial use o horário indicado na receita ou 08:00 como padrão. " +
+                                       "Para dias use número inteiro ou null se não informado. " +
+                                       "Se nao encontrar algum campo, use null."     
+                               }
                             ]
                         }
                     ]
@@ -52,7 +68,9 @@ public class OCRService {
                 """.formatted(mediaType, base64);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey))
+                    .uri(URI.create(
+                            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey
+                    ))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(body))
                     .build();
@@ -60,7 +78,6 @@ public class OCRService {
             HttpResponse<String> response = httpClient.send(
                     request, HttpResponse.BodyHandlers.ofString()
             );
-            System.out.println("Resposta Gemini: " + response.body());
 
             var json = mapper.readTree(response.body());
             String content = json
