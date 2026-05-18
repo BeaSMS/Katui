@@ -209,13 +209,17 @@ async function iniciarPerfil() {
 
     btnSalvar.onclick = async () => {
 
-        const usuarioAtualizado = {
+        let usuarioAtualizado = {
             nome: inputNome.value,
-            telefone: inputTelefone.value,
-            altura: Number(inputAltura.value),
-            peso: Number(inputPeso.value),
-            alergias: inputAlergias.value
+            telefone: inputTelefone.value
         };
+
+        if (localStorage.getItem("tipoUsuario") === "PACIENTE") {
+
+            usuarioAtualizado.altura = Number(inputAltura.value);
+            usuarioAtualizado.peso = Number(inputPeso.value);
+            usuarioAtualizado.alergias = inputAlergias.value;
+        }
 
         try {
 
