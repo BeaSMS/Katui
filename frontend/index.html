@@ -10,7 +10,7 @@
     <header>
         <div class="cabecalho">
             <div class="cabecalhoKatui">
-               <h1 onclick="carregarPagina('paginas/dashboard.html')">Katu'I</h1>
+               <h1 onclick="voltarInicio()">Katu'I</h1>
                 <p>Acompanhamento Inteligente de Tratamento e Sintomas</p>
             </div>
             <nav class="cabecalhoMenu">
@@ -29,6 +29,12 @@
                     <li id="itemCadastro">
                         <a href="#" onclick="carregarPagina('paginas/auth/cadastro.html')">
                             Cadastro
+                        </a>
+                    </li>
+
+                    <li id="itemPacientes" style="display:none;">
+                        <a href="#" onclick="carregarPagina('paginas/pacientes.html')">
+                            Meus Pacientes
                         </a>
                     </li>
 

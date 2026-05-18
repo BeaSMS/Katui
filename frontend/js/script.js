@@ -1,5 +1,24 @@
 /*Menu e Rodapé*/
 
+function voltarInicio() {
+
+    const token = localStorage.getItem("token");
+    const tipoUsuario = localStorage.getItem("tipoUsuario");
+    const pacienteSelecionado = localStorage.getItem("pacienteSelecionadoId");
+
+    if (!token) {
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
+
+    if (tipoUsuario === "CUIDADOR" && !pacienteSelecionado) {
+        carregarPagina('paginas/pacientes.html');
+        return;
+    }
+
+    carregarPagina('paginas/dashboard.html');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     const conteudo = document.querySelector('.conteudo');
@@ -16,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /*Função de carregar as páginas*/
     function carregarPagina(pagina) {
+
         fetch(pagina)
             .then(res => {
                 if (!res.ok) {
@@ -23,9 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 return res.text();
             })
-            .then(html => {
-                conteudo.innerHTML = html;
-                if (pagina.includes('dashboard')) {
+        .then(html => {
+            conteudo.innerHTML = html;
+
+            mostrarAvisoPacienteSelecionado();
+
+            if (pagina.includes('dashboard')) {
                 iniciarDashboard();
             }
 
@@ -40,20 +63,27 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pagina.includes('exames')) {
                 iniciarExames();
             }
+
             if (pagina.includes('receitas')) {
                 iniciarReceitas();
             }
+
             if (pagina.includes('medicamentos')) {
                 iniciarMedicamentos();
             }
+
             if (pagina.includes('sintomas')) {
                 iniciarSintomas();
             }
-            })
-            .catch(err => {
-                conteudo.innerHTML = "<p>Erro ao carregar conteúdo</p>";
-                console.log(err);
-            });
+
+            if (pagina.includes('pacientes')) {
+                iniciarPacientes();
+            }
+        })
+        .catch(err => {
+            conteudo.innerHTML = "<p>Erro ao carregar conteúdo</p>";
+            console.log(err);
+        });
     }
 
     /*Deixa a função acessível no HTML*/
@@ -65,7 +95,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         mostrarMenuSistema();
 
-        carregarPagina('paginas/dashboard.html');
+        const tipoUsuario = localStorage.getItem("tipoUsuario");
+        const pacienteSelecionado = localStorage.getItem("pacienteSelecionadoId");
+
+        if (tipoUsuario === "CUIDADOR" && !pacienteSelecionado) {
+
+            carregarPagina('paginas/pacientes.html');
+
+        } else {
+
+            carregarPagina('paginas/dashboard.html');
+
+        }
 
     } else {
 
@@ -108,6 +149,23 @@ async function iniciarPerfil() {
         document.getElementById("viewPeso").textContent = usuario.peso || "";
         document.getElementById("viewAlergias").textContent = usuario.alergias || "";
         document.getElementById("viewCategoria").textContent = usuario.tipo || "";
+
+        const areaPaciente =
+            document.getElementById("areaDadosPaciente");
+
+        const edicaoDadosPaciente =
+            document.getElementById("edicaoDadosPaciente");
+
+        if (usuario.tipo === "CUIDADOR") {
+
+            areaPaciente.style.display = "none";
+            edicaoDadosPaciente.style.display = "none";
+
+        } else {
+
+            areaPaciente.style.display = "block";
+            edicaoDadosPaciente.style.display = "block";
+        }
 
     } catch (erro) {
         console.log(erro);
@@ -208,13 +266,15 @@ function iniciarDashboard() {
 
     carregarMedicamentos();
     carregarSintomas();
+    carregarConsultas();
+
 
     async function carregarMedicamentos() {
 
         try {
 
             const resposta = await fetch(
-                "http://localhost:8085/medicamentos",
+                montarUrlComPaciente("http://localhost:8085/medicamentos"),
                 {
                     headers: {
                         "Authorization": "Bearer " + token
@@ -239,7 +299,7 @@ function iniciarDashboard() {
         try {
 
             const resposta = await fetch(
-                "http://localhost:8085/sintomas",
+                montarUrlComPaciente("http://localhost:8085/sintomas"),
                 {
                     headers: {
                         "Authorization": "Bearer " + token
@@ -257,10 +317,32 @@ function iniciarDashboard() {
         } catch (erro) {
             console.log(erro);
         }
-    }
+    }   
 
-    // consultas ainda fake por enquanto
-    document.getElementById("qtdConsultas").textContent = "0";
+    async function carregarConsultas() {
+
+    try {
+
+        const resposta = await fetch(
+            montarUrlComPaciente("http://localhost:8085/consultas"),
+            {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        if (!resposta.ok) return;
+
+        const consultas = await resposta.json();
+
+        document.getElementById("qtdConsultas").textContent =
+            consultas.length;
+
+    } catch (erro) {
+        console.log(erro);
+    }
+}
 }
 
 
@@ -306,7 +388,7 @@ function iniciarConsultas() {
 
         try {
 
-            const resposta = await fetch("http://localhost:8085/consultas", {
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/consultas"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -336,7 +418,7 @@ function iniciarConsultas() {
 
         try {
 
-            const resposta = await fetch("http://localhost:8085/consultas", {
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/consultas"), {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -390,7 +472,7 @@ function iniciarConsultas() {
 
         try {
 
-            const resposta = await fetch(`http://localhost:8085/consultas/${id}`, {
+            const resposta = await fetch(montarUrlComPaciente( `http://localhost:8085/consultas/${id}`), {
                 method: "DELETE",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -466,7 +548,7 @@ function iniciarExames() {
 
         try {
 
-            const resposta = await fetch("http://localhost:8085/exames", {
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/exames"), {
                 method: "POST",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -495,7 +577,7 @@ function iniciarExames() {
 
         try {
 
-            const resposta = await fetch("http://localhost:8085/exames", {
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/exames"), {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -555,7 +637,7 @@ function iniciarExames() {
 
         try {
 
-            const resposta = await fetch(`http://localhost:8085/exames/${id}/download`, {
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/exames/${id}/download`), {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -583,7 +665,7 @@ function iniciarExames() {
 
         try {
 
-            const resposta = await fetch(`http://localhost:8085/exames/${id}`, {
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/exames/${id}`), {
                 method: "DELETE",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -652,7 +734,7 @@ function iniciarMedicamentos() {
 
         try {
 
-            const resposta = await fetch("http://localhost:8085/medicamentos", {
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/medicamentos"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -682,7 +764,7 @@ function iniciarMedicamentos() {
 
         try {
 
-            const resposta = await fetch("http://localhost:8085/medicamentos", {
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/medicamentos"), {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -738,7 +820,7 @@ function iniciarMedicamentos() {
 
         try {
 
-            const resposta = await fetch(`http://localhost:8085/medicamentos/${id}`, {
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/medicamentos/${id}`), {
                 method: "DELETE",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -833,7 +915,7 @@ function iniciarSintomas() {
 
         try {
 
-            const resposta = await fetch("http://localhost:8085/sintomas", {
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/sintomas"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -863,7 +945,7 @@ function iniciarSintomas() {
 
         try {
 
-            const resposta = await fetch("http://localhost:8085/sintomas", {
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/sintomas"), {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -978,7 +1060,7 @@ function iniciarReceitas() {
 
         try {
 
-            const resposta = await fetch("http://localhost:8085/receitas", {
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/receitas"), {
                 method: "POST",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -1007,7 +1089,7 @@ function iniciarReceitas() {
 
         try {
 
-            const resposta = await fetch("http://localhost:8085/receitas", {
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/receitas"), {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -1076,7 +1158,7 @@ function iniciarReceitas() {
 
         try {
 
-            const resposta = await fetch(`http://localhost:8085/receitas/${id}/download`, {
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/receitas/${id}/download`), {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -1107,7 +1189,7 @@ function iniciarReceitas() {
 
             console.log("Token usado:", token);
 
-           const resposta = await fetch(`http://localhost:8085/receitas/${id}/processar`, {
+           const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/receitas/${id}/processar`), {
             method: "POST",
             headers: {
             "Authorization": "Bearer " + token
@@ -1175,7 +1257,7 @@ function iniciarReceitas() {
 
         try {
 
-            const resposta = await fetch("http://localhost:8085/medicamentos", {
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/medicamentos"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -1201,7 +1283,7 @@ function iniciarReceitas() {
 
         try {
 
-            const resposta = await fetch(`http://localhost:8085/receitas/${id}`, {
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/receitas/${id}`), {
                 method: "DELETE",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -1251,4 +1333,238 @@ function iniciarReceitas() {
 
         return "Não informado";
     }
+}
+
+function iniciarPacientes() {
+
+    const token = localStorage.getItem("token");
+
+    const lista = document.getElementById("listaPacientes");
+    const btn = document.getElementById("btnAddPaciente");
+    const pacienteSelecionado = document.getElementById("pacienteSelecionado");
+
+    if (!token) {
+        alert("Você precisa fazer login");
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
+
+    if (!lista || !btn) {
+        return;
+    }
+
+    carregarPacientes();
+    mostrarPacienteSelecionado();
+
+    btn.onclick = async () => {
+
+        const email = document.getElementById("emailPaciente").value;
+
+        if (!email) {
+            alert("Digite o email do paciente!");
+            return;
+        }
+
+        try {
+
+            const resposta = await fetch(
+                "http://localhost:8085/usuarios/me/pacientes",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        email: email
+                    })
+                }
+            );
+
+            if (!resposta.ok) {
+                alert("Erro ao adicionar paciente");
+                return;
+            }
+
+            document.getElementById("emailPaciente").value = "";
+
+            carregarPacientes();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    };
+
+    async function carregarPacientes() {
+
+        lista.innerHTML = "<p>Carregando pacientes...</p>";
+
+        try {
+
+            const resposta = await fetch(
+                "http://localhost:8085/usuarios/me/pacientes",
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            );
+
+            if (!resposta.ok) {
+                lista.innerHTML = "<p>Erro ao carregar pacientes.</p>";
+                return;
+            }
+
+            const pacientes = await resposta.json();
+
+            lista.innerHTML = "";
+
+            if (pacientes.length === 0) {
+                lista.innerHTML = "<p>Nenhum paciente vinculado ainda.</p>";
+                return;
+            }
+
+            pacientes.forEach(paciente => {
+
+                const div = document.createElement("div");
+                div.classList.add("paciente");
+
+                div.innerHTML = `
+                    <p><strong>Nome:</strong> ${paciente.nome}</p>
+                    <p><strong>Email:</strong> ${paciente.email}</p>
+
+                    <button class="btnSelecionarPaciente">
+                        Acessar Dados
+                    </button>
+
+                    <button class="btnRemoverPaciente">
+                        Remover
+                    </button>
+                `;
+
+                div.querySelector(".btnSelecionarPaciente").onclick = () => {
+
+                    localStorage.setItem("pacienteSelecionadoId", paciente.id);
+                    localStorage.setItem("pacienteSelecionadoNome", paciente.nome);
+
+                    mostrarMenuSistema();
+                    mostrarPacienteSelecionado();
+
+                    alert(`Paciente ${paciente.nome} selecionado!`);
+
+                    carregarPagina('paginas/dashboard.html');
+                };
+
+                div.querySelector(".btnRemoverPaciente").onclick = () => {
+                    removerPaciente(paciente.id);
+                };
+
+                lista.appendChild(div);
+            });
+
+        } catch (erro) {
+            console.log(erro);
+            lista.innerHTML = "<p>Erro ao conectar com backend.</p>";
+        }
+    }
+
+    async function removerPaciente(id) {
+
+        try {
+
+            const resposta = await fetch(
+                `http://localhost:8085/usuarios/me/pacientes/${id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            );
+
+            if (!resposta.ok) {
+                alert("Erro ao remover paciente");
+                return;
+            }
+
+            const pacienteSelecionadoId =
+                localStorage.getItem("pacienteSelecionadoId");
+
+            if (pacienteSelecionadoId == id) {
+
+                localStorage.removeItem("pacienteSelecionadoId");
+                localStorage.removeItem("pacienteSelecionadoNome");
+
+                mostrarMenuSistema();
+                mostrarPacienteSelecionado();
+            }
+
+            carregarPacientes();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    }
+
+    function mostrarPacienteSelecionado() {
+
+        const nome = localStorage.getItem("pacienteSelecionadoNome");
+
+        if (nome) {
+
+            pacienteSelecionado.innerHTML = `
+                Paciente selecionado:
+                <strong>${nome}</strong>
+            `;
+
+        } else {
+
+            pacienteSelecionado.innerHTML =
+                "Nenhum paciente selecionado";
+        }
+    }
+}
+
+function montarUrlComPaciente(urlBase) {
+
+    const tipoUsuario =
+        localStorage.getItem("tipoUsuario");
+
+    const pacienteId =
+        localStorage.getItem("pacienteSelecionadoId");
+
+    if (
+        tipoUsuario === "CUIDADOR"
+        && pacienteId
+    ) {
+
+        return `${urlBase}?pacienteId=${pacienteId}`;
+    }
+
+    return urlBase;
+}
+
+function mostrarAvisoPacienteSelecionado() {
+
+    const tipoUsuario = localStorage.getItem("tipoUsuario");
+    const nomePaciente = localStorage.getItem("pacienteSelecionadoNome");
+
+    if (tipoUsuario !== "CUIDADOR" || !nomePaciente) {
+        return;
+    }
+
+    const conteudo = document.querySelector(".conteudo");
+
+    const aviso = document.createElement("div");
+    aviso.classList.add("aviso-paciente");
+
+    aviso.innerHTML = `
+        Você está acessando os dados de:
+        <strong>${nomePaciente}</strong>
+    `;
+
+    conteudo.prepend(aviso);
 }

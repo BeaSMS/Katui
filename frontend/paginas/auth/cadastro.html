@@ -1,32 +1,15 @@
 <div class="containerCadastro">
+
     <div class="cardCadastro">
+
         <h2>Cadastro</h2>
+
         <form class="formCadastro">
 
-            <label>Nome</label>
-            <input id="nomeCadastro" type="text">
-
-            <label>Email</label>
-            <input id="emailCadastro" type="email">
-
-            <label>Telefone</label>
-            <input id="telefoneCadastro" type="text">
-
-            <label>Altura</label>
-            <input id="alturaCadastro" type="number" step="0.01">
-
-            <label>Peso</label>
-            <input id="pesoCadastro" type="number" step="0.1">
-
-            <label>Alergias</label>
-            <input id="alergiasCadastro" type="text">
-
-            <label>Senha</label>
-            <input id="senhaCadastro" type="password">
-
             <label>Tipo de usuário</label>
+            <select id="tipoCadastro" onchange="mostrarCamposCadastro()">
 
-            <select id="tipoCadastro">
+                <option value="">Selecione</option>
 
                 <option value="PACIENTE">
                     Paciente
@@ -37,6 +20,31 @@
                 </option>
 
             </select>
+
+            <label>Nome</label>
+            <input id="nomeCadastro" type="text">
+
+            <label>Email</label>
+            <input id="emailCadastro" type="email">
+
+            <label>Telefone</label>
+            <input id="telefoneCadastro" type="text">
+
+            <div id="camposPaciente" class="escondido">
+
+                <label>Altura</label>
+                <input id="alturaCadastro" type="number" step="0.01">
+
+                <label>Peso</label>
+                <input id="pesoCadastro" type="number" step="0.1">
+
+                <label>Alergias</label>
+                <input id="alergiasCadastro" type="text">
+
+            </div>
+
+            <label>Senha</label>
+            <input id="senhaCadastro" type="password">
 
             <button type="button" onclick="fazerCadastro()">
                 Cadastrar
