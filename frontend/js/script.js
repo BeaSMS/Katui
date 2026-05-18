@@ -1,5 +1,24 @@
 /*Menu e Rodapé*/
 
+function voltarInicio() {
+
+    const token = localStorage.getItem("token");
+    const tipoUsuario = localStorage.getItem("tipoUsuario");
+    const pacienteSelecionado = localStorage.getItem("pacienteSelecionadoId");
+
+    if (!token) {
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
+
+    if (tipoUsuario === "CUIDADOR" && !pacienteSelecionado) {
+        carregarPagina('paginas/pacientes.html');
+        return;
+    }
+
+    carregarPagina('paginas/dashboard.html');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     const conteudo = document.querySelector('.conteudo');
@@ -16,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /*Função de carregar as páginas*/
     function carregarPagina(pagina) {
+
         fetch(pagina)
             .then(res => {
                 if (!res.ok) {
@@ -23,9 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 return res.text();
             })
-            .then(html => {
-                conteudo.innerHTML = html;
-                if (pagina.includes('dashboard')) {
+        .then(html => {
+            conteudo.innerHTML = html;
+
+            mostrarAvisoPacienteSelecionado();
+
+            if (pagina.includes('dashboard')) {
                 iniciarDashboard();
             }
 
@@ -40,30 +63,114 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pagina.includes('exames')) {
                 iniciarExames();
             }
+
+            if (pagina.includes('receitas')) {
+                iniciarReceitas();
+            }
+
             if (pagina.includes('medicamentos')) {
                 iniciarMedicamentos();
             }
+
             if (pagina.includes('sintomas')) {
                 iniciarSintomas();
             }
-            })
-            .catch(err => {
-                conteudo.innerHTML = "<p>Erro ao carregar conteúdo</p>";
-                console.log(err);
-            });
+
+            if (pagina.includes('pacientes')) {
+                iniciarPacientes();
+            }
+        })
+        .catch(err => {
+            conteudo.innerHTML = "<p>Erro ao carregar conteúdo</p>";
+            console.log(err);
+        });
     }
 
-    /*Deixa a função acessível no HTML ****IMPORTANTE*****/
+    /*Deixa a função acessível no HTML*/
     window.carregarPagina = carregarPagina;
 
-    /*Carrega a dashboard ao abrir*/
-    carregarPagina('paginas/dashboard.html');
+        const token = localStorage.getItem("token");
+
+    if (token) {
+
+        mostrarMenuSistema();
+
+        const tipoUsuario = localStorage.getItem("tipoUsuario");
+        const pacienteSelecionado = localStorage.getItem("pacienteSelecionadoId");
+
+        if (tipoUsuario === "CUIDADOR" && !pacienteSelecionado) {
+
+            carregarPagina('paginas/pacientes.html');
+
+        } else {
+
+            carregarPagina('paginas/dashboard.html');
+
+        }
+
+    } else {
+
+        carregarPagina('paginas/auth/login.html');
+
+    }
 
 });    
 
-function iniciarPerfil() {
+async function iniciarPerfil() {
 
-    console.log("Perfil carregado");
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        alert("Você precisa fazer login");
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
+
+    try {
+
+        const resposta = await fetch("http://localhost:8085/usuarios/me", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        if (!resposta.ok) {
+            alert("Erro ao carregar perfil");
+            return;
+        }
+
+        const usuario = await resposta.json();
+
+        document.getElementById("viewNome").textContent = usuario.nome || "";
+        document.getElementById("viewEmail").textContent = usuario.email || "";
+        document.getElementById("viewTelefone").textContent = usuario.telefone || "";
+        document.getElementById("viewAltura").textContent = usuario.altura || "";
+        document.getElementById("viewPeso").textContent = usuario.peso || "";
+        document.getElementById("viewAlergias").textContent = usuario.alergias || "";
+        document.getElementById("viewCategoria").textContent = usuario.tipo || "";
+
+        const areaPaciente =
+            document.getElementById("areaDadosPaciente");
+
+        const edicaoDadosPaciente =
+            document.getElementById("edicaoDadosPaciente");
+
+        if (usuario.tipo === "CUIDADOR") {
+
+            areaPaciente.style.display = "none";
+            edicaoDadosPaciente.style.display = "none";
+
+        } else {
+
+            areaPaciente.style.display = "block";
+            edicaoDadosPaciente.style.display = "block";
+        }
+
+    } catch (erro) {
+        console.log(erro);
+        alert("Erro ao conectar com backend");
+    }
 
     const visualizacao = document.getElementById("visualizacao");
     const edicao = document.getElementById("edicao");
@@ -73,180 +180,544 @@ function iniciarPerfil() {
     const btnCancelar = document.getElementById("btnCancelar");
 
     const viewNome = document.getElementById("viewNome");
-    const viewEmail = document.getElementById("viewEmail");
     const viewTelefone = document.getElementById("viewTelefone");
     const viewAltura = document.getElementById("viewAltura");
     const viewPeso = document.getElementById("viewPeso");
     const viewAlergias = document.getElementById("viewAlergias");
 
     const inputNome = document.getElementById("nome");
-    const inputEmail = document.getElementById("email");
     const inputTelefone = document.getElementById("telefone");
     const inputAltura = document.getElementById("altura");
     const inputPeso = document.getElementById("peso");
     const inputAlergias = document.getElementById("alergias");
 
-    if (!btnEditar || !btnSalvar || !btnCancelar) {
-        console.log("Elementos não encontrados");
-        return;
-    }
-
-    //Editar
     btnEditar.onclick = () => {
-
         visualizacao.style.display = "none";
         edicao.style.display = "block";
 
         inputNome.value = viewNome.textContent;
-        inputEmail.value = viewEmail.textContent;
         inputTelefone.value = viewTelefone.textContent;
         inputAltura.value = viewAltura.textContent;
         inputPeso.value = viewPeso.textContent;
         inputAlergias.value = viewAlergias.textContent;
     };
 
-    /*Cancelar*/
     btnCancelar.onclick = () => {
         edicao.style.display = "none";
         visualizacao.style.display = "block";
     };
 
-    /*Salvar*/
-    btnSalvar.onclick = () => {
+    btnSalvar.onclick = async () => {
 
-        viewNome.textContent = inputNome.value;
-        viewEmail.textContent = inputEmail.value;
-        viewTelefone.textContent = inputTelefone.value;
-        viewAltura.textContent = inputAltura.value;
-        viewPeso.textContent = inputPeso.value;
-        viewAlergias.textContent = inputAlergias.value;
+        let usuarioAtualizado = {
+            nome: inputNome.value,
+            telefone: inputTelefone.value
+        };
 
-        document.getElementById("msg").style.display = "block";
+        if (localStorage.getItem("tipoUsuario") === "PACIENTE") {
 
-        setTimeout(() => {
-            document.getElementById("msg").style.display = "none";
-        }, 2000);
+            usuarioAtualizado.altura = Number(inputAltura.value);
+            usuarioAtualizado.peso = Number(inputPeso.value);
+            usuarioAtualizado.alergias = inputAlergias.value;
+        }
 
-        edicao.style.display = "none";
-        visualizacao.style.display = "block";
+        try {
+
+            const resposta = await fetch("http://localhost:8085/usuarios/me", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(usuarioAtualizado)
+            });
+
+            if (!resposta.ok) {
+                alert("Erro ao salvar perfil");
+                return;
+            }
+
+            const usuario = await resposta.json();
+
+            viewNome.textContent = usuario.nome || "";
+            viewTelefone.textContent = usuario.telefone || "";
+            viewAltura.textContent = usuario.altura || "";
+            viewPeso.textContent = usuario.peso || "";
+            viewAlergias.textContent = usuario.alergias || "";
+
+            document.getElementById("msg").style.display = "block";
+
+            setTimeout(() => {
+                document.getElementById("msg").style.display = "none";
+            }, 2000);
+
+            edicao.style.display = "none";
+            visualizacao.style.display = "block";
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
     };
 }
 
 /* botao dashboard */
 function iniciarDashboard() {
 
-    const meds = document.getElementById("qtdMedicamentos");
-    const cons = document.getElementById("qtdConsultas");
-    const sint = document.getElementById("qtdSintomas");
+    const token = localStorage.getItem("token");
 
-    const btn = document.getElementById("btnAtualizar");
+    if (!token) return;
 
-    if (!btn) return;
+    carregarMedicamentos();
+    carregarSintomas();
+    carregarConsultas();
 
-    function gerarDados() {
-        meds.textContent = Math.floor(Math.random() * 5);
-        cons.textContent = Math.floor(Math.random() * 3);
-        sint.textContent = Math.floor(Math.random() * 2);
+
+    async function carregarMedicamentos() {
+
+        try {
+
+            const resposta = await fetch(
+                montarUrlComPaciente("http://localhost:8085/medicamentos"),
+                {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            );
+
+            if (!resposta.ok) return;
+
+            const medicamentos = await resposta.json();
+
+            document.getElementById("qtdMedicamentos").textContent =
+                medicamentos.length;
+
+        } catch (erro) {
+            console.log(erro);
+        }
     }
 
-    gerarDados();
+    async function carregarSintomas() {
 
-    btn.onclick = gerarDados;
+        try {
+
+            const resposta = await fetch(
+                montarUrlComPaciente("http://localhost:8085/sintomas"),
+                {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            );
+
+            if (!resposta.ok) return;
+
+            const sintomas = await resposta.json();
+
+            document.getElementById("qtdSintomas").textContent =
+                sintomas.length;
+
+        } catch (erro) {
+            console.log(erro);
+        }
+    }   
+
+    async function carregarConsultas() {
+
+    try {
+
+        const resposta = await fetch(
+            montarUrlComPaciente("http://localhost:8085/consultas"),
+            {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        if (!resposta.ok) return;
+
+        const consultas = await resposta.json();
+
+        document.getElementById("qtdConsultas").textContent =
+            consultas.length;
+
+    } catch (erro) {
+        console.log(erro);
+    }
 }
+}
+
+
 
 /* funcao consultas */
 function iniciarConsultas() {
 
+    const token = localStorage.getItem("token");
+
     const lista = document.getElementById("listaConsultas");
     const btn = document.getElementById("btnAddConsulta");
 
-    if (!btn) return;
+    if (!token) {
+        alert("Você precisa fazer login");
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
 
-    btn.onclick = () => {
+    if (!lista || !btn) {
+        return;
+    }
 
-        const data = document.getElementById("dataConsulta").value;
+    carregarConsultas();
+
+    btn.onclick = async () => {
+
+        const dataHora = document.getElementById("dataConsulta").value;
         const medico = document.getElementById("medicoConsulta").value;
-        const esp = document.getElementById("espConsulta").value;
+        const especialidade = document.getElementById("espConsulta").value;
+        const local = document.getElementById("localConsulta").value;
 
-        if (!data || !medico || !esp) {
-            alert("Preencha tudo!");
+        if (!dataHora || !medico || !especialidade || !local) {
+            alert("Preencha data, médico, especialidade e local!");
             return;
         }
 
-        const div = document.createElement("div");
-        div.classList.add("consulta");
-
-        div.innerHTML = `
-            <p><strong>Data:</strong> ${data}</p>
-            <p><strong>Médico:</strong> ${medico}</p>
-            <p><strong>Especialidade:</strong> ${esp}</p>
-            <button class="remover">Remover</button>
-        `;
-
-        div.querySelector(".remover").onclick = () => {
-            div.remove();
+        const consulta = {
+            dataHora: dataHora,
+            medico: medico,
+            especialidade: especialidade,
+            local: local,
         };
 
-        lista.appendChild(div);
+        try {
 
-        // limpa inputs
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/consultas"), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(consulta)
+            });
+
+            if (!resposta.ok) {
+                alert("Erro ao salvar consulta");
+                return;
+            }
+
+            limparCamposConsulta();
+
+            carregarConsultas();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    };
+
+    async function carregarConsultas() {
+
+        lista.innerHTML = "<p>Carregando consultas...</p>";
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/consultas"), {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                lista.innerHTML = "<p>Erro ao carregar consultas.</p>";
+                return;
+            }
+
+            const consultas = await resposta.json();
+
+            lista.innerHTML = "";
+
+            if (consultas.length === 0) {
+                lista.innerHTML = "<p>Nenhuma consulta cadastrada ainda.</p>";
+                return;
+            }
+
+            consultas.sort((a, b) => new Date(a.dataHora) - new Date(b.dataHora));
+
+            consultas.forEach(consulta => {
+
+                const div = document.createElement("div");
+                div.classList.add("consulta");
+
+                div.innerHTML = `
+                    <p><strong>Data e horário:</strong> ${formatarDataConsulta(consulta.dataHora)}</p>
+                    <p><strong>Médico:</strong> ${consulta.medico}</p>
+                    <p><strong>Especialidade:</strong> ${consulta.especialidade}</p>
+                    <p><strong>Local:</strong> ${consulta.local}</p>
+
+                    <button class="remover">Remover</button>
+                `;
+
+                div.querySelector(".remover").onclick = () => {
+                    removerConsulta(consulta.id);
+                };
+
+                lista.appendChild(div);
+            });
+
+        } catch (erro) {
+            console.log(erro);
+            lista.innerHTML = "<p>Erro ao conectar com backend.</p>";
+        }
+    }
+
+    async function removerConsulta(id) {
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente( `http://localhost:8085/consultas/${id}`), {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                alert("Erro ao remover consulta");
+                return;
+            }
+
+            carregarConsultas();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    }
+
+    function limparCamposConsulta() {
         document.getElementById("dataConsulta").value = "";
         document.getElementById("medicoConsulta").value = "";
         document.getElementById("espConsulta").value = "";
-    };
+        document.getElementById("localConsulta").value = "";
+    }
+
+    function formatarDataConsulta(data) {
+
+        if (!data) {
+            return "Não informado";
+        }
+
+        return new Date(data).toLocaleString();
+    }
 }
 
 /* funcao exames */
 function iniciarExames() {
 
+    const token = localStorage.getItem("token");
+
     const lista = document.getElementById("listaExames");
     const btn = document.getElementById("btnAddExame");
 
-    if (!btn) return;
+    if (!token) {
+        alert("Você precisa fazer login");
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
 
-    btn.onclick = () => {
+    if (!lista || !btn) {
+        return;
+    }
+
+    carregarExames();
+
+    btn.onclick = async () => {
 
         const nome = document.getElementById("nomeExame").value;
         const data = document.getElementById("dataExame").value;
-        const resultado = document.getElementById("resultadoExame").value;
+        const arquivo = document.getElementById("arquivoExame").files[0];
 
-        if (!nome || !data || !resultado) {
-            alert("Preencha todos os campos!");
+        if (!nome || !data || !arquivo) {
+            alert("Preencha nome, data e arquivo!");
             return;
         }
 
-        const div = document.createElement("div");
-        div.classList.add("exame");
+        const formData = new FormData();
 
-        div.innerHTML = `
-            <p><strong>Exame:</strong> ${nome}</p>
-            <p><strong>Data:</strong> ${data}</p>
-            <p><strong>Resultado:</strong> ${resultado}</p>
-            <button class="remover">Remover</button>
-        `;
+        formData.append("nome", nome);
+        formData.append("observacao", `Data do exame: ${data}`);
+        formData.append("arquivo", arquivo);
 
-        div.querySelector(".remover").onclick = () => {
-            div.remove();
-        };
+        try {
 
-        lista.appendChild(div);
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/exames"), {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                body: formData
+            });
 
-        // limpar campos
+            if (!resposta.ok) {
+                alert("Erro ao salvar exame");
+                return;
+            }
+
+            limparCamposExame();
+
+            carregarExames();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    };
+
+    async function carregarExames() {
+
+        lista.innerHTML = "<p>Carregando exames...</p>";
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/exames"), {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                lista.innerHTML = "<p>Erro ao carregar exames.</p>";
+                return;
+            }
+
+            const exames = await resposta.json();
+
+            lista.innerHTML = "";
+
+            if (exames.length === 0) {
+                lista.innerHTML = "<p>Nenhum exame cadastrado ainda.</p>";
+                return;
+            }
+
+            exames.forEach(exame => {
+
+                const div = document.createElement("div");
+                div.classList.add("exame");
+
+                div.innerHTML = `
+                    <p><strong>Exame:</strong> ${exame.nome}</p>
+                    <p><strong>Registro:</strong> ${exame.observacao}</p>
+
+                    <button class="download">
+                        Baixar Arquivo
+                    </button>
+
+                    <button class="remover">
+                        Remover
+                    </button>
+                `;
+
+                div.querySelector(".download").onclick = () => {
+                    baixarExame(exame.id);
+                };
+
+                div.querySelector(".remover").onclick = () => {
+                    removerExame(exame.id);
+                };
+
+                lista.appendChild(div);
+            });
+
+        } catch (erro) {
+            console.log(erro);
+            lista.innerHTML = "<p>Erro ao conectar com backend.</p>";
+        }
+    }
+
+    async function baixarExame(id) {
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/exames/${id}/download`), {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                alert("Erro ao baixar exame");
+                return;
+            }
+
+            const blob = await resposta.blob();
+
+            const url = window.URL.createObjectURL(blob);
+
+            window.open(url);
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao baixar arquivo");
+        }
+    }
+
+    async function removerExame(id) {
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/exames/${id}`), {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                alert("Erro ao remover exame");
+                return;
+            }
+
+            carregarExames();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao remover exame");
+        }
+    }
+
+    function limparCamposExame() {
+
         document.getElementById("nomeExame").value = "";
         document.getElementById("dataExame").value = "";
-        document.getElementById("resultadoExame").value = "";
-    };
+        document.getElementById("arquivoExame").value = "";
+    }
 }
 
 /* funcao medicamentos */
 function iniciarMedicamentos() {
 
+    const token = localStorage.getItem("token");
+
     const lista = document.getElementById("listaMedicamentos");
     const btn = document.getElementById("btnAddMed");
 
-    if (!btn) return;
+    if (!token) {
+        alert("Você precisa fazer login");
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
 
-    btn.onclick = () => {
+    if (!lista || !btn) {
+        return;
+    }
+
+    carregarMedicamentos();
+
+    btn.onclick = async () => {
 
         const nome = document.getElementById("nomeMed").value;
         const horario = document.getElementById("horarioMed").value;
@@ -254,258 +725,850 @@ function iniciarMedicamentos() {
         const valor = document.getElementById("valorFreq").value;
 
         if (!nome || !horario || !tipo) {
-            alert("Preencha todos os campos!");
+            alert("Preencha nome, horário e tipo!");
             return;
         }
 
-        if ((tipo === "intervalo" || tipo === "dias") && !valor) {
-            alert("Preencha corretamente a frequência!");
-            return;
-        }
+        const medicamento = {
+            nome: nome,
+            horario: horario,
+            tipoFrequencia: tipo,
+            valorFrequencia: valor ? Number(valor) : null
+        };
 
-        let intervaloHoras = null;
+        try {
 
-        if (tipo === "intervalo") {
-            intervaloHoras = Number(valor);
-        }
-        else if (tipo === "semanal") {
-            intervaloHoras = 7 * 24;
-        }
-        else if (tipo === "quinzenal") {
-            intervaloHoras = 15 * 24;
-        }
-        else if (tipo === "mensal") {
-            intervaloHoras = 30 * 24;
-        }
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/medicamentos"), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(medicamento)
+            });
 
-        let proximaDoseTexto = "Não calculado";
-
-        if (intervaloHoras) {
-
-            const agora = new Date();
-
-            // separa horário
-            const [h, m] = horario.split(":");
-
-            const primeiraDose = new Date();
-            primeiraDose.setHours(h);
-            primeiraDose.setMinutes(m);
-            primeiraDose.setSeconds(0);
-
-            if (primeiraDose < agora) {
-            primeiraDose.setDate(primeiraDose.getDate() + 1);
-        }
-
-            const proxima = new Date(primeiraDose.getTime() + intervaloHoras * 60 * 60 * 1000);
-
-            proximaDoseTexto = proxima.toLocaleString();
-        }
-
-        // texto da frequência
-        let frequenciaTexto = "";
-
-        if (tipo === "intervalo") {
-            frequenciaTexto = `A cada ${valor} horas`;
-        } 
-        else if (tipo === "dias") {
-            frequenciaTexto = `Por ${valor} dias`;
-        } 
-        else if (tipo === "semanal") {
-            frequenciaTexto = "1 vez por semana";
-        } 
-        else if (tipo === "quinzenal") {
-            frequenciaTexto = "A cada 15 dias";
-        } 
-        else if (tipo === "mensal") {
-            frequenciaTexto = "1 vez por mês";
-        }
-
-        const div = document.createElement("div");
-        div.classList.add("med");
-
-        div.innerHTML = `
-            <p><strong>Medicamento:</strong> ${nome}</p>
-            <p><strong>Horário:</strong> ${horario}</p>
-            <p><strong>Frequência:</strong> ${frequenciaTexto}</p>
-            <p><strong>Próxima dose:</strong> ${proximaDoseTexto}</p>
-            <p class="status"><strong>Status:</strong> Pendente</p>
-
-            <button class="tomar">Tomado</button>
-            <button class="remover">Remover</button>
-        `;
-
-        const status = div.querySelector(".status");
-
-        // marcar como tomado
-        div.querySelector(".tomar").onclick = () => {
-            div.classList.toggle("tomado");
-
-            if (div.classList.contains("tomado")) {
-                status.innerHTML = "<strong>Status:</strong> Tomado";
-            } else {
-                status.innerHTML = "<strong>Status:</strong> Pendente";
+            if (!resposta.ok) {
+                alert("Erro ao salvar medicamento");
+                return;
             }
-        };
 
-        // remover
-        div.querySelector(".remover").onclick = () => {
-            div.remove();
-        };
+            limparCamposMedicamento();
 
-        lista.appendChild(div);
+            carregarMedicamentos();
 
-        // limpar inputs
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    };
+
+    async function carregarMedicamentos() {
+
+        lista.innerHTML = "<p>Carregando medicamentos...</p>";
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/medicamentos"), {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                lista.innerHTML = "<p>Erro ao carregar medicamentos.</p>";
+                return;
+            }
+
+            const medicamentos = await resposta.json();
+
+            lista.innerHTML = "";
+
+            if (medicamentos.length === 0) {
+                lista.innerHTML = "<p>Nenhum medicamento cadastrado ainda.</p>";
+                return;
+            }
+
+            medicamentos.forEach(med => {
+
+                const div = document.createElement("div");
+                div.classList.add("med");
+
+                div.innerHTML = `
+                    <p><strong>Medicamento:</strong> ${med.nome}</p>
+                    <p><strong>Horário:</strong> ${med.horario}</p>
+                    <p><strong>Frequência:</strong> ${formatarFrequencia(med.tipoFrequencia, med.valorFrequencia)}</p>
+
+                    <button class="tomar">Tomado</button>
+                    <button class="remover">Remover</button>
+                `;
+
+                div.querySelector(".tomar").onclick = () => {
+                    div.classList.toggle("tomado");
+                };
+
+                div.querySelector(".remover").onclick = () => {
+                    removerMedicamento(med.id);
+                };
+
+                lista.appendChild(div);
+            });
+
+        } catch (erro) {
+            console.log(erro);
+            lista.innerHTML = "<p>Erro ao conectar com backend.</p>";
+        }
+    }
+
+    async function removerMedicamento(id) {
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/medicamentos/${id}`), {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                alert("Erro ao remover medicamento");
+                return;
+            }
+
+            carregarMedicamentos();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    }
+
+    function limparCamposMedicamento() {
         document.getElementById("nomeMed").value = "";
         document.getElementById("horarioMed").value = "";
         document.getElementById("tipoFreq").value = "";
         document.getElementById("valorFreq").value = "";
-    };
+    }
+
+    function formatarFrequencia(tipo, valor) {
+
+        if (tipo === "intervalo") {
+            return `A cada ${valor} horas`;
+        }
+
+        if (tipo === "dias") {
+            return `Por ${valor} dias`;
+        }
+
+        if (tipo === "semanal") {
+            return "Semanal";
+        }
+
+        if (tipo === "quinzenal") {
+            return "Quinzenal";
+        }
+
+        if (tipo === "mensal") {
+            return "Mensal";
+        }
+
+        return "Não informado";
+    }
 }
 
-/* funcoes sintomas */
 function iniciarSintomas() {
+
+    const token = localStorage.getItem("token");
 
     const lista = document.getElementById("listaSintomas");
     const btn = document.getElementById("btnAddSintoma");
 
-    if (!btn) return;
+    if (!token) {
+        alert("Você precisa fazer login");
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
 
-    // carregar histórico ao abrir
-    carregarHistorico();
+    if (!lista || !btn) {
+        return;
+    }
 
-    btn.onclick = () => {
+    carregarSintomas();
+
+    btn.onclick = async () => {
 
         const descricao = document.getElementById("descSintoma").value;
         const categoria = document.getElementById("categoriaSintoma").value;
-        const nivel = document.getElementById("nivelSintoma").value;
+        const intensidade = document.getElementById("nivelSintoma").value;
         const data = document.getElementById("dataSintoma").value;
         const tipo = document.getElementById("tipoSintoma").value;
 
-        // validação
-        if (!descricao || !categoria || !nivel || !data || !tipo) {
+        if (!descricao || !categoria || !intensidade || !data || !tipo) {
             alert("Preencha todos os campos!");
             return;
         }
 
-        // objeto do sintoma
-        const novoSintoma = {
-            id: Date.now(), // ID único
-            descricao,
-            categoria,
-            nivel,
-            data,
-            tipo,
-            status: "ativo"
+        const sintoma = {
+            descricao: descricao,
+            categoria: categoria,
+            intensidade: intensidade,
+            data: data,
+            tipo: tipo
         };
 
-        // salvar no localStorage
-        let sintomas = JSON.parse(localStorage.getItem("sintomas")) || [];
-        sintomas.push(novoSintoma);
-        localStorage.setItem("sintomas", JSON.stringify(sintomas));
+        try {
 
-        // atualizar tela
-        carregarHistorico();
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/sintomas"), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(sintoma)
+            });
 
-        // limpar campos
+            if (!resposta.ok) {
+                alert("Erro ao salvar sintoma");
+                return;
+            }
+
+            limparCamposSintoma();
+
+            carregarSintomas();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    };
+
+    async function carregarSintomas() {
+
+        lista.innerHTML = "<p>Carregando sintomas...</p>";
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/sintomas"), {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                lista.innerHTML = "<p>Erro ao carregar sintomas.</p>";
+                return;
+            }
+
+            const sintomas = await resposta.json();
+
+            lista.innerHTML = "";
+
+            if (sintomas.length === 0) {
+                lista.innerHTML = "<p>Nenhum sintoma cadastrado ainda.</p>";
+                return;
+            }
+
+            sintomas.forEach(s => {
+
+                const div = document.createElement("div");
+                div.classList.add("sintoma", s.intensidade);
+
+                div.innerHTML = `
+                    <p><strong>Descrição:</strong> ${s.descricao}</p>
+                    <p><strong>Categoria:</strong> ${s.categoria}</p>
+                    <p><strong>Intensidade:</strong> ${formatarIntensidade(s.intensidade)}</p>
+                    <p><strong>Quando ocorreu:</strong> ${formatarData(s.data)}</p>
+                    <p><strong>Tipo:</strong> ${s.tipo}</p>
+                    ${s.intensidade === "grave" ? '<p class="alerta">⚠️ Sintoma grave!</p>' : ""}
+                `;
+
+                lista.appendChild(div);
+            });
+
+        } catch (erro) {
+            console.log(erro);
+            lista.innerHTML = "<p>Erro ao conectar com backend.</p>";
+        }
+    }
+
+    function limparCamposSintoma() {
         document.getElementById("descSintoma").value = "";
         document.getElementById("categoriaSintoma").value = "";
         document.getElementById("nivelSintoma").value = "";
         document.getElementById("dataSintoma").value = "";
         document.getElementById("tipoSintoma").value = "";
-    };
+    }
 
-    // historico sintomas
-    function carregarHistorico() {
+    function formatarIntensidade(intensidade) {
 
-        lista.innerHTML = "";
+        if (intensidade === "leve") {
+            return "Leve";
+        }
 
-        const sintomas = JSON.parse(localStorage.getItem("sintomas")) || [];
+        if (intensidade === "medio") {
+            return "Médio";
+        }
 
-        const agrupados = {};
+        if (intensidade === "grave") {
+            return "Grave";
+        }
 
-        // agrupar por data
-        sintomas.forEach(s => {
-            const dataFormatada = new Date(s.data).toLocaleDateString();
+        return "Não informado";
+    }
 
-            if (!agrupados[dataFormatada]) {
-                agrupados[dataFormatada] = [];
+    function formatarData(data) {
+
+        if (!data) {
+            return "Não informado";
+        }
+
+        return new Date(data).toLocaleString();
+    }
+}
+
+function iniciarReceitas() {
+
+    const token = localStorage.getItem("token");
+
+    const lista = document.getElementById("listaReceitas");
+    const btn = document.getElementById("btnAddReceita");
+
+    if (!token) {
+        alert("Você precisa fazer login");
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
+
+    if (!lista || !btn) {
+        return;
+    }
+
+    carregarReceitas();
+
+    btn.onclick = async () => {
+
+        const observacao = document.getElementById("obsReceita").value;
+        const arquivo = document.getElementById("arquivoReceita").files[0];
+
+        if (!observacao || !arquivo) {
+            alert("Preencha a observação e selecione um arquivo!");
+            return;
+        }
+
+        const formData = new FormData();
+
+        formData.append("observacao", observacao);
+        formData.append("arquivo", arquivo);
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/receitas"), {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                body: formData
+            });
+
+            if (!resposta.ok) {
+                alert("Erro ao salvar receita");
+                return;
             }
 
-            agrupados[dataFormatada].push(s);
-        });
+            limparCamposReceita();
 
-        // renderizar
-        for (let data in agrupados) {
+            carregarReceitas();
 
-            const titulo = document.createElement("h3");
-            titulo.textContent = ` ${data}`;
-            lista.appendChild(titulo);
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    };
 
-            agrupados[data].forEach(s => {
+    async function carregarReceitas() {
 
-                const nivelTexto =
-                    s.nivel === "leve" ? "Leve" :
-                    s.nivel === "medio" ? "Médio" :
-                    "Grave";
+        lista.innerHTML = "<p>Carregando receitas...</p>";
 
-                let alerta = "";
-                if (s.nivel === "grave") {
-                    alerta = "⚠️ Sintoma grave!";
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/receitas"), {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
                 }
+            });
+
+            if (!resposta.ok) {
+                lista.innerHTML = "<p>Erro ao carregar receitas.</p>";
+                return;
+            }
+
+            const receitas = await resposta.json();
+
+            lista.innerHTML = "";
+
+            if (receitas.length === 0) {
+                lista.innerHTML = "<p>Nenhuma receita cadastrada ainda.</p>";
+                return;
+            }
+
+            receitas.forEach(receita => {
 
                 const div = document.createElement("div");
-                div.classList.add("sintoma", s.nivel);
-
-                if (s.status === "resolvido") {
-                    div.classList.add("resolvido");
-                }
+                div.classList.add("receita");
 
                 div.innerHTML = `
-                    <p><strong>Descrição:</strong> ${s.descricao}</p>
-                    <p><strong>Categoria:</strong> ${s.categoria}</p>
-                    <p><strong>Intensidade:</strong> ${nivelTexto}</p>
-                    <p><strong>Quando ocorreu:</strong> ${s.data}</p>
-                    <p><strong>Tipo:</strong> ${s.tipo}</p>
-                    <p class="alerta">${alerta}</p>
-                    <p class="status"><strong>Status:</strong> ${s.status}</p>
+                    <p><strong>Observação:</strong> ${receita.observacao}</p>
 
-                    <button class="resolver">Resolver</button>
-                    <button class="remover">Remover</button>
+                    <button class="btnDownloadReceita">
+                        Baixar Arquivo
+                    </button>
+
+                    <button class="btnProcessarReceita">
+                        Processar Receita
+                    </button>
+
+                    <button class="btnRemoverReceita">
+                        Remover
+                    </button>
+
+                    <div class="resultadoReceita"></div>
                 `;
 
-                const statusEl = div.querySelector(".status");
-
-                // resolver (salva no storage)
-                div.querySelector(".resolver").onclick = () => {
-
-                    let sintomas = JSON.parse(localStorage.getItem("sintomas")) || [];
-
-                    sintomas = sintomas.map(item => {
-                        if (item.id === s.id) {
-                            item.status = item.status === "ativo" ? "resolvido" : "ativo";
-                        }
-                        return item;
-                    });
-
-                    localStorage.setItem("sintomas", JSON.stringify(sintomas));
-
-                    carregarHistorico();
+                div.querySelector(".btnDownloadReceita").onclick = () => {
+                    baixarReceita(receita.id);
                 };
 
-                // remover (remove do storage)
-                div.querySelector(".remover").onclick = () => {
+                div.querySelector(".btnProcessarReceita").onclick = () => {
+                    processarReceita(receita.id, div.querySelector(".resultadoReceita"));
+                };
 
-                    let sintomas = JSON.parse(localStorage.getItem("sintomas")) || [];
-
-                    sintomas = sintomas.filter(item => item.id !== s.id);
-
-                    localStorage.setItem("sintomas", JSON.stringify(sintomas));
-
-                    carregarHistorico();
+                div.querySelector(".btnRemoverReceita").onclick = () => {
+                    removerReceita(receita.id);
                 };
 
                 lista.appendChild(div);
             });
+
+        } catch (erro) {
+            console.log(erro);
+            lista.innerHTML = "<p>Erro ao conectar com backend.</p>";
         }
     }
+
+    async function baixarReceita(id) {
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/receitas/${id}/download`), {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                alert("Erro ao baixar receita");
+                return;
+            }
+
+            const blob = await resposta.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            window.open(url);
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao baixar arquivo");
+        }
+    }
+
+    async function processarReceita(id, areaResultado) {
+
+        areaResultado.innerHTML = "<p>Processando receita...</p>";
+
+        try {
+
+            console.log("Token usado:", token);
+
+           const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/receitas/${id}/processar`), {
+            method: "POST",
+            headers: {
+            "Authorization": "Bearer " + token
+        }
+    });
+
+            if (!resposta.ok) {
+                const erro = await resposta.text();
+                console.log("Erro ao processar receita:", erro);
+                areaResultado.innerHTML = `<p>Erro ao processar receita: ${erro}</p>`;
+                return;
+            }
+
+            const medicamentos = await resposta.json();
+
+            areaResultado.innerHTML = "";
+
+            if (medicamentos.length === 0) {
+                areaResultado.innerHTML = "<p>Nenhum medicamento identificado.</p>";
+                return;
+            }
+
+            medicamentos.forEach(med => {
+
+                const div = document.createElement("div");
+                div.classList.add("medicamento-extraido");
+
+                div.innerHTML = `
+                    <p><strong>Medicamento:</strong> ${med.nome || "Não identificado"}</p>
+                    <p><strong>Frequência:</strong> ${formatarFrequenciaReceita(med.tipoFrequencia, med.valorFrequencia)}</p>
+                    <p><strong>Horário inicial:</strong> ${med.horarioInicial || "Não informado"}</p>
+
+                    <button class="btnAddMedicamentoReceita">
+                        Adicionar aos Medicamentos
+                    </button>
+                `;
+
+                div.querySelector(".btnAddMedicamentoReceita").onclick = () => {
+                    adicionarMedicamentoDaReceita(med);
+                };
+
+                areaResultado.appendChild(div);
+            });
+
+        } catch (erro) {
+            console.log(erro);
+            areaResultado.innerHTML = "<p>Erro ao conectar com backend.</p>";
+        }
+    }
+
+    async function adicionarMedicamentoDaReceita(med) {
+
+        if (!med.nome) {
+            alert("Medicamento sem nome identificado");
+            return;
+        }
+
+        const medicamento = {
+            nome: med.nome,
+            horario: med.horarioInicial || "08:00",
+            tipoFrequencia: med.tipoFrequencia || "dias",
+            valorFrequencia: med.valorFrequencia || null,
+            dias: med.dias || null
+        };
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/medicamentos"), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(medicamento)
+            });
+
+            if (!resposta.ok) {
+                alert("Erro ao adicionar medicamento");
+                return;
+            }
+
+            alert("Medicamento adicionado com sucesso!");
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    }
+
+    async function removerReceita(id) {
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/receitas/${id}`), {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                alert("Erro ao remover receita");
+                return;
+            }
+
+            carregarReceitas();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao remover receita");
+        }
+    }
+
+    function limparCamposReceita() {
+
+        document.getElementById("obsReceita").value = "";
+        document.getElementById("arquivoReceita").value = "";
+    }
+
+    function formatarFrequenciaReceita(tipo, valor) {
+
+        if (tipo === "intervalo") {
+            return `A cada ${valor} horas`;
+        }
+
+        if (tipo === "dias") {
+            return `Por ${valor} dias`;
+        }
+
+        if (tipo === "semanal") {
+            return "Semanal";
+        }
+
+        if (tipo === "quinzenal") {
+            return "Quinzenal";
+        }
+
+        if (tipo === "mensal") {
+            return "Mensal";
+        }
+
+        return "Não informado";
+    }
+}
+
+function iniciarPacientes() {
+
+    const token = localStorage.getItem("token");
+
+    const lista = document.getElementById("listaPacientes");
+    const btn = document.getElementById("btnAddPaciente");
+    const pacienteSelecionado = document.getElementById("pacienteSelecionado");
+
+    if (!token) {
+        alert("Você precisa fazer login");
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
+
+    if (!lista || !btn) {
+        return;
+    }
+
+    carregarPacientes();
+    mostrarPacienteSelecionado();
+
+    btn.onclick = async () => {
+
+        const email = document.getElementById("emailPaciente").value;
+
+        if (!email) {
+            alert("Digite o email do paciente!");
+            return;
+        }
+
+        try {
+
+            const resposta = await fetch(
+                "http://localhost:8085/usuarios/me/pacientes",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        email: email
+                    })
+                }
+            );
+
+            if (!resposta.ok) {
+                alert("Erro ao adicionar paciente");
+                return;
+            }
+
+            document.getElementById("emailPaciente").value = "";
+
+            carregarPacientes();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    };
+
+    async function carregarPacientes() {
+
+        lista.innerHTML = "<p>Carregando pacientes...</p>";
+
+        try {
+
+            const resposta = await fetch(
+                "http://localhost:8085/usuarios/me/pacientes",
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            );
+
+            if (!resposta.ok) {
+                lista.innerHTML = "<p>Erro ao carregar pacientes.</p>";
+                return;
+            }
+
+            const pacientes = await resposta.json();
+
+            lista.innerHTML = "";
+
+            if (pacientes.length === 0) {
+                lista.innerHTML = "<p>Nenhum paciente vinculado ainda.</p>";
+                return;
+            }
+
+            pacientes.forEach(paciente => {
+
+                const div = document.createElement("div");
+                div.classList.add("paciente");
+
+                div.innerHTML = `
+                    <p><strong>Nome:</strong> ${paciente.nome}</p>
+                    <p><strong>Email:</strong> ${paciente.email}</p>
+
+                    <button class="btnSelecionarPaciente">
+                        Acessar Dados
+                    </button>
+
+                    <button class="btnRemoverPaciente">
+                        Remover
+                    </button>
+                `;
+
+                div.querySelector(".btnSelecionarPaciente").onclick = () => {
+
+                    localStorage.setItem("pacienteSelecionadoId", paciente.id);
+                    localStorage.setItem("pacienteSelecionadoNome", paciente.nome);
+
+                    mostrarMenuSistema();
+                    mostrarPacienteSelecionado();
+
+                    alert(`Paciente ${paciente.nome} selecionado!`);
+
+                    carregarPagina('paginas/dashboard.html');
+                };
+
+                div.querySelector(".btnRemoverPaciente").onclick = () => {
+                    removerPaciente(paciente.id);
+                };
+
+                lista.appendChild(div);
+            });
+
+        } catch (erro) {
+            console.log(erro);
+            lista.innerHTML = "<p>Erro ao conectar com backend.</p>";
+        }
+    }
+
+    async function removerPaciente(id) {
+
+        try {
+
+            const resposta = await fetch(
+                `http://localhost:8085/usuarios/me/pacientes/${id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            );
+
+            if (!resposta.ok) {
+                alert("Erro ao remover paciente");
+                return;
+            }
+
+            const pacienteSelecionadoId =
+                localStorage.getItem("pacienteSelecionadoId");
+
+            if (pacienteSelecionadoId == id) {
+
+                localStorage.removeItem("pacienteSelecionadoId");
+                localStorage.removeItem("pacienteSelecionadoNome");
+
+                mostrarMenuSistema();
+                mostrarPacienteSelecionado();
+            }
+
+            carregarPacientes();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    }
+
+    function mostrarPacienteSelecionado() {
+
+        const nome = localStorage.getItem("pacienteSelecionadoNome");
+
+        if (nome) {
+
+            pacienteSelecionado.innerHTML = `
+                Paciente selecionado:
+                <strong>${nome}</strong>
+            `;
+
+        } else {
+
+            pacienteSelecionado.innerHTML =
+                "Nenhum paciente selecionado";
+        }
+    }
+}
+
+function montarUrlComPaciente(urlBase) {
+
+    const tipoUsuario =
+        localStorage.getItem("tipoUsuario");
+
+    const pacienteId =
+        localStorage.getItem("pacienteSelecionadoId");
+
+    if (
+        tipoUsuario === "CUIDADOR"
+        && pacienteId
+    ) {
+
+        return `${urlBase}?pacienteId=${pacienteId}`;
+    }
+
+    return urlBase;
+}
+
+function mostrarAvisoPacienteSelecionado() {
+
+    const tipoUsuario = localStorage.getItem("tipoUsuario");
+    const nomePaciente = localStorage.getItem("pacienteSelecionadoNome");
+
+    if (tipoUsuario !== "CUIDADOR" || !nomePaciente) {
+        return;
+    }
+
+    const conteudo = document.querySelector(".conteudo");
+
+    const aviso = document.createElement("div");
+    aviso.classList.add("aviso-paciente");
+
+    aviso.innerHTML = `
+        Você está acessando os dados de:
+        <strong>${nomePaciente}</strong>
+    `;
+
+    conteudo.prepend(aviso);
 }

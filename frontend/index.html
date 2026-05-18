@@ -10,7 +10,7 @@
     <header>
         <div class="cabecalho">
             <div class="cabecalhoKatui">
-                <h1>Katu'I</h1>
+               <h1 onclick="voltarInicio()">Katu'I</h1>
                 <p>Acompanhamento Inteligente de Tratamento e Sintomas</p>
             </div>
             <nav class="cabecalhoMenu">
@@ -18,14 +18,77 @@
                     <span>☰</span>
                     <span>Menu</span>
                 </button>
-                 <ul>
-                    <li><a href="#" onclick="carregarPagina('paginas/dashboard.html')">Dashboard</a></li>
-                    <li><a href="#" onclick="carregarPagina('paginas/medicamentos.html')">Medicamentos</a></li>
-                    <li><a href="#" onclick="carregarPagina('paginas/sintomas.html')">Sintomas</a></li>
-                    <li><a href="#" onclick="carregarPagina('paginas/consultas.html')">Consultas</a></li>
-                    <li><a href="#" onclick="carregarPagina('paginas/perfil.html')">Perfil</a></li>
-                    <li><a href="#" onclick="carregarPagina('paginas/exames.html')">Exames</a></li>
+                <ul>
+
+                    <li id="itemLogin">
+                        <a href="#" onclick="carregarPagina('paginas/auth/login.html')">
+                            Login
+                        </a>
+                    </li>
+
+                    <li id="itemCadastro">
+                        <a href="#" onclick="carregarPagina('paginas/auth/cadastro.html')">
+                            Cadastro
+                        </a>
+                    </li>
+
+                    <li id="itemPacientes" style="display:none;">
+                        <a href="#" onclick="carregarPagina('paginas/pacientes.html')">
+                            Meus Pacientes
+                        </a>
+                    </li>
+
+                    <li id="itemDashboard" style="display:none;">
+                        <a href="#" onclick="carregarPagina('paginas/dashboard.html')">
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li id="itemPerfil" style="display:none;">
+                        <a href="#" onclick="carregarPagina('paginas/perfil.html')">
+                            Perfil
+                        </a>
+                    </li>
+
+                    <li id="itemMedicamentos" style="display:none;">
+                        <a href="#" onclick="carregarPagina('paginas/medicamentos.html')">
+                            Medicamentos
+                        </a>
+
+                    </li>
+
+                    <li id="itemConsultas" style="display:none;">
+                        <a href="#" onclick="carregarPagina('paginas/consultas.html')">
+                            Consultas
+                        </a>
+                    </li>
+
+                    <li id="itemSintomas" style="display:none;">
+                        <a href="#" onclick="carregarPagina('paginas/sintomas.html')">
+                            Sintomas
+                        </a>
+                    </li>
+
+                    <li id="itemExames" style="display:none;">
+                        <a href="#" onclick="carregarPagina('paginas/exames.html')">
+                            Exames
+                        </a>
+                    </li>
+
+                    <li id="itemReceitas" style="display:none;">
+                        <a href="#" onclick="carregarPagina('paginas/receitas.html')">
+                            Receitas
+                        </a>
+                    </li>
+
+                    <li id="itemSair" style="display:none;">
+                        <a href="#" onclick="sair()">
+                            Sair
+                        </a>
+                    </li>
+
                 </ul>
+
             </nav>
         </div>
     </header>
@@ -58,6 +121,7 @@
     </footer>
 
     <script src="js/script.js"></script>
+    <script src="js/auth.js"></script>
 
 </body>
 </html>    

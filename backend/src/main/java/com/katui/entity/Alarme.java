@@ -26,7 +26,4 @@ public class Alarme {
 
     @ManyToOne
     private Usuario usuario;
-
-    public static class Consulta {
-    }
 }

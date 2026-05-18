@@ -29,7 +29,6 @@ public class Usuario implements UserDetails {
 
     private String nome;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
     @Column(unique = true)
     private String email;
 

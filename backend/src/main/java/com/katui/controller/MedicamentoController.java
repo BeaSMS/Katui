@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/medicamentos")
 @RequiredArgsConstructor
-
 public class MedicamentoController {
 
     private final MedicamentoService service;

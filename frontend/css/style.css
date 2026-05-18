@@ -17,11 +17,17 @@ body {
 .cabecalhoKatui h1 {
     color: white;
     margin: 0;
+    cursor: pointer;
 }
 .cabecalhoKatui p {
     color: white;
     margin: 0;
     font-size: 18px;
+}
+
+.cabecalhoMenu {
+    position: relative;
+    z-index: 1000;
 }
 
 .cabecalhoMenu button {
@@ -49,6 +55,9 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     padding: 20px;
+
+    z-index: 1001;
+    min-width: 180px;
 }
 .cabecalhoMenu.ativo ul {
     display: block;
@@ -104,6 +113,191 @@ body {
 }
 
 /*Páginas Main*/
+
+/* LOGIN */
+
+.containerLogin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+}
+
+.cardLogin {
+    background: #f5f5f5;
+    padding: 35px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 420px;
+}
+
+.cardLogin h2 {
+    text-align: center;
+    color: #31a79d;
+    margin-bottom: 25px;
+}
+
+.formLogin {
+    display: flex;
+    flex-direction: column;
+}
+
+.formLogin label {
+    margin-top: 12px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.formLogin input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: 0.2s;
+}
+
+.formLogin input:focus {
+    border-color: #2aa198;
+    outline: none;
+    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+}
+
+.formLogin button {
+    margin-top: 25px;
+    padding: 12px;
+    background-color: #2aa198;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.formLogin button:hover {
+    background-color: #238b82;
+}
+
+.textoLogin {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.textoLogin a {
+    color: #31a79d;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.textoLogin a:hover {
+    text-decoration: underline;
+}
+
+
+/* CADASTRO */
+
+.containerCadastro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+}
+
+.cardCadastro {
+    background: #f5f5f5;
+    padding: 35px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 420px;
+}
+
+.cardCadastro h2 {
+    text-align: center;
+    color: #31a79d;
+    margin-bottom: 25px;
+}
+
+.formCadastro {
+    display: flex;
+    flex-direction: column;
+}
+
+.formCadastro label {
+    margin-top: 12px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.formCadastro input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: 0.2s;
+}
+
+.formCadastro input:focus {
+    border-color: #2aa198;
+    outline: none;
+    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+}
+
+.formCadastro button {
+    margin-top: 25px;
+    padding: 12px;
+    background-color: #2aa198;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.formCadastro button:hover {
+    background-color: #238b82;
+}
+
+.textoCadastro {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.textoCadastro a {
+    color: #31a79d;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.textoCadastro a:hover {
+    text-decoration: underline;
+}
+
+.formCadastro select {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: 0.2s;
+}
+
+.formCadastro select:focus {
+    border-color: #2aa198;
+    outline: none;
+    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+}
+
+#camposPaciente {
+    display: flex;
+    flex-direction: column;
+}
+
+#camposPaciente.escondido {
+    display: none;
+}
 
 /*Perfil*/
 
@@ -193,47 +387,114 @@ body {
     font-size: 14px;
 }
 
-/* dashbpard */
+/* dashboard */
+
+.dashboard {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.dashboard h2 {
+    color: #31a79d;
+    font-size: 34px;
+    margin-bottom: 30px;
+}
+
 .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 25px;
+    margin-bottom: 25px;
 }
 
 .card {
     background: #f5f5f5;
-    padding: 20px;
-    border-radius: 12px;
+    padding: 35px 20px;
+    border-radius: 14px;
     text-align: center;
     transition: 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    cursor: pointer;
 }
 
 .card:hover {
-    transform: scale(1.05);
+    transform: scale(1.03);
+    background-color: #eeeeee;
+}
+
+.card h3 {
+    color: #31a79d;
+    font-size: 24px;
+    margin-bottom: 18px;
+}
+
+.card p {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
 }
 
 #btnAtualizar {
-    margin-top: 20px;
-    padding: 10px;
+    padding: 12px 18px;
     border: none;
     background: #2aa198;
     color: white;
     border-radius: 8px;
     cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+#btnAtualizar:hover {
+    background-color: #238b82;
 }
 
 /* consultas */
+/* consultas */
+
+.consultas {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.consultas h2 {
+    color: #31a79d;
+    margin-bottom: 20px;
+}
+
 .form-consulta {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
     flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
 .form-consulta input {
-    padding: 8px;
-    border-radius: 6px;
+    padding: 10px;
+    border-radius: 8px;
     border: 1px solid #ccc;
+}
+
+.form-consulta input:focus {
+    border-color: #2aa198;
+    outline: none;
+    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+}
+
+#btnAddConsulta {
+    background-color: #2aa198;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#btnAddConsulta:hover {
+    background-color: #238b82;
 }
 
 .lista-consultas {
@@ -246,6 +507,7 @@ body {
     background: #f5f5f5;
     padding: 15px;
     border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .consulta button {
@@ -253,9 +515,13 @@ body {
     background: #e74c3c;
     color: white;
     border: none;
-    padding: 5px;
+    padding: 6px 10px;
     border-radius: 6px;
     cursor: pointer;
+}
+
+.consulta button:hover {
+    background: #c0392b;
 }
 
 /* exames */
@@ -528,4 +794,209 @@ body {
 .alerta {
     color: #e74c3c;
     font-weight: bold;
+}
+
+/* receitas */
+
+.receitas {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.receitas h2 {
+    color: #31a79d;
+    margin-bottom: 20px;
+}
+
+.form-receita {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.form-receita input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.form-receita input:focus {
+    border-color: #2aa198;
+    outline: none;
+    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+}
+
+#btnAddReceita {
+    background-color: #2aa198;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#btnAddReceita:hover {
+    background-color: #238b82;
+}
+
+.lista-receitas {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.receita {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.receita button {
+    margin-top: 10px;
+    margin-right: 5px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btnDownloadReceita,
+.btnProcessarReceita,
+.btnAddMedicamentoReceita {
+    background-color: #2aa198;
+    color: white;
+}
+
+.btnDownloadReceita:hover,
+.btnProcessarReceita:hover,
+.btnAddMedicamentoReceita:hover {
+    background-color: #238b82;
+}
+
+.btnRemoverReceita {
+    background: #e74c3c;
+    color: white;
+}
+
+.btnRemoverReceita:hover {
+    background: #c0392b;
+}
+
+.medicamento-extraido {
+    background: white;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border-left: 5px solid #31a79d;
+}
+
+/* pacientes */
+
+.pacientes {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.pacientes h2 {
+    color: #31a79d;
+    margin-bottom: 20px;
+}
+
+.form-paciente {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.form-paciente input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    flex: 1;
+}
+
+.form-paciente input:focus {
+    border-color: #2aa198;
+    outline: none;
+    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+}
+
+#btnAddPaciente {
+    background-color: #2aa198;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#btnAddPaciente:hover {
+    background-color: #238b82;
+}
+
+.lista-pacientes {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.paciente {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.paciente button {
+    margin-top: 10px;
+    margin-right: 5px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btnSelecionarPaciente {
+    background-color: #2aa198;
+    color: white;
+}
+
+.btnSelecionarPaciente:hover {
+    background-color: #238b82;
+}
+
+.btnRemoverPaciente {
+    background: #e74c3c;
+    color: white;
+}
+
+.btnRemoverPaciente:hover {
+    background: #c0392b;
+}
+
+#pacienteSelecionado {
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #eafaf8;
+    border-left: 5px solid #31a79d;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.aviso-paciente {
+    max-width: 800px;
+    margin: 25px auto 0 auto;
+    padding: 12px 16px;
+    background-color: #eafaf8;
+    border-left: 5px solid #31a79d;
+    border-radius: 8px;
+    color: #333;
+    font-weight: 500;
 }
