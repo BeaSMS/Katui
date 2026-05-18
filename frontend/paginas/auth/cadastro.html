@@ -1,0 +1,58 @@
+<div class="containerCadastro">
+    <div class="cardCadastro">
+        <h2>Cadastro</h2>
+        <form class="formCadastro">
+
+            <label>Nome</label>
+            <input id="nomeCadastro" type="text">
+
+            <label>Email</label>
+            <input id="emailCadastro" type="email">
+
+            <label>Telefone</label>
+            <input id="telefoneCadastro" type="text">
+
+            <label>Altura</label>
+            <input id="alturaCadastro" type="number" step="0.01">
+
+            <label>Peso</label>
+            <input id="pesoCadastro" type="number" step="0.1">
+
+            <label>Alergias</label>
+            <input id="alergiasCadastro" type="text">
+
+            <label>Senha</label>
+            <input id="senhaCadastro" type="password">
+
+            <label>Tipo de usuário</label>
+
+            <select id="tipoCadastro">
+
+                <option value="PACIENTE">
+                    Paciente
+                </option>
+
+                <option value="CUIDADOR">
+                    Cuidador
+                </option>
+
+            </select>
+
+            <button type="button" onclick="fazerCadastro()">
+                Cadastrar
+            </button>
+
+            <p class="textoCadastro">
+
+                Já possui conta?
+
+                <a href="#"
+                   onclick="carregarPagina('paginas/auth/login.html')">
+
+                    Fazer login
+
+                </a>
+            </p>
+        </form>
+    </div>
+</div>

@@ -53,17 +53,63 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    /*Deixa a função acessível no HTML ****IMPORTANTE*****/
+    /*Deixa a função acessível no HTML*/
     window.carregarPagina = carregarPagina;
 
-    /*Carrega a dashboard ao abrir*/
-    carregarPagina('paginas/dashboard.html');
+        const token = localStorage.getItem("token");
+
+    if (token) {
+
+        mostrarMenuSistema();
+
+        carregarPagina('paginas/dashboard.html');
+
+    } else {
+
+        carregarPagina('paginas/auth/login.html');
+
+    }
 
 });    
 
-function iniciarPerfil() {
+async function iniciarPerfil() {
 
-    console.log("Perfil carregado");
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        alert("Você precisa fazer login");
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
+
+    try {
+
+        const resposta = await fetch("http://localhost:8085/usuarios/me", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        if (!resposta.ok) {
+            alert("Erro ao carregar perfil");
+            return;
+        }
+
+        const usuario = await resposta.json();
+
+        document.getElementById("viewNome").textContent = usuario.nome || "";
+        document.getElementById("viewEmail").textContent = usuario.email || "";
+        document.getElementById("viewTelefone").textContent = usuario.telefone || "";
+        document.getElementById("viewAltura").textContent = usuario.altura || "";
+        document.getElementById("viewPeso").textContent = usuario.peso || "";
+        document.getElementById("viewAlergias").textContent = usuario.alergias || "";
+        document.getElementById("viewCategoria").textContent = usuario.tipo || "";
+
+    } catch (erro) {
+        console.log(erro);
+        alert("Erro ao conectar com backend");
+    }
 
     const visualizacao = document.getElementById("visualizacao");
     const edicao = document.getElementById("edicao");
@@ -73,86 +119,148 @@ function iniciarPerfil() {
     const btnCancelar = document.getElementById("btnCancelar");
 
     const viewNome = document.getElementById("viewNome");
-    const viewEmail = document.getElementById("viewEmail");
     const viewTelefone = document.getElementById("viewTelefone");
     const viewAltura = document.getElementById("viewAltura");
     const viewPeso = document.getElementById("viewPeso");
     const viewAlergias = document.getElementById("viewAlergias");
 
     const inputNome = document.getElementById("nome");
-    const inputEmail = document.getElementById("email");
     const inputTelefone = document.getElementById("telefone");
     const inputAltura = document.getElementById("altura");
     const inputPeso = document.getElementById("peso");
     const inputAlergias = document.getElementById("alergias");
 
-    if (!btnEditar || !btnSalvar || !btnCancelar) {
-        console.log("Elementos não encontrados");
-        return;
-    }
-
-    //Editar
     btnEditar.onclick = () => {
-
         visualizacao.style.display = "none";
         edicao.style.display = "block";
 
         inputNome.value = viewNome.textContent;
-        inputEmail.value = viewEmail.textContent;
         inputTelefone.value = viewTelefone.textContent;
         inputAltura.value = viewAltura.textContent;
         inputPeso.value = viewPeso.textContent;
         inputAlergias.value = viewAlergias.textContent;
     };
 
-    /*Cancelar*/
     btnCancelar.onclick = () => {
         edicao.style.display = "none";
         visualizacao.style.display = "block";
     };
 
-    /*Salvar*/
-    btnSalvar.onclick = () => {
+    btnSalvar.onclick = async () => {
 
-        viewNome.textContent = inputNome.value;
-        viewEmail.textContent = inputEmail.value;
-        viewTelefone.textContent = inputTelefone.value;
-        viewAltura.textContent = inputAltura.value;
-        viewPeso.textContent = inputPeso.value;
-        viewAlergias.textContent = inputAlergias.value;
+        const usuarioAtualizado = {
+            nome: inputNome.value,
+            telefone: inputTelefone.value,
+            altura: Number(inputAltura.value),
+            peso: Number(inputPeso.value),
+            alergias: inputAlergias.value
+        };
 
-        document.getElementById("msg").style.display = "block";
+        try {
 
-        setTimeout(() => {
-            document.getElementById("msg").style.display = "none";
-        }, 2000);
+            const resposta = await fetch("http://localhost:8085/usuarios/me", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(usuarioAtualizado)
+            });
 
-        edicao.style.display = "none";
-        visualizacao.style.display = "block";
+            if (!resposta.ok) {
+                alert("Erro ao salvar perfil");
+                return;
+            }
+
+            const usuario = await resposta.json();
+
+            viewNome.textContent = usuario.nome || "";
+            viewTelefone.textContent = usuario.telefone || "";
+            viewAltura.textContent = usuario.altura || "";
+            viewPeso.textContent = usuario.peso || "";
+            viewAlergias.textContent = usuario.alergias || "";
+
+            document.getElementById("msg").style.display = "block";
+
+            setTimeout(() => {
+                document.getElementById("msg").style.display = "none";
+            }, 2000);
+
+            edicao.style.display = "none";
+            visualizacao.style.display = "block";
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
     };
 }
 
 /* botao dashboard */
 function iniciarDashboard() {
 
-    const meds = document.getElementById("qtdMedicamentos");
-    const cons = document.getElementById("qtdConsultas");
-    const sint = document.getElementById("qtdSintomas");
+    const token = localStorage.getItem("token");
 
-    const btn = document.getElementById("btnAtualizar");
+    if (!token) return;
 
-    if (!btn) return;
+    carregarMedicamentos();
+    carregarSintomas();
 
-    function gerarDados() {
-        meds.textContent = Math.floor(Math.random() * 5);
-        cons.textContent = Math.floor(Math.random() * 3);
-        sint.textContent = Math.floor(Math.random() * 2);
+    async function carregarMedicamentos() {
+
+        try {
+
+            const resposta = await fetch(
+                "http://localhost:8085/medicamentos",
+                {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            );
+
+            if (!resposta.ok) return;
+
+            const medicamentos = await resposta.json();
+
+            document.getElementById("qtdMedicamentos").textContent =
+                medicamentos.length;
+
+        } catch (erro) {
+            console.log(erro);
+        }
     }
 
-    gerarDados();
+    async function carregarSintomas() {
 
-    btn.onclick = gerarDados;
+        try {
+
+            const resposta = await fetch(
+                "http://localhost:8085/sintomas",
+                {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            );
+
+            if (!resposta.ok) return;
+
+            const sintomas = await resposta.json();
+
+            document.getElementById("qtdSintomas").textContent =
+                sintomas.length;
+
+        } catch (erro) {
+            console.log(erro);
+        }
+    }
+
+    // consultas ainda fake por enquanto
+    document.getElementById("qtdConsultas").textContent = "0";
 }
+
+
 
 /* funcao consultas */
 function iniciarConsultas() {
@@ -241,12 +349,24 @@ function iniciarExames() {
 /* funcao medicamentos */
 function iniciarMedicamentos() {
 
+    const token = localStorage.getItem("token");
+
     const lista = document.getElementById("listaMedicamentos");
     const btn = document.getElementById("btnAddMed");
 
-    if (!btn) return;
+    if (!token) {
+        alert("Você precisa fazer login");
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
 
-    btn.onclick = () => {
+    if (!lista || !btn) {
+        return;
+    }
+
+    carregarMedicamentos();
+
+    btn.onclick = async () => {
 
         const nome = document.getElementById("nomeMed").value;
         const horario = document.getElementById("horarioMed").value;
@@ -254,258 +374,305 @@ function iniciarMedicamentos() {
         const valor = document.getElementById("valorFreq").value;
 
         if (!nome || !horario || !tipo) {
-            alert("Preencha todos os campos!");
+            alert("Preencha nome, horário e tipo!");
             return;
         }
 
-        if ((tipo === "intervalo" || tipo === "dias") && !valor) {
-            alert("Preencha corretamente a frequência!");
-            return;
-        }
+        const medicamento = {
+            nome: nome,
+            horario: horario,
+            tipoFrequencia: tipo,
+            valorFrequencia: valor ? Number(valor) : null
+        };
 
-        let intervaloHoras = null;
+        try {
 
-        if (tipo === "intervalo") {
-            intervaloHoras = Number(valor);
-        }
-        else if (tipo === "semanal") {
-            intervaloHoras = 7 * 24;
-        }
-        else if (tipo === "quinzenal") {
-            intervaloHoras = 15 * 24;
-        }
-        else if (tipo === "mensal") {
-            intervaloHoras = 30 * 24;
-        }
+            const resposta = await fetch("http://localhost:8085/medicamentos", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(medicamento)
+            });
 
-        let proximaDoseTexto = "Não calculado";
-
-        if (intervaloHoras) {
-
-            const agora = new Date();
-
-            // separa horário
-            const [h, m] = horario.split(":");
-
-            const primeiraDose = new Date();
-            primeiraDose.setHours(h);
-            primeiraDose.setMinutes(m);
-            primeiraDose.setSeconds(0);
-
-            if (primeiraDose < agora) {
-            primeiraDose.setDate(primeiraDose.getDate() + 1);
-        }
-
-            const proxima = new Date(primeiraDose.getTime() + intervaloHoras * 60 * 60 * 1000);
-
-            proximaDoseTexto = proxima.toLocaleString();
-        }
-
-        // texto da frequência
-        let frequenciaTexto = "";
-
-        if (tipo === "intervalo") {
-            frequenciaTexto = `A cada ${valor} horas`;
-        } 
-        else if (tipo === "dias") {
-            frequenciaTexto = `Por ${valor} dias`;
-        } 
-        else if (tipo === "semanal") {
-            frequenciaTexto = "1 vez por semana";
-        } 
-        else if (tipo === "quinzenal") {
-            frequenciaTexto = "A cada 15 dias";
-        } 
-        else if (tipo === "mensal") {
-            frequenciaTexto = "1 vez por mês";
-        }
-
-        const div = document.createElement("div");
-        div.classList.add("med");
-
-        div.innerHTML = `
-            <p><strong>Medicamento:</strong> ${nome}</p>
-            <p><strong>Horário:</strong> ${horario}</p>
-            <p><strong>Frequência:</strong> ${frequenciaTexto}</p>
-            <p><strong>Próxima dose:</strong> ${proximaDoseTexto}</p>
-            <p class="status"><strong>Status:</strong> Pendente</p>
-
-            <button class="tomar">Tomado</button>
-            <button class="remover">Remover</button>
-        `;
-
-        const status = div.querySelector(".status");
-
-        // marcar como tomado
-        div.querySelector(".tomar").onclick = () => {
-            div.classList.toggle("tomado");
-
-            if (div.classList.contains("tomado")) {
-                status.innerHTML = "<strong>Status:</strong> Tomado";
-            } else {
-                status.innerHTML = "<strong>Status:</strong> Pendente";
+            if (!resposta.ok) {
+                alert("Erro ao salvar medicamento");
+                return;
             }
-        };
 
-        // remover
-        div.querySelector(".remover").onclick = () => {
-            div.remove();
-        };
+            limparCamposMedicamento();
 
-        lista.appendChild(div);
+            carregarMedicamentos();
 
-        // limpar inputs
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    };
+
+    async function carregarMedicamentos() {
+
+        lista.innerHTML = "<p>Carregando medicamentos...</p>";
+
+        try {
+
+            const resposta = await fetch("http://localhost:8085/medicamentos", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                lista.innerHTML = "<p>Erro ao carregar medicamentos.</p>";
+                return;
+            }
+
+            const medicamentos = await resposta.json();
+
+            lista.innerHTML = "";
+
+            if (medicamentos.length === 0) {
+                lista.innerHTML = "<p>Nenhum medicamento cadastrado ainda.</p>";
+                return;
+            }
+
+            medicamentos.forEach(med => {
+
+                const div = document.createElement("div");
+                div.classList.add("med");
+
+                div.innerHTML = `
+                    <p><strong>Medicamento:</strong> ${med.nome}</p>
+                    <p><strong>Horário:</strong> ${med.horario}</p>
+                    <p><strong>Frequência:</strong> ${formatarFrequencia(med.tipoFrequencia, med.valorFrequencia)}</p>
+
+                    <button class="tomar">Tomado</button>
+                    <button class="remover">Remover</button>
+                `;
+
+                div.querySelector(".tomar").onclick = () => {
+                    div.classList.toggle("tomado");
+                };
+
+                div.querySelector(".remover").onclick = () => {
+                    removerMedicamento(med.id);
+                };
+
+                lista.appendChild(div);
+            });
+
+        } catch (erro) {
+            console.log(erro);
+            lista.innerHTML = "<p>Erro ao conectar com backend.</p>";
+        }
+    }
+
+    async function removerMedicamento(id) {
+
+        try {
+
+            const resposta = await fetch(`http://localhost:8085/medicamentos/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                alert("Erro ao remover medicamento");
+                return;
+            }
+
+            carregarMedicamentos();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    }
+
+    function limparCamposMedicamento() {
         document.getElementById("nomeMed").value = "";
         document.getElementById("horarioMed").value = "";
         document.getElementById("tipoFreq").value = "";
         document.getElementById("valorFreq").value = "";
-    };
+    }
+
+    function formatarFrequencia(tipo, valor) {
+
+        if (tipo === "intervalo") {
+            return `A cada ${valor} horas`;
+        }
+
+        if (tipo === "dias") {
+            return `Por ${valor} dias`;
+        }
+
+        if (tipo === "semanal") {
+            return "Semanal";
+        }
+
+        if (tipo === "quinzenal") {
+            return "Quinzenal";
+        }
+
+        if (tipo === "mensal") {
+            return "Mensal";
+        }
+
+        return "Não informado";
+    }
 }
 
-/* funcoes sintomas */
 function iniciarSintomas() {
+
+    const token = localStorage.getItem("token");
 
     const lista = document.getElementById("listaSintomas");
     const btn = document.getElementById("btnAddSintoma");
 
-    if (!btn) return;
+    if (!token) {
+        alert("Você precisa fazer login");
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
 
-    // carregar histórico ao abrir
-    carregarHistorico();
+    if (!lista || !btn) {
+        return;
+    }
 
-    btn.onclick = () => {
+    carregarSintomas();
+
+    btn.onclick = async () => {
 
         const descricao = document.getElementById("descSintoma").value;
         const categoria = document.getElementById("categoriaSintoma").value;
-        const nivel = document.getElementById("nivelSintoma").value;
+        const intensidade = document.getElementById("nivelSintoma").value;
         const data = document.getElementById("dataSintoma").value;
         const tipo = document.getElementById("tipoSintoma").value;
 
-        // validação
-        if (!descricao || !categoria || !nivel || !data || !tipo) {
+        if (!descricao || !categoria || !intensidade || !data || !tipo) {
             alert("Preencha todos os campos!");
             return;
         }
 
-        // objeto do sintoma
-        const novoSintoma = {
-            id: Date.now(), // ID único
-            descricao,
-            categoria,
-            nivel,
-            data,
-            tipo,
-            status: "ativo"
+        const sintoma = {
+            descricao: descricao,
+            categoria: categoria,
+            intensidade: intensidade,
+            data: data,
+            tipo: tipo
         };
 
-        // salvar no localStorage
-        let sintomas = JSON.parse(localStorage.getItem("sintomas")) || [];
-        sintomas.push(novoSintoma);
-        localStorage.setItem("sintomas", JSON.stringify(sintomas));
+        try {
 
-        // atualizar tela
-        carregarHistorico();
+            const resposta = await fetch("http://localhost:8085/sintomas", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(sintoma)
+            });
 
-        // limpar campos
+            if (!resposta.ok) {
+                alert("Erro ao salvar sintoma");
+                return;
+            }
+
+            limparCamposSintoma();
+
+            carregarSintomas();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
+        }
+    };
+
+    async function carregarSintomas() {
+
+        lista.innerHTML = "<p>Carregando sintomas...</p>";
+
+        try {
+
+            const resposta = await fetch("http://localhost:8085/sintomas", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!resposta.ok) {
+                lista.innerHTML = "<p>Erro ao carregar sintomas.</p>";
+                return;
+            }
+
+            const sintomas = await resposta.json();
+
+            lista.innerHTML = "";
+
+            if (sintomas.length === 0) {
+                lista.innerHTML = "<p>Nenhum sintoma cadastrado ainda.</p>";
+                return;
+            }
+
+            sintomas.forEach(s => {
+
+                const div = document.createElement("div");
+                div.classList.add("sintoma", s.intensidade);
+
+                div.innerHTML = `
+                    <p><strong>Descrição:</strong> ${s.descricao}</p>
+                    <p><strong>Categoria:</strong> ${s.categoria}</p>
+                    <p><strong>Intensidade:</strong> ${formatarIntensidade(s.intensidade)}</p>
+                    <p><strong>Quando ocorreu:</strong> ${formatarData(s.data)}</p>
+                    <p><strong>Tipo:</strong> ${s.tipo}</p>
+                    ${s.intensidade === "grave" ? '<p class="alerta">⚠️ Sintoma grave!</p>' : ""}
+                `;
+
+                lista.appendChild(div);
+            });
+
+        } catch (erro) {
+            console.log(erro);
+            lista.innerHTML = "<p>Erro ao conectar com backend.</p>";
+        }
+    }
+
+    function limparCamposSintoma() {
         document.getElementById("descSintoma").value = "";
         document.getElementById("categoriaSintoma").value = "";
         document.getElementById("nivelSintoma").value = "";
         document.getElementById("dataSintoma").value = "";
         document.getElementById("tipoSintoma").value = "";
-    };
+    }
 
-    // historico sintomas
-    function carregarHistorico() {
+    function formatarIntensidade(intensidade) {
 
-        lista.innerHTML = "";
-
-        const sintomas = JSON.parse(localStorage.getItem("sintomas")) || [];
-
-        const agrupados = {};
-
-        // agrupar por data
-        sintomas.forEach(s => {
-            const dataFormatada = new Date(s.data).toLocaleDateString();
-
-            if (!agrupados[dataFormatada]) {
-                agrupados[dataFormatada] = [];
-            }
-
-            agrupados[dataFormatada].push(s);
-        });
-
-        // renderizar
-        for (let data in agrupados) {
-
-            const titulo = document.createElement("h3");
-            titulo.textContent = ` ${data}`;
-            lista.appendChild(titulo);
-
-            agrupados[data].forEach(s => {
-
-                const nivelTexto =
-                    s.nivel === "leve" ? "Leve" :
-                    s.nivel === "medio" ? "Médio" :
-                    "Grave";
-
-                let alerta = "";
-                if (s.nivel === "grave") {
-                    alerta = "⚠️ Sintoma grave!";
-                }
-
-                const div = document.createElement("div");
-                div.classList.add("sintoma", s.nivel);
-
-                if (s.status === "resolvido") {
-                    div.classList.add("resolvido");
-                }
-
-                div.innerHTML = `
-                    <p><strong>Descrição:</strong> ${s.descricao}</p>
-                    <p><strong>Categoria:</strong> ${s.categoria}</p>
-                    <p><strong>Intensidade:</strong> ${nivelTexto}</p>
-                    <p><strong>Quando ocorreu:</strong> ${s.data}</p>
-                    <p><strong>Tipo:</strong> ${s.tipo}</p>
-                    <p class="alerta">${alerta}</p>
-                    <p class="status"><strong>Status:</strong> ${s.status}</p>
-
-                    <button class="resolver">Resolver</button>
-                    <button class="remover">Remover</button>
-                `;
-
-                const statusEl = div.querySelector(".status");
-
-                // resolver (salva no storage)
-                div.querySelector(".resolver").onclick = () => {
-
-                    let sintomas = JSON.parse(localStorage.getItem("sintomas")) || [];
-
-                    sintomas = sintomas.map(item => {
-                        if (item.id === s.id) {
-                            item.status = item.status === "ativo" ? "resolvido" : "ativo";
-                        }
-                        return item;
-                    });
-
-                    localStorage.setItem("sintomas", JSON.stringify(sintomas));
-
-                    carregarHistorico();
-                };
-
-                // remover (remove do storage)
-                div.querySelector(".remover").onclick = () => {
-
-                    let sintomas = JSON.parse(localStorage.getItem("sintomas")) || [];
-
-                    sintomas = sintomas.filter(item => item.id !== s.id);
-
-                    localStorage.setItem("sintomas", JSON.stringify(sintomas));
-
-                    carregarHistorico();
-                };
-
-                lista.appendChild(div);
-            });
+        if (intensidade === "leve") {
+            return "Leve";
         }
+
+        if (intensidade === "medio") {
+            return "Médio";
+        }
+
+        if (intensidade === "grave") {
+            return "Grave";
+        }
+
+        return "Não informado";
+    }
+
+    function formatarData(data) {
+
+        if (!data) {
+            return "Não informado";
+        }
+
+        return new Date(data).toLocaleString();
     }
 }
