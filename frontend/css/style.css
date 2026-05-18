@@ -429,17 +429,50 @@ body {
 }
 
 /* consultas */
+/* consultas */
+
+.consultas {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.consultas h2 {
+    color: #31a79d;
+    margin-bottom: 20px;
+}
+
 .form-consulta {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
     flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
 .form-consulta input {
-    padding: 8px;
-    border-radius: 6px;
+    padding: 10px;
+    border-radius: 8px;
     border: 1px solid #ccc;
+}
+
+.form-consulta input:focus {
+    border-color: #2aa198;
+    outline: none;
+    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+}
+
+#btnAddConsulta {
+    background-color: #2aa198;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#btnAddConsulta:hover {
+    background-color: #238b82;
 }
 
 .lista-consultas {
@@ -452,6 +485,7 @@ body {
     background: #f5f5f5;
     padding: 15px;
     border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .consulta button {
@@ -459,9 +493,13 @@ body {
     background: #e74c3c;
     color: white;
     border: none;
-    padding: 5px;
+    padding: 6px 10px;
     border-radius: 6px;
     cursor: pointer;
+}
+
+.consulta button:hover {
+    background: #c0392b;
 }
 
 /* exames */
@@ -734,4 +772,102 @@ body {
 .alerta {
     color: #e74c3c;
     font-weight: bold;
+}
+
+/* receitas */
+
+.receitas {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.receitas h2 {
+    color: #31a79d;
+    margin-bottom: 20px;
+}
+
+.form-receita {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.form-receita input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.form-receita input:focus {
+    border-color: #2aa198;
+    outline: none;
+    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+}
+
+#btnAddReceita {
+    background-color: #2aa198;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#btnAddReceita:hover {
+    background-color: #238b82;
+}
+
+.lista-receitas {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.receita {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.receita button {
+    margin-top: 10px;
+    margin-right: 5px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btnDownloadReceita,
+.btnProcessarReceita,
+.btnAddMedicamentoReceita {
+    background-color: #2aa198;
+    color: white;
+}
+
+.btnDownloadReceita:hover,
+.btnProcessarReceita:hover,
+.btnAddMedicamentoReceita:hover {
+    background-color: #238b82;
+}
+
+.btnRemoverReceita {
+    background: #e74c3c;
+    color: white;
+}
+
+.btnRemoverReceita:hover {
+    background: #c0392b;
+}
+
+.medicamento-extraido {
+    background: white;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border-left: 5px solid #31a79d;
 }
