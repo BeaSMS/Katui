@@ -687,7 +687,7 @@ body {
 
 /* sintomas */
 .sintomas {
-    max-width: 800px;
+    max-width: 950px;
     margin: 40px auto;
     padding: 20px;
 }
@@ -695,35 +695,50 @@ body {
 .sintomas h2 {
     color: #31a79d;
     margin-bottom: 20px;
+    font-size: 32px;
 }
 
 .form-sintoma {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 25px;
 }
 
 .form-sintoma input,
 .form-sintoma select {
-    padding: 10px;
-    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border-radius: 10px;
     border: 1px solid #ccc;
+    font-size: 15px;
+    background-color: white;
 }
 
 .form-sintoma input:focus,
 .form-sintoma select:focus {
     border-color: #2aa198;
     outline: none;
+    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+}
+
+#impactoSintoma,
+#fatoresSintoma,
+#padraoTempoSintoma {
+    grid-column: span 2;
 }
 
 #btnAddSintoma {
+    grid-column: span 2;
     background-color: #2aa198;
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
+    padding: 14px 18px;
+    border-radius: 10px;
     cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
 }
 
 #btnAddSintoma:hover {
@@ -738,12 +753,17 @@ body {
 
 .sintoma {
     background: #f5f5f5;
-    padding: 15px;
-    border-radius: 10px;
+    padding: 18px;
+    border-radius: 12px;
     border-left: 6px solid gray;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-/* intensidade */
+.sintoma p {
+    margin: 7px 0;
+    color: #333;
+}
+
 .sintoma.leve {
     border-left-color: #27ae60;
 }
@@ -756,44 +776,22 @@ body {
     border-left-color: #e74c3c;
 }
 
-/* resolvido */
-.sintoma.resolvido {
-    opacity: 0.6;
-    text-decoration: line-through;
-}
-
-.sintoma button {
-    margin-top: 10px;
-    margin-right: 5px;
-    padding: 6px 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-/* botão resolver */
-.resolver {
-    background: #3498db;
-    color: white;
-}
-
-.resolver:hover {
-    background: #2980b9;
-}
-
-/* remover */
-.remover {
-    background: #e74c3c;
-    color: white;
-}
-
-.remover:hover {
-    background: #c0392b;
-}
-
 .alerta {
     color: #e74c3c;
     font-weight: bold;
+}
+
+@media (max-width: 700px) {
+    .form-sintoma {
+        grid-template-columns: 1fr;
+    }
+
+    #impactoSintoma,
+    #fatoresSintoma,
+    #padraoTempoSintoma,
+    #btnAddSintoma {
+        grid-column: span 1;
+    }
 }
 
 /* receitas */

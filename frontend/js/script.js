@@ -898,23 +898,29 @@ function iniciarSintomas() {
 
     btn.onclick = async () => {
 
-        const descricao = document.getElementById("descSintoma").value;
-        const categoria = document.getElementById("categoriaSintoma").value;
-        const intensidade = document.getElementById("nivelSintoma").value;
-        const data = document.getElementById("dataSintoma").value;
-        const tipo = document.getElementById("tipoSintoma").value;
+        const localizacao = document.getElementById("localSintoma").value;
+        const qualidade = document.getElementById("qualidadeSintoma").value;
+        const intensidadeEscala = document.getElementById("intensidadeSintoma").value;
+        const incapacitante = document.getElementById("incapacitanteSintoma").value;
+        const padraoTempo = document.getElementById("padraoTempoSintoma").value;
+        const fatoresAssociados = document.getElementById("fatoresSintoma").value;
+        const impactoFuncional = document.getElementById("impactoSintoma").value;
+        const dataHoraRegistro = document.getElementById("dataHoraSintoma").value;
 
-        if (!descricao || !categoria || !intensidade || !data || !tipo) {
-            alert("Preencha todos os campos!");
+        if (!localizacao || !qualidade || !intensidadeEscala || !incapacitante || !padraoTempo || !dataHoraRegistro) {
+            alert("Preencha localização, qualidade, intensidade, incapacitante, tempo/padrão e data!");
             return;
         }
 
         const sintoma = {
-            descricao: descricao,
-            categoria: categoria,
-            intensidade: intensidade,
-            data: data,
-            tipo: tipo
+            localizacao: localizacao,
+            qualidade: qualidade,
+            intensidadeEscala: Number(intensidadeEscala),
+            incapacitante: incapacitante === "true",
+            padraoTempo: padraoTempo,
+            fatoresAssociados: fatoresAssociados,
+            impactoFuncional: impactoFuncional,
+            dataHoraRegistro: dataHoraRegistro
         };
 
         try {
@@ -973,15 +979,26 @@ function iniciarSintomas() {
             sintomas.forEach(s => {
 
                 const div = document.createElement("div");
-                div.classList.add("sintoma", s.intensidade);
+                div.classList.add("sintoma");
+
+                if (s.intensidadeEscala >= 8 || s.incapacitante) {
+                    div.classList.add("grave");
+                } else if (s.intensidadeEscala >= 4) {
+                    div.classList.add("medio");
+                } else {
+                    div.classList.add("leve");
+                }
 
                 div.innerHTML = `
-                    <p><strong>Descrição:</strong> ${s.descricao}</p>
-                    <p><strong>Categoria:</strong> ${s.categoria}</p>
-                    <p><strong>Intensidade:</strong> ${formatarIntensidade(s.intensidade)}</p>
-                    <p><strong>Quando ocorreu:</strong> ${formatarData(s.data)}</p>
-                    <p><strong>Tipo:</strong> ${s.tipo}</p>
-                    ${s.intensidade === "grave" ? '<p class="alerta">⚠️ Sintoma grave!</p>' : ""}
+                    <p><strong>Localização:</strong> ${s.localizacao || "Não informado"}</p>
+                    <p><strong>Tipo / qualidade:</strong> ${s.qualidade || "Não informado"}</p>
+                    <p><strong>Intensidade:</strong> ${s.intensidadeEscala ?? "Não informado"}/10</p>
+                    <p><strong>Incapacitante:</strong> ${s.incapacitante ? "Sim" : "Não"}</p>
+                    <p><strong>Tempo / padrão:</strong> ${s.padraoTempo || "Não informado"}</p>
+                    <p><strong>Fatores associados:</strong> ${s.fatoresAssociados || "Não informado"}</p>
+                    <p><strong>Impacto funcional:</strong> ${s.impactoFuncional || "Não informado"}</p>
+                    <p><strong>Data:</strong> ${formatarDataSintoma(s.dataHoraRegistro)}</p>
+                    ${(s.intensidadeEscala >= 8 || s.incapacitante) ? '<p class="alerta">⚠️ Atenção: sintoma intenso ou incapacitante!</p>' : ""}
                 `;
 
                 lista.appendChild(div);
@@ -994,31 +1011,17 @@ function iniciarSintomas() {
     }
 
     function limparCamposSintoma() {
-        document.getElementById("descSintoma").value = "";
-        document.getElementById("categoriaSintoma").value = "";
-        document.getElementById("nivelSintoma").value = "";
-        document.getElementById("dataSintoma").value = "";
-        document.getElementById("tipoSintoma").value = "";
+        document.getElementById("localSintoma").value = "";
+        document.getElementById("qualidadeSintoma").value = "";
+        document.getElementById("intensidadeSintoma").value = "";
+        document.getElementById("incapacitanteSintoma").value = "";
+        document.getElementById("padraoTempoSintoma").value = "";
+        document.getElementById("fatoresSintoma").value = "";
+        document.getElementById("impactoSintoma").value = "";
+        document.getElementById("dataHoraSintoma").value = "";
     }
 
-    function formatarIntensidade(intensidade) {
-
-        if (intensidade === "leve") {
-            return "Leve";
-        }
-
-        if (intensidade === "medio") {
-            return "Médio";
-        }
-
-        if (intensidade === "grave") {
-            return "Grave";
-        }
-
-        return "Não informado";
-    }
-
-    function formatarData(data) {
+    function formatarDataSintoma(data) {
 
         if (!data) {
             return "Não informado";

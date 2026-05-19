@@ -4,30 +4,38 @@
 
     <div class="form-sintoma">
 
-        <input id="descSintoma" type="text" placeholder="Descreva o sintoma">
+        <input id="localSintoma" type="text" placeholder="Localização do sintoma. Ex: cabeça, barriga, peito">
 
-        <select id="categoriaSintoma">
-            <option value="">Categoria</option>
-            <option value="Dor">Dor</option>
+        <select id="qualidadeSintoma">
+            <option value="">Tipo / qualidade</option>
+            <option value="Dor latejante">Dor latejante</option>
+            <option value="Queimação">Queimação</option>
+            <option value="Pressão">Pressão</option>
+            <option value="Peso">Peso</option>
+            <option value="Coceira">Coceira</option>
+            <option value="Formigamento">Formigamento</option>
+            <option value="Dormência">Dormência</option>
+            <option value="Náusea">Náusea</option>
+            <option value="Tontura">Tontura</option>
             <option value="Febre">Febre</option>
-            <option value="Respiratório">Respiratório</option>
             <option value="Outro">Outro</option>
         </select>
 
-        <select id="nivelSintoma">
-            <option value="">Intensidade</option>
-            <option value="leve">Leve</option>
-            <option value="medio">Médio</option>
-            <option value="grave">Grave</option>
+        <input id="intensidadeSintoma" type="number" min="0" max="10" placeholder="Intensidade de 0 a 10">
+
+        <select id="incapacitanteSintoma">
+            <option value="">Incapacitante?</option>
+            <option value="false">Não</option>
+            <option value="true">Sim</option>
         </select>
 
-        <input id="dataSintoma" type="datetime-local">
+        <input id="padraoTempoSintoma" type="text" placeholder="Tempo/padrão. Ex: começou ontem, vem em crises, dura 30min">
 
-        <select id="tipoSintoma">
-            <option value="">Tipo</option>
-            <option value="persistente">Persistente</option>
-            <option value="passageiro">Passageiro</option>
-        </select>
+        <input id="fatoresSintoma" type="text" placeholder="O que piora ou melhora? Ex: esforço, repouso, comida">
+
+        <input id="impactoSintoma" type="text" placeholder="Impacto no dia a dia. Ex: atrapalha sono, trabalho, estudos">
+
+        <input id="dataHoraSintoma" type="datetime-local">
 
         <button id="btnAddSintoma">
             Adicionar
