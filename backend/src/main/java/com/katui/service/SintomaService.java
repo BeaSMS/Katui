@@ -41,11 +41,14 @@ public class SintomaService {
     public Sintoma atualizar(Long id, Sintoma sintoma, Usuario usuario) {
         Sintoma existente = buscar(id, usuario);
 
-        existente.setDescricao(sintoma.getDescricao());
-        existente.setCategoria(sintoma.getCategoria());
-        existente.setIntensidade(sintoma.getIntensidade());
-        existente.setTipo(sintoma.getTipo());
-        existente.setData(sintoma.getData());
+        existente.setLocalizacao(sintoma.getLocalizacao());
+        existente.setQualidade(sintoma.getQualidade());
+        existente.setIntensidadeEscala(sintoma.getIntensidadeEscala());
+        existente.setIncapacitante(sintoma.getIncapacitante());
+        existente.setPadraoTempo(sintoma.getPadraoTempo());
+        existente.setFatoresAssociados(sintoma.getFatoresAssociados());
+        existente.setImpactoFuncional(sintoma.getImpactoFuncional());
+        existente.setDataHoraRegistro(sintoma.getDataHoraRegistro());
 
         return repository.save(existente);
     }
