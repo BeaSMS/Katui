@@ -39,7 +39,7 @@ async function fazerCadastro() {
     try {
 
         const resposta = await fetch(
-            "http://localhost:8085/auth/cadastro",
+            "http://localhost:8085/auth/register",
             {
                 method: "POST",
 

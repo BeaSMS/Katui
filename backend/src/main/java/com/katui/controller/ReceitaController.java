@@ -58,6 +58,7 @@ public class ReceitaController {
 
         if (pacienteId != null) {
             usuario = cuidadorService.verificarAcesso(usuario, pacienteId);
+
         }
 
         return service.processar(id, usuario);
