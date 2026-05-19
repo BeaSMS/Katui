@@ -47,6 +47,8 @@ public class MedicamentoService {
         existente.setHorario(medicamento.getHorario());
         existente.setTipoFrequencia(medicamento.getTipoFrequencia());
         existente.setValorFrequencia(medicamento.getValorFrequencia());
+        existente.setDias(medicamento.getDias());           // faltando
+        existente.setDiasSemana(medicamento.getDiasSemana()); // faltando
 
         return repository.save(existente);
     }

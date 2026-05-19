@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.katui.dto.ReceitaProcessadaDTO.MedicamentoExtratoDTO;
 
+import com.katui.entity.Receita;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,8 @@ public class OCRService {
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public List<MedicamentoExtratoDTO> extrairMedicamentos(Path caminhoImagem) {
+
+
         try {
             byte[] imageBytes = Files.readAllBytes(caminhoImagem);
             String base64 = Base64.getEncoder().encodeToString(imageBytes);
