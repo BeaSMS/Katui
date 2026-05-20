@@ -13,12 +13,11 @@
         <input id="horarioMed" type="time">
 
         <select id="tipoFreq">
-            <option value="">Frequência</option>
-            <option value="intervalo">De X em X horas</option>
-            <option value="dias">Por X dias</option>
-            <option value="semanal">Semanal</option>
-            <option value="quinzenal">Quinzenal</option>
-            <option value="mensal">Mensal</option>
+            <option value="">Frequência de uso</option>
+            <option value="DIARIO">Diário</option>
+            <option value="INTERVALO_HORAS">A cada X horas</option>
+            <option value="SEMANAL">Semanal</option>
+            <option value="MENSAL">Mensal</option>
         </select>
 
         <input id="valorFreq" type="number" placeholder="Valor da frequência">
@@ -29,8 +28,8 @@
         </div>
 
         <div class="grupo-data">
-            <label>Término do tratamento</label>
-            <input id="dataFimMed" type="date">
+            <label>Término do tratamento | término vazio para medicamentos de uso contínuo.</label>
+            <input id="dataFimMed" type="date">            
         </div>
 
         <textarea

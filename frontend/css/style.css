@@ -747,11 +747,6 @@ body {
     transition: 0.2s;
 }
 
-/* quando marcado como tomado */
-.med.tomado {
-    background: #d4edda;
-}
-
 .med button {
     margin-top: 10px;
     margin-right: 5px;
@@ -761,14 +756,14 @@ body {
     cursor: pointer;
 }
 
-/* botão tomar */
-.tomar {
-    background: #27ae60;
+/* botão finalizar*/
+.finalizar {
+    background: #f39c12;
     color: white;
 }
 
-.tomar:hover {
-    background: #219150;
+.finalizar:hover {
+    background: #d68910;
 }
 
 /* botão remover */
@@ -1209,6 +1204,14 @@ body {
     display: flex;
     gap: 10px;
     margin-top: 15px;
+}
+
+.acoes-med button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 @media (max-width: 700px) {

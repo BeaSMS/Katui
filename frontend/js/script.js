@@ -502,34 +502,74 @@ function iniciarCalendarioDashboard() {
 
             medicamentos.forEach(m => {
 
-            if (m.ativo === false) {
-                return;
-            }
+                if (m.ativo === false) {
+                    return;
+                }
 
-            if (!m.dataInicio) {
-                return;
-            }
+                if (!m.dataInicio) {
+                    return;
+                }
 
-            const dataDoDia = new Date(dataTexto + "T00:00:00");
-            const inicio = new Date(m.dataInicio + "T00:00:00");
+                const dataDoDia = new Date(dataTexto + "T00:00:00");
 
-            let deveMostrar = false;
+                const inicio = new Date(m.dataInicio + "T00:00:00");
 
-            if (m.dataFim) {
+                let dentroPeriodo = false;
 
-                const fim = new Date(m.dataFim + "T00:00:00");
+                if (m.dataFim) {
 
-                deveMostrar =
-                    dataDoDia >= inicio &&
-                    dataDoDia <= fim;
+                    const fim = new Date(m.dataFim + "T00:00:00");
 
-            } else {
+                    dentroPeriodo =
+                        dataDoDia >= inicio &&
+                        dataDoDia <= fim;
 
-                deveMostrar =
-                    dataDoDia >= inicio;
-            }
+                } else {
 
-            if (deveMostrar) {
+                    dentroPeriodo =
+                        dataDoDia >= inicio;
+                }
+
+                if (!dentroPeriodo) {
+                    return;
+                }
+
+                let mostrarHoje = false;
+
+                // DIÁRIO
+                if (m.tipoFrequencia === "DIARIO") {
+
+                    mostrarHoje = true;
+                }
+
+                // INTERVALO EM HORAS
+                else if (m.tipoFrequencia === "INTERVALO_HORAS") {
+
+                    mostrarHoje = true;
+                }
+
+                // SEMANAL
+                else if (m.tipoFrequencia === "SEMANAL") {
+
+                    const diffDias =
+                        Math.floor(
+                            (dataDoDia - inicio)
+                            / (1000 * 60 * 60 * 24)
+                        );
+
+                    mostrarHoje = diffDias % 7 === 0;
+                }
+
+                // MENSAL
+                else if (m.tipoFrequencia === "MENSAL") {
+
+                    mostrarHoje =
+                        dataDoDia.getDate() === inicio.getDate();
+                }
+
+                if (!mostrarHoje) {
+                    return;
+                }
 
                 const evento = document.createElement("div");
 
@@ -542,8 +582,7 @@ function iniciarCalendarioDashboard() {
                     `💊 ${m.nome} ${m.horario || ""}`;
 
                 divDia.appendChild(evento);
-            }
-        });
+            });
 
             grid.appendChild(divDia);
         }
@@ -918,7 +957,7 @@ function iniciarMedicamentos() {
 
     carregarMedicamentos();
 
-        btn.onclick = async () => {
+    btn.onclick = async () => {
 
         const nome = document.getElementById("nomeMed").value;
         const dosagem = document.getElementById("dosagemMed").value;
@@ -926,14 +965,12 @@ function iniciarMedicamentos() {
         const horario = document.getElementById("horarioMed").value;
         const tipo = document.getElementById("tipoFreq").value;
         const valor = document.getElementById("valorFreq").value;
-
         const dataInicio = document.getElementById("dataInicioMed").value;
         const dataFim = document.getElementById("dataFimMed").value;
-
         const observacoes = document.getElementById("obsMed").value;
 
-        if (!nome || !dosagem || !horario) {
-            alert("Preencha nome, dosagem e horário!");
+        if (!nome || !dosagem || !horario || !dataInicio) {
+            alert("Preencha nome, dosagem, horário e data de início!");
             return;
         }
 
@@ -944,7 +981,7 @@ function iniciarMedicamentos() {
             horario: horario,
             tipoFrequencia: tipo,
             valorFrequencia: valor ? Number(valor) : null,
-            dataInicio: dataInicio || null,
+            dataInicio: dataInicio,
             dataFim: dataFim || null,
             observacoes: observacoes,
             ativo: true
@@ -970,7 +1007,6 @@ function iniciarMedicamentos() {
             }
 
             limparCamposMedicamento();
-
             carregarMedicamentos();
 
         } catch (erro) {
@@ -1011,17 +1047,37 @@ function iniciarMedicamentos() {
                 const div = document.createElement("div");
                 div.classList.add("med");
 
-                div.innerHTML = `
-                    <p><strong>Medicamento:</strong> ${med.nome}</p>
-                    <p><strong>Horário:</strong> ${med.horario}</p>
-                    <p><strong>Frequência:</strong> ${formatarFrequencia(med.tipoFrequencia, med.valorFrequencia)}</p>
+                const finalizado =
+                    med.ativo === false ||
+                    (med.dataFim && new Date(med.dataFim + "T00:00:00") < new Date());
 
-                    <button class="tomar">Tomado</button>
-                    <button class="remover">Remover</button>
+                div.innerHTML = `
+                    <div class="med-topo">
+                        <div>
+                            <h3>${med.nome}</h3>
+                            <span class="dosagem">${med.dosagem || "Dosagem não informada"}</span>
+                        </div>
+
+                        <span class="status-med ${finalizado ? 'finalizado' : 'ativo'}">
+                            ${finalizado ? 'Finalizado' : 'Ativo'}
+                        </span>
+                    </div>
+
+                    <p><strong>Finalidade:</strong> ${med.finalidade || "Não informado"}</p>
+                    <p><strong>Horário:</strong> ${med.horario || "Não informado"}</p>
+                    <p><strong>Frequência:</strong> ${formatarFrequencia(med.tipoFrequencia, med.valorFrequencia)}</p>
+                    <p><strong>Início:</strong> ${formatarDataMed(med.dataInicio)}</p>
+                    <p><strong>Término:</strong> ${formatarDataMed(med.dataFim)}</p>
+                    <p><strong>Observações:</strong> ${med.observacoes || "Nenhuma"}</p>
+
+                    <div class="acoes-med">
+                        <button class="finalizar">Finalizar tratamento</button>
+                        <button class="remover">Remover</button>
+                    </div>
                 `;
 
-                div.querySelector(".tomar").onclick = () => {
-                    div.classList.toggle("tomado");
+                div.querySelector(".finalizar").onclick = () => {
+                    finalizarMedicamento(med);
                 };
 
                 div.querySelector(".remover").onclick = () => {
@@ -1034,6 +1090,38 @@ function iniciarMedicamentos() {
         } catch (erro) {
             console.log(erro);
             lista.innerHTML = "<p>Erro ao conectar com backend.</p>";
+        }
+    }
+
+    async function finalizarMedicamento(med) {
+
+        const medicamentoAtualizado = {
+            ...med,
+            ativo: false,
+            dataFim: med.dataFim || new Date().toISOString().split("T")[0]
+        };
+
+        try {
+
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/medicamentos/${med.id}`), {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(medicamentoAtualizado)
+            });
+
+            if (!resposta.ok) {
+                alert("Erro ao finalizar tratamento");
+                return;
+            }
+
+            carregarMedicamentos();
+
+        } catch (erro) {
+            console.log(erro);
+            alert("Erro ao conectar com backend");
         }
     }
 
@@ -1062,7 +1150,6 @@ function iniciarMedicamentos() {
     }
 
     function limparCamposMedicamento() {
-
         document.getElementById("nomeMed").value = "";
         document.getElementById("dosagemMed").value = "";
         document.getElementById("finalidadeMed").value = "";
@@ -1076,23 +1163,24 @@ function iniciarMedicamentos() {
 
     function formatarFrequencia(tipo, valor) {
 
-        if (tipo === "intervalo") {
+        if (tipo === "DIARIO") {
+            return "Diário";
+        }
+
+        if (tipo === "INTERVALO_HORAS") {
+
+            if (!valor) {
+                return "Intervalo não informado";
+            }
+
             return `A cada ${valor} horas`;
         }
 
-        if (tipo === "dias") {
-            return `Por ${valor} dias`;
-        }
-
-        if (tipo === "semanal") {
+        if (tipo === "SEMANAL") {
             return "Semanal";
         }
 
-        if (tipo === "quinzenal") {
-            return "Quinzenal";
-        }
-
-        if (tipo === "mensal") {
+        if (tipo === "MENSAL") {
             return "Mensal";
         }
 
@@ -1106,8 +1194,7 @@ function formatarDataMed(data) {
         return "Não informado";
     }
 
-    return new Date(data)
-        .toLocaleDateString("pt-BR");
+    return new Date(data + "T00:00:00").toLocaleDateString("pt-BR");
 }
 
 function iniciarSintomas() {
