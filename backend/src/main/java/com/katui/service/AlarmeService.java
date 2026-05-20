@@ -21,76 +21,107 @@ public class AlarmeService {
 
     private final AlarmeRepository repository;
 
-    // Gera alarmes automaticamente a partir do medicamento
     public List<Alarme> gerarAlarmes(Medicamento medicamento, Usuario usuario) {
 
         List<Alarme> alarmes = new ArrayList<>();
 
-        // Deleta alarmes anteriores do medicamento se existirem
         repository.deleteAll(
                 repository.findByMedicamento(medicamento)
         );
+
+        if (medicamento.getHorario() == null || medicamento.getDataInicio() == null) {
+            return alarmes;
+        }
 
         LocalTime horarioInicial = LocalTime.parse(
                 medicamento.getHorario(),
                 DateTimeFormatter.ofPattern("HH:mm")
         );
 
-        LocalDate dataInicio = LocalDate.now();
-        int dias = medicamento.getDias() != null ? medicamento.getDias() : 1;
+        LocalDate dataInicio = medicamento.getDataInicio();
+
+        LocalDate dataFim;
+
+        if (medicamento.getDataFim() != null) {
+            dataFim = medicamento.getDataFim();
+        } else {
+            dataFim = dataInicio.plusDays(30);
+        }
 
         switch (medicamento.getTipoFrequencia()) {
 
+            case "DIARIO" -> {
+
+                LocalDate data = dataInicio;
+
+                while (!data.isAfter(dataFim)) {
+                    Alarme alarme = criarAlarme(
+                            LocalDateTime.of(data, horarioInicial),
+                            medicamento,
+                            usuario
+                    );
+
+                    alarmes.add(alarme);
+
+                    data = data.plusDays(1);
+                }
+            }
+
             case "INTERVALO_HORAS" -> {
-                int intervalo = medicamento.getValorFrequencia();
+
+                Integer intervalo = medicamento.getValorFrequencia();
+
+                if (intervalo == null || intervalo <= 0) {
+                    break;
+                }
+
                 LocalDateTime atual = LocalDateTime.of(dataInicio, horarioInicial);
-                LocalDateTime fim = atual.plusDays(dias);
+                LocalDateTime fim = LocalDateTime.of(dataFim.plusDays(1), LocalTime.MIN);
 
                 while (atual.isBefore(fim)) {
-                    Alarme alarme = new Alarme();
-                    alarme.setHorario(atual);
-                    alarme.setTomado(false);
-                    alarme.setMedicamento(medicamento);
-                    alarme.setUsuario(usuario);
+                    Alarme alarme = criarAlarme(
+                            atual,
+                            medicamento,
+                            usuario
+                    );
+
                     alarmes.add(alarme);
+
                     atual = atual.plusHours(intervalo);
                 }
             }
 
-            case "VEZES_DIA" -> {
-                int vezes = medicamento.getValorFrequencia();
-                int intervalo = 24 / vezes;
+            case "SEMANAL" -> {
 
-                for (int dia = 0; dia < dias; dia++) {
-                    LocalDateTime atual = LocalDateTime.of(
-                            dataInicio.plusDays(dia), horarioInicial
+                LocalDate data = dataInicio;
+
+                while (!data.isAfter(dataFim)) {
+                    Alarme alarme = criarAlarme(
+                            LocalDateTime.of(data, horarioInicial),
+                            medicamento,
+                            usuario
                     );
-                    for (int v = 0; v < vezes; v++) {
-                        Alarme alarme = new Alarme();
-                        alarme.setHorario(atual.plusHours((long) intervalo * v));
-                        alarme.setTomado(false);
-                        alarme.setMedicamento(medicamento);
-                        alarme.setUsuario(usuario);
-                        alarmes.add(alarme);
-                    }
+
+                    alarmes.add(alarme);
+
+                    data = data.plusWeeks(1);
                 }
             }
 
-            case "DIAS_ESPECIFICOS" -> {
-                List<Integer> diasSemana = medicamento.getDiasSemana();
+            case "MENSAL" -> {
 
-                for (int dia = 0; dia < dias; dia++) {
-                    LocalDate data = dataInicio.plusDays(dia);
-                    int diaSemana = data.getDayOfWeek().getValue(); // 1=Segunda...7=Domingo
+                LocalDate data = dataInicio;
 
-                    if (diasSemana.contains(diaSemana)) {
-                        Alarme alarme = new Alarme();
-                        alarme.setHorario(LocalDateTime.of(data, horarioInicial));
-                        alarme.setTomado(false);
-                        alarme.setMedicamento(medicamento);
-                        alarme.setUsuario(usuario);
-                        alarmes.add(alarme);
-                    }
+                while (!data.isAfter(dataFim)) {
+                    Alarme alarme = criarAlarme(
+                            LocalDateTime.of(data, horarioInicial),
+                            medicamento,
+                            usuario
+                    );
+
+                    alarmes.add(alarme);
+
+                    data = data.plusMonths(1);
                 }
             }
         }
@@ -98,12 +129,23 @@ public class AlarmeService {
         return repository.saveAll(alarmes);
     }
 
-    // Listar alarmes do usuário
+    private Alarme criarAlarme(
+            LocalDateTime horario,
+            Medicamento medicamento,
+            Usuario usuario
+    ) {
+        Alarme alarme = new Alarme();
+        alarme.setHorario(horario);
+        alarme.setTomado(false);
+        alarme.setMedicamento(medicamento);
+        alarme.setUsuario(usuario);
+        return alarme;
+    }
+
     public List<Alarme> listar(Usuario usuario) {
         return repository.findByUsuario(usuario);
     }
 
-    // Buscar alarme por ID
     public Alarme buscar(Long id, Usuario usuario) {
         Alarme alarme = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Alarme não encontrado"));
@@ -115,28 +157,24 @@ public class AlarmeService {
         return alarme;
     }
 
-    // Atualizar horário do alarme
     public Alarme atualizar(Long id, Alarme alarme, Usuario usuario) {
         Alarme existente = buscar(id, usuario);
         existente.setHorario(alarme.getHorario());
         return repository.save(existente);
     }
 
-    // Marcar como tomado
     public Alarme marcarTomado(Long id, Usuario usuario) {
         Alarme existente = buscar(id, usuario);
         existente.setTomado(true);
         return repository.save(existente);
     }
 
-    // Deletar alarmes do medicamento
     public void deletarPorMedicamento(Medicamento medicamento) {
         repository.deleteAll(
                 repository.findByMedicamento(medicamento)
         );
     }
 
-    // Deletar alarme
     public void deletar(Long id, Usuario usuario) {
         buscar(id, usuario);
         repository.deleteById(id);

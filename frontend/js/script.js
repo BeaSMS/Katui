@@ -52,6 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 iniciarDashboard();
             }
 
+            if (pagina.includes('alarmes')) {
+                iniciarAlarmes();
+            }
+
             if (pagina.includes('consultas')) {
                 iniciarConsultas();
             }
@@ -129,7 +133,10 @@ function montarUrlComPaciente(urlBase) {
         && pacienteId
     ) {
 
-        return `${urlBase}?pacienteId=${pacienteId}`;
+        const separador =
+            urlBase.includes("?") ? "&" : "?";
+
+        return `${urlBase}${separador}pacienteId=${pacienteId}`;
     }
 
     return urlBase;
@@ -155,4 +162,8 @@ function mostrarAvisoPacienteSelecionado() {
     `;
 
     conteudo.prepend(aviso);
+}
+
+if (pagina.includes('alarmes')) {
+    iniciarAlarmes();
 }

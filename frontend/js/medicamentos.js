@@ -36,22 +36,22 @@ function iniciarMedicamentos() {
         }
 
         const medicamento = {
-            nome: nome,
-            dosagem: dosagem,
-            finalidade: finalidade,
-            horario: horario,
+            nome,
+            dosagem,
+            finalidade,
+            horario,
             tipoFrequencia: tipo,
             valorFrequencia: valor ? Number(valor) : null,
-            dataInicio: dataInicio,
+            dataInicio,
             dataFim: dataFim || null,
-            observacoes: observacoes,
+            observacoes,
             ativo: true
         };
 
         try {
 
             const resposta = await fetch(
-                montarUrlComPaciente("http://localhost:8085/medicamentos"),
+                montarUrlComPaciente("http://localhost:8085/medicamentos?gerarAlarmes=true"),
                 {
                     method: "POST",
                     headers: {
@@ -82,12 +82,15 @@ function iniciarMedicamentos() {
 
         try {
 
-            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/medicamentos"), {
-                method: "GET",
-                headers: {
-                    "Authorization": "Bearer " + token
+            const resposta = await fetch(
+                montarUrlComPaciente("http://localhost:8085/medicamentos"),
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
                 }
-            });
+            );
 
             if (!resposta.ok) {
                 lista.innerHTML = "<p>Erro ao carregar medicamentos.</p>";
@@ -164,14 +167,17 @@ function iniciarMedicamentos() {
 
         try {
 
-            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/medicamentos/${med.id}`), {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token
-                },
-                body: JSON.stringify(medicamentoAtualizado)
-            });
+            const resposta = await fetch(
+                montarUrlComPaciente(`http://localhost:8085/medicamentos/${med.id}`),
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify(medicamentoAtualizado)
+                }
+            );
 
             if (!resposta.ok) {
                 alert("Erro ao finalizar tratamento");
@@ -190,12 +196,15 @@ function iniciarMedicamentos() {
 
         try {
 
-            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/medicamentos/${id}`), {
-                method: "DELETE",
-                headers: {
-                    "Authorization": "Bearer " + token
+            const resposta = await fetch(
+                montarUrlComPaciente(`http://localhost:8085/medicamentos/${id}`),
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
                 }
-            });
+            );
 
             if (!resposta.ok) {
                 alert("Erro ao remover medicamento");
@@ -229,7 +238,6 @@ function iniciarMedicamentos() {
         }
 
         if (tipo === "INTERVALO_HORAS") {
-
             if (!valor) {
                 return "Intervalo não informado";
             }
