@@ -1,15 +1,19 @@
 <div class="medicamentos">
 
-    <h2>Medicamentos</h2>
+    <h2>Controle Medicamentoso</h2>
 
     <div class="form-med">
 
         <input id="nomeMed" type="text" placeholder="Nome do medicamento">
 
+        <input id="dosagemMed" type="text" placeholder="Dosagem (500mg, 1 comprimido...)">
+
+        <input id="finalidadeMed" type="text" placeholder="Finalidade do tratamento">
+
         <input id="horarioMed" type="time">
 
         <select id="tipoFreq">
-            <option value="">Tipo</option>
+            <option value="">Frequência</option>
             <option value="intervalo">De X em X horas</option>
             <option value="dias">Por X dias</option>
             <option value="semanal">Semanal</option>
@@ -17,10 +21,25 @@
             <option value="mensal">Mensal</option>
         </select>
 
-        <input id="valorFreq" type="number" placeholder="Valor">
+        <input id="valorFreq" type="number" placeholder="Valor da frequência">
+
+        <div class="grupo-data">
+            <label>Início do tratamento</label>
+            <input id="dataInicioMed" type="date">
+        </div>
+
+        <div class="grupo-data">
+            <label>Término do tratamento</label>
+            <input id="dataFimMed" type="date">
+        </div>
+
+        <textarea
+            id="obsMed"
+            placeholder="Observações (tomar após refeição, evitar álcool...)"
+        ></textarea>
 
         <button id="btnAddMed">
-            Adicionar
+            Salvar Medicamento
         </button>
 
     </div>

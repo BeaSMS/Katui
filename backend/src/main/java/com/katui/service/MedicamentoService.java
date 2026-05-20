@@ -39,7 +39,7 @@ public class MedicamentoService {
 
         return medicamento;
     }
-
+    
     public Medicamento atualizar(Long id, Medicamento medicamento, Usuario usuario) {
         Medicamento existente = buscar(id, usuario);
 
@@ -47,8 +47,15 @@ public class MedicamentoService {
         existente.setHorario(medicamento.getHorario());
         existente.setTipoFrequencia(medicamento.getTipoFrequencia());
         existente.setValorFrequencia(medicamento.getValorFrequencia());
-        existente.setDias(medicamento.getDias());           // faltando
-        existente.setDiasSemana(medicamento.getDiasSemana()); // faltando
+        existente.setDias(medicamento.getDias());
+        existente.setDiasSemana(medicamento.getDiasSemana());
+
+        existente.setFinalidade(medicamento.getFinalidade());
+        existente.setDosagem(medicamento.getDosagem());
+        existente.setDataInicio(medicamento.getDataInicio());
+        existente.setDataFim(medicamento.getDataFim());
+        existente.setObservacoes(medicamento.getObservacoes());
+        existente.setAtivo(medicamento.getAtivo());
 
         return repository.save(existente);
     }

@@ -389,8 +389,10 @@ body {
 
 /* dashboard */
 
+/* dashboard */
+
 .dashboard {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
 }
@@ -398,56 +400,150 @@ body {
 .dashboard h2 {
     color: #31a79d;
     font-size: 34px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-    margin-bottom: 25px;
+    gap: 18px;
+    margin-bottom: 35px;
 }
 
 .card {
     background: #f5f5f5;
-    padding: 35px 20px;
+    padding: 22px 15px;
     border-radius: 14px;
     text-align: center;
     transition: 0.2s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     cursor: pointer;
 }
 
 .card:hover {
-    transform: scale(1.03);
+    transform: translateY(-3px);
     background-color: #eeeeee;
 }
 
 .card h3 {
     color: #31a79d;
-    font-size: 24px;
-    margin-bottom: 18px;
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
 .card p {
-    font-size: 30px;
+    font-size: 24px;
     font-weight: bold;
     color: #333;
 }
 
-#btnAtualizar {
-    padding: 12px 18px;
-    border: none;
-    background: #2aa198;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
+/* calendário */
+
+.calendario-dashboard {
+    background: #f5f5f5;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
-#btnAtualizar:hover {
-    background-color: #238b82;
+.calendario-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendario-topo h3 {
+    color: #31a79d;
+    font-size: 26px;
+}
+
+.calendario-topo button {
+    border: none;
+    background: #31a79d;
+    color: white;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.calendario-topo button:hover {
+    background: #27877f;
+}
+
+.dias-semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: #666;
+}
+
+.grid-calendario {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.dia-calendario {
+    min-height: 130px;
+    background: white;
+    border-radius: 12px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #e6e6e6;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.numero-dia {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.evento-calendario {
+    font-size: 12px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    color: white;
+    word-break: break-word;
+}
+
+.evento-consulta {
+    background: #3498db;
+}
+
+.evento-sintoma {
+    background: #e74c3c;
+}
+
+.evento-medicamento {
+    background: #27ae60;
+}
+
+.dia-vazio {
+    background: transparent;
+    border: none;
+}
+
+@media (max-width: 900px) {
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-calendario {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dias-semana {
+        display: none;
+    }
 }
 
 /* consultas */
@@ -997,4 +1093,137 @@ body {
     border-radius: 8px;
     color: #333;
     font-weight: 500;
+}
+
+/* NOVO MEDICAMENTOS */
+
+.medicamentos {
+    max-width: 1000px;
+}
+
+.form-med {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 25px;
+}
+
+.form-med input,
+.form-med select,
+.form-med textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    background: white;
+}
+
+.form-med textarea {
+    min-height: 120px;
+    resize: vertical;
+    grid-column: span 2;
+}
+
+.form-med input:focus,
+.form-med select:focus,
+.form-med textarea:focus {
+    border-color: #2aa198;
+    outline: none;
+    box-shadow: 0 0 5px rgba(42,161,152,0.3);
+}
+
+.grupo-data {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.grupo-data label {
+    font-size: 14px;
+    color: #666;
+}
+
+#btnAddMed {
+    grid-column: span 2;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.lista-meds {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.med {
+    background: #f5f5f5;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.med-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 12px;
+}
+
+.med-topo h3 {
+    margin: 0;
+    color: #31a79d;
+    font-size: 22px;
+}
+
+.dosagem {
+    color: #666;
+    font-size: 14px;
+}
+
+.status-med {
+    padding: 7px 12px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.status-med.ativo {
+    background: #d4edda;
+    color: #1e8449;
+}
+
+.status-med.finalizado {
+    background: #f8d7da;
+    color: #c0392b;
+}
+
+.med p {
+    margin: 8px 0;
+    color: #333;
+}
+
+.acoes-med {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+@media (max-width: 700px) {
+
+    .form-med {
+        grid-template-columns: 1fr;
+    }
+
+    .form-med textarea,
+    #btnAddMed {
+        grid-column: span 1;
+    }
+
+    .med-topo {
+        flex-direction: column;
+        gap: 10px;
+    }
 }

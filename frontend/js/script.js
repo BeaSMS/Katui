@@ -271,6 +271,7 @@ function iniciarDashboard() {
     carregarMedicamentos();
     carregarSintomas();
     carregarConsultas();
+    iniciarCalendarioDashboard();
 
 
     async function carregarMedicamentos() {
@@ -347,6 +348,206 @@ function iniciarDashboard() {
         console.log(erro);
     }
 }
+}
+
+function iniciarCalendarioDashboard() {
+
+    const token = localStorage.getItem("token");
+
+    const grid = document.getElementById("gridCalendario");
+    const titulo = document.getElementById("tituloCalendario");
+
+    if (!grid || !titulo) return;
+
+    let dataAtual = new Date();
+
+    let consultas = [];
+    let sintomas = [];
+    let medicamentos = [];
+
+    carregarEventos();
+
+    document.getElementById("btnMesAnterior").onclick = () => {
+        dataAtual.setMonth(dataAtual.getMonth() - 1);
+        renderizarCalendario();
+    };
+
+    document.getElementById("btnProximoMes").onclick = () => {
+        dataAtual.setMonth(dataAtual.getMonth() + 1);
+        renderizarCalendario();
+    };
+
+    async function carregarEventos() {
+
+        try {
+
+            const respostas = await Promise.all([
+
+                fetch(
+                    montarUrlComPaciente("http://localhost:8085/consultas"),
+                    {
+                        headers: {
+                            "Authorization": "Bearer " + token
+                        }
+                    }
+                ),
+
+                fetch(
+                    montarUrlComPaciente("http://localhost:8085/sintomas"),
+                    {
+                        headers: {
+                            "Authorization": "Bearer " + token
+                        }
+                    }
+                ),
+
+                fetch(
+                    montarUrlComPaciente("http://localhost:8085/medicamentos"),
+                    {
+                        headers: {
+                            "Authorization": "Bearer " + token
+                        }
+                    }
+                )
+
+            ]);
+
+            consultas = await respostas[0].json();
+            sintomas = await respostas[1].json();
+            medicamentos = await respostas[2].json();
+
+            renderizarCalendario();
+
+        } catch (erro) {
+            console.log(erro);
+        }
+    }
+
+    function renderizarCalendario() {
+
+        grid.innerHTML = "";
+
+        const ano = dataAtual.getFullYear();
+        const mes = dataAtual.getMonth();
+
+        const primeiroDia = new Date(ano, mes, 1);
+        const ultimoDia = new Date(ano, mes + 1, 0);
+
+        const totalDias = ultimoDia.getDate();
+        const diaSemanaInicio = primeiroDia.getDay();
+
+        titulo.textContent =
+            primeiroDia.toLocaleDateString('pt-BR', {
+                month: 'long',
+                year: 'numeric'
+            });
+
+        for (let i = 0; i < diaSemanaInicio; i++) {
+
+            const vazio = document.createElement("div");
+            vazio.classList.add("dia-vazio");
+
+            grid.appendChild(vazio);
+        }
+
+        for (let dia = 1; dia <= totalDias; dia++) {
+
+            const divDia = document.createElement("div");
+            divDia.classList.add("dia-calendario");
+
+            const numero = document.createElement("div");
+            numero.classList.add("numero-dia");
+            numero.textContent = dia;
+
+            divDia.appendChild(numero);
+
+            const dataTexto =
+                `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+
+            consultas.forEach(c => {
+
+                if (c.dataHora?.startsWith(dataTexto)) {
+
+                    const evento = document.createElement("div");
+
+                    evento.classList.add(
+                        "evento-calendario",
+                        "evento-consulta"
+                    );
+
+                    evento.textContent =
+                        `🩺 ${c.medico}`;
+
+                    divDia.appendChild(evento);
+                }
+            });
+
+            sintomas.forEach(s => {
+
+                if (s.dataHoraRegistro?.startsWith(dataTexto)) {
+
+                    const evento = document.createElement("div");
+
+                    evento.classList.add(
+                        "evento-calendario",
+                        "evento-sintoma"
+                    );
+
+                    evento.textContent =
+                        `⚠ ${s.qualidade}`;
+
+                    divDia.appendChild(evento);
+                }
+            });
+
+            medicamentos.forEach(m => {
+
+            if (m.ativo === false) {
+                return;
+            }
+
+            if (!m.dataInicio) {
+                return;
+            }
+
+            const dataDoDia = new Date(dataTexto + "T00:00:00");
+            const inicio = new Date(m.dataInicio + "T00:00:00");
+
+            let deveMostrar = false;
+
+            if (m.dataFim) {
+
+                const fim = new Date(m.dataFim + "T00:00:00");
+
+                deveMostrar =
+                    dataDoDia >= inicio &&
+                    dataDoDia <= fim;
+
+            } else {
+
+                deveMostrar =
+                    dataDoDia >= inicio;
+            }
+
+            if (deveMostrar) {
+
+                const evento = document.createElement("div");
+
+                evento.classList.add(
+                    "evento-calendario",
+                    "evento-medicamento"
+                );
+
+                evento.textContent =
+                    `💊 ${m.nome} ${m.horario || ""}`;
+
+                divDia.appendChild(evento);
+            }
+        });
+
+            grid.appendChild(divDia);
+        }
+    }
 }
 
 
@@ -717,35 +918,51 @@ function iniciarMedicamentos() {
 
     carregarMedicamentos();
 
-    btn.onclick = async () => {
+        btn.onclick = async () => {
 
         const nome = document.getElementById("nomeMed").value;
+        const dosagem = document.getElementById("dosagemMed").value;
+        const finalidade = document.getElementById("finalidadeMed").value;
         const horario = document.getElementById("horarioMed").value;
         const tipo = document.getElementById("tipoFreq").value;
         const valor = document.getElementById("valorFreq").value;
 
-        if (!nome || !horario || !tipo) {
-            alert("Preencha nome, horário e tipo!");
+        const dataInicio = document.getElementById("dataInicioMed").value;
+        const dataFim = document.getElementById("dataFimMed").value;
+
+        const observacoes = document.getElementById("obsMed").value;
+
+        if (!nome || !dosagem || !horario) {
+            alert("Preencha nome, dosagem e horário!");
             return;
         }
 
         const medicamento = {
             nome: nome,
+            dosagem: dosagem,
+            finalidade: finalidade,
             horario: horario,
             tipoFrequencia: tipo,
-            valorFrequencia: valor ? Number(valor) : null
+            valorFrequencia: valor ? Number(valor) : null,
+            dataInicio: dataInicio || null,
+            dataFim: dataFim || null,
+            observacoes: observacoes,
+            ativo: true
         };
 
         try {
 
-            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/medicamentos"), {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token
-                },
-                body: JSON.stringify(medicamento)
-            });
+            const resposta = await fetch(
+                montarUrlComPaciente("http://localhost:8085/medicamentos"),
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify(medicamento)
+                }
+            );
 
             if (!resposta.ok) {
                 alert("Erro ao salvar medicamento");
@@ -845,10 +1062,16 @@ function iniciarMedicamentos() {
     }
 
     function limparCamposMedicamento() {
+
         document.getElementById("nomeMed").value = "";
+        document.getElementById("dosagemMed").value = "";
+        document.getElementById("finalidadeMed").value = "";
         document.getElementById("horarioMed").value = "";
         document.getElementById("tipoFreq").value = "";
         document.getElementById("valorFreq").value = "";
+        document.getElementById("dataInicioMed").value = "";
+        document.getElementById("dataFimMed").value = "";
+        document.getElementById("obsMed").value = "";
     }
 
     function formatarFrequencia(tipo, valor) {
@@ -875,6 +1098,16 @@ function iniciarMedicamentos() {
 
         return "Não informado";
     }
+}
+
+function formatarDataMed(data) {
+
+    if (!data) {
+        return "Não informado";
+    }
+
+    return new Date(data)
+        .toLocaleDateString("pt-BR");
 }
 
 function iniciarSintomas() {
@@ -1224,14 +1457,71 @@ function iniciarReceitas() {
                 const div = document.createElement("div");
                 div.classList.add("medicamento-extraido");
 
-                div.innerHTML = `
-                    <p><strong>Medicamento:</strong> ${med.nome || "Não identificado"}</p>
-                    <p><strong>Frequência:</strong> ${formatarFrequenciaReceita(med.tipoFrequencia, med.valorFrequencia)}</p>
-                    <p><strong>Horário inicial:</strong> ${med.horarioInicial || "Não informado"}</p>
+                const finalizado =
+                med.dataFim &&
+                new Date(med.dataFim) < new Date();
 
-                    <button class="btnAddMedicamentoReceita">
-                        Adicionar aos Medicamentos
-                    </button>
+                div.innerHTML = `
+
+                    <div class="med-topo">
+
+                        <div>
+                            <h3>${med.nome}</h3>
+                            <span class="dosagem">
+                                ${med.dosagem || "Dosagem não informada"}
+                            </span>
+                        </div>
+
+                        <span class="status-med ${finalizado ? 'finalizado' : 'ativo'}">
+                            ${finalizado ? 'Finalizado' : 'Ativo'}
+                        </span>
+
+                    </div>
+
+                    <p>
+                        <strong>Finalidade:</strong>
+                        ${med.finalidade || "Não informado"}
+                    </p>
+
+                    <p>
+                        <strong>Horário:</strong>
+                        ${med.horario || "Não informado"}
+                    </p>
+
+                    <p>
+                        <strong>Frequência:</strong>
+                        ${formatarFrequencia(
+                            med.tipoFrequencia,
+                            med.valorFrequencia
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Início:</strong>
+                        ${formatarDataMed(med.dataInicio)}
+                    </p>
+
+                    <p>
+                        <strong>Término:</strong>
+                        ${formatarDataMed(med.dataFim)}
+                    </p>
+
+                    <p>
+                        <strong>Observações:</strong>
+                        ${med.observacoes || "Nenhuma"}
+                    </p>
+
+                    <div class="acoes-med">
+
+                        <button class="tomar">
+                            Tomado
+                        </button>
+
+                        <button class="remover">
+                            Remover
+                        </button>
+
+                    </div>
                 `;
 
                 div.querySelector(".btnAddMedicamentoReceita").onclick = () => {
