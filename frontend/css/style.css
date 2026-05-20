@@ -1230,3 +1230,51 @@ body {
         gap: 10px;
     }
 }
+
+/* histórico diário de sintomas */
+
+.grupo-dia-sintoma {
+    background: #f5f5f5;
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.grupo-dia-sintoma h3 {
+    color: #31a79d;
+    margin-bottom: 15px;
+}
+
+.sintoma-historico {
+    display: flex;
+    gap: 15px;
+    background: white;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    border-left: 6px solid gray;
+}
+
+.sintoma-historico.leve {
+    border-left-color: #27ae60;
+}
+
+.sintoma-historico.medio {
+    border-left-color: #f39c12;
+}
+
+.sintoma-historico.grave {
+    border-left-color: #e74c3c;
+}
+
+.sintoma-hora {
+    font-weight: bold;
+    color: #31a79d;
+    min-width: 55px;
+}
+
+.sintoma-info p {
+    margin: 5px 0;
+    color: #333;
+}
