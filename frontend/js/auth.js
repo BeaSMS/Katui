@@ -177,6 +177,7 @@ function mostrarMenuSistema() {
     document.getElementById("itemCadastro").style.display = "none";
 
     document.getElementById("itemDashboard").style.display = "none";
+    document.getElementById("itemAlarme").style.display = "none";
     document.getElementById("itemMedicamentos").style.display = "none";
     document.getElementById("itemSintomas").style.display = "none";
     document.getElementById("itemConsultas").style.display = "none";
@@ -197,6 +198,7 @@ function mostrarMenuSistema() {
     if (tipoUsuario === "PACIENTE") {
 
         document.getElementById("itemDashboard").style.display = "block";
+        document.getElementById("itemAlarme").style.display = "block";
         document.getElementById("itemMedicamentos").style.display = "block";
         document.getElementById("itemSintomas").style.display = "block";
         document.getElementById("itemConsultas").style.display = "block";
@@ -215,6 +217,7 @@ function mostrarMenuSistema() {
         if (pacienteSelecionado) {
 
             document.getElementById("itemDashboard").style.display = "block";
+            document.getElementById("itemAlarme").style.display = "block";
             document.getElementById("itemMedicamentos").style.display = "block";
             document.getElementById("itemSintomas").style.display = "block";
             document.getElementById("itemConsultas").style.display = "block";

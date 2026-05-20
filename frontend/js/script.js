@@ -163,7 +163,3 @@ function mostrarAvisoPacienteSelecionado() {
 
     conteudo.prepend(aviso);
 }
-
-if (pagina.includes('alarmes')) {
-    iniciarAlarmes();
-}

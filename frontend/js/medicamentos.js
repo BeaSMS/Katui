@@ -30,8 +30,8 @@ function iniciarMedicamentos() {
         const dataFim = document.getElementById("dataFimMed").value;
         const observacoes = document.getElementById("obsMed").value;
 
-        if (!nome || !dosagem || !horario || !dataInicio) {
-            alert("Preencha nome, dosagem, horário e data de início!");
+        if (!nome || !dosagem || !horario || !dataInicio || !tipo) {
+            alert("Preencha nome, dosagem, horário, data de início e frequência!");
             return;
         }
 
