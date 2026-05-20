@@ -3,6 +3,7 @@ package com.katui.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -29,6 +30,20 @@ public class Medicamento {
 
     @ElementCollection
     private List<Integer> diasSemana; // só para DIAS_ESPECIFICOS: [1,5] = Segunda e Sexta
+
+    // NOVOS CAMPOS
+
+    private String finalidade; // ex: gripe, acne, dor, pressão alta
+
+    private String dosagem; // ex: 500mg, 1 comprimido, 10 gotas
+
+    private LocalDate dataInicio;
+
+    private LocalDate dataFim;
+
+    private String observacoes; // ex: tomar após refeição
+
+    private Boolean ativo = true;
 
     @ManyToOne
     private Usuario usuario;
