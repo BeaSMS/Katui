@@ -1,24 +1,66 @@
 function iniciarAlarmes() {
 
+    let timersAlarmes = [];
+
     const token = localStorage.getItem("token");
     const lista = document.getElementById("listaAlarmes");
 
+    const btnAtivarNotificacao = document.getElementById("btnAtivarNotificacao");
+    const statusNotificacao = document.getElementById("statusNotificacao");
+
     if (!token) {
         alert("Você precisa fazer login");
-        carregarPagina('paginas/auth/login.html');
+        carregarPagina("paginas/auth/login.html");
         return;
     }
 
     if (!lista) return;
 
+    configurarNotificacoes();
     carregarAlarmes();
 
-    async function carregarAlarmes() {
+    function configurarNotificacoes() {
+        if (!btnAtivarNotificacao || !statusNotificacao) return;
 
+        if (!("Notification" in window)) {
+            statusNotificacao.textContent = "Seu navegador não suporta notificações.";
+            btnAtivarNotificacao.style.display = "none";
+            return;
+        }
+
+        atualizarStatusNotificacao();
+
+        btnAtivarNotificacao.onclick = async () => {
+            const permissao = await Notification.requestPermission();
+
+            atualizarStatusNotificacao();
+
+            if (permissao === "granted") {
+                alert("Notificações ativadas com sucesso!");
+                carregarAlarmes();
+            }
+        };
+    }
+
+    function atualizarStatusNotificacao() {
+        if (!btnAtivarNotificacao || !statusNotificacao) return;
+
+        if (Notification.permission === "granted") {
+            statusNotificacao.textContent = "Notificações ativadas.";
+            btnAtivarNotificacao.style.display = "none";
+        } else if (Notification.permission === "denied") {
+            statusNotificacao.textContent = "Notificações bloqueadas no navegador.";
+            btnAtivarNotificacao.style.display = "none";
+        } else {
+            statusNotificacao.textContent = "Ative para receber lembretes no PC.";
+            btnAtivarNotificacao.style.display = "inline-block";
+        }
+    }
+
+    async function carregarAlarmes() {
         lista.innerHTML = "<p>Carregando lembretes...</p>";
 
         try {
-
             const resposta = await fetch(
                 montarUrlComPaciente("http://localhost:8085/alarmes"),
                 {
@@ -40,6 +82,7 @@ function iniciarAlarmes() {
 
             if (alarmes.length === 0) {
                 lista.innerHTML = "<p>Nenhum lembrete encontrado.</p>";
+                limparTimersAlarmes();
                 return;
             }
 
@@ -56,8 +99,8 @@ function iniciarAlarmes() {
             amanha.setDate(amanha.getDate() + 1);
 
             alarmes.forEach(alarme => {
-
                 const dataAlarme = new Date(alarme.horario);
+
                 const dataSemHora = new Date(dataAlarme);
                 dataSemHora.setHours(0, 0, 0, 0);
 
@@ -70,9 +113,11 @@ function iniciarAlarmes() {
                 }
             });
 
-            criarGrupo("Hoje", pendentesHoje, "hoje");
-            criarGrupo("Próximos dias", proximosDias, "proximos");
-            criarGrupo("Já tomados", tomados, "tomados");
+            criarGrupo("Hoje", pendentesHoje);
+            criarGrupo("Próximos dias", proximosDias);
+            criarGrupo("Já tomados", tomados);
+
+            agendarNotificacoes(alarmes);
 
         } catch (erro) {
             console.log(erro);
@@ -80,8 +125,7 @@ function iniciarAlarmes() {
         }
     }
 
-    function criarGrupo(titulo, alarmes, tipo) {
-
+    function criarGrupo(titulo, alarmes) {
         const grupo = document.createElement("div");
         grupo.classList.add("grupo-dia-alarme");
 
@@ -94,7 +138,6 @@ function iniciarAlarmes() {
         }
 
         alarmes.forEach(alarme => {
-
             const div = document.createElement("div");
             div.classList.add("alarme");
 
@@ -133,8 +176,8 @@ function iniciarAlarmes() {
                 <div class="acoes-alarme">
                     ${
                         !alarme.tomado
-                        ? `<button class="btnTomado">Marcar como tomado</button>`
-                        : ""
+                            ? `<button class="btnTomado">Marcar como tomado</button>`
+                            : ""
                     }
 
                     <button class="btnRemoverAlarme">Remover</button>
@@ -158,9 +201,7 @@ function iniciarAlarmes() {
     }
 
     async function marcarTomado(id) {
-
         try {
-
             const resposta = await fetch(
                 montarUrlComPaciente(`http://localhost:8085/alarmes/${id}/tomado`),
                 {
@@ -185,9 +226,7 @@ function iniciarAlarmes() {
     }
 
     async function removerAlarme(id) {
-
         try {
-
             const resposta = await fetch(
                 montarUrlComPaciente(`http://localhost:8085/alarmes/${id}`),
                 {
@@ -211,12 +250,63 @@ function iniciarAlarmes() {
         }
     }
 
+    function agendarNotificacoes(alarmes) {
+        limparTimersAlarmes();
+
+        if (!("Notification" in window)) return;
+        if (Notification.permission !== "granted") return;
+
+        const agora = new Date();
+
+        alarmes.forEach(alarme => {
+            if (alarme.tomado) return;
+
+            const horarioAlarme = new Date(alarme.horario);
+            const tempoAteAlarme = horarioAlarme.getTime() - agora.getTime();
+
+            const umaSemana = 7 * 24 * 60 * 60 * 1000;
+
+            if (tempoAteAlarme < 0 || tempoAteAlarme > umaSemana) {
+                return;
+            }
+
+            const chave = `notificacaoAlarme_${alarme.id}_${alarme.horario}`;
+
+            const timer = setTimeout(() => {
+                if (localStorage.getItem(chave)) return;
+
+                const nomeMedicamento = alarme.medicamento?.nome || "Medicamento";
+                const dosagem = alarme.medicamento?.dosagem || "Dosagem não informada";
+
+                const notificacao = new Notification("Hora do medicamento", {
+                    body: `${nomeMedicamento} - ${dosagem}`,
+                    tag: `alarme-${alarme.id}`,
+                    requireInteraction: true
+                });
+
+                notificacao.onclick = () => {
+                    window.focus();
+                    carregarPagina("paginas/alarmes.html");
+                };
+
+                localStorage.setItem(chave, "notificado");
+
+            }, tempoAteAlarme);
+
+            timersAlarmes.push(timer);
+        });
+    }
+
+    function limparTimersAlarmes() {
+        timersAlarmes.forEach(timer => clearTimeout(timer));
+        timersAlarmes = [];
+    }
+
     function alarmeAtrasado(horario) {
         return new Date(horario) < new Date();
     }
 
     function definirStatusAlarme(alarme) {
-
         if (alarme.tomado) {
             return "Tomado";
         }
@@ -229,7 +319,6 @@ function iniciarAlarmes() {
     }
 
     function formatarDataHoraAlarme(data) {
-
         return new Date(data).toLocaleString("pt-BR", {
             dateStyle: "short",
             timeStyle: "short"

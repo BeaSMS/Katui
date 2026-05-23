@@ -1415,3 +1415,35 @@ body {
     background: #e74c3c;
     color: white;
 }
+
+.card-notificacao {
+    background: #f5f5f5;
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    border-left: 6px solid #31a79d;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.card-notificacao h3 {
+    color: #31a79d;
+    margin-top: 0;
+}
+
+.card-notificacao p {
+    color: #333;
+}
+
+.card-notificacao button {
+    background: #31a79d;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.card-notificacao button:hover {
+    background: #27877f;
+}
