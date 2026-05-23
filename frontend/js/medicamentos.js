@@ -145,7 +145,13 @@ function iniciarMedicamentos() {
                 };
 
                 div.querySelector(".remover").onclick = () => {
-                    removerMedicamento(med.id);
+                const confirmar = confirm(
+                    "Tem certeza que deseja remover este medicamento? Para manter histórico, use 'Finalizar tratamento'."
+                );
+
+                    if (confirmar) {
+                        removerMedicamento(med.id);
+                    }
                 };
 
                 lista.appendChild(div);
@@ -184,6 +190,7 @@ function iniciarMedicamentos() {
                 return;
             }
 
+            alert("Tratamento finalizado e alarmes removidos.");
             carregarMedicamentos();
 
         } catch (erro) {

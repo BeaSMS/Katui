@@ -129,10 +129,45 @@ function iniciarAlarmes() {
         const grupo = document.createElement("div");
         grupo.classList.add("grupo-dia-alarme");
 
-        grupo.innerHTML = `<h3>${titulo}</h3>`;
+        const deveComecarAberto = titulo === "Hoje" || titulo === "Já tomados";
+
+        grupo.innerHTML = `
+            <div class="grupo-alarme-cabecalho">
+                <h3>${titulo} (${alarmes.length})</h3>
+
+                ${
+                    !deveComecarAberto
+                        ? `<button class="btn-toggle-grupo">
+                            Mostrar
+                        </button>`
+                        : ""
+                }
+            </div>
+
+            <div class="grupo-alarme-conteudo ${deveComecarAberto ? "aberto" : "fechado"}"></div>
+        `;
+
+        const conteudo = grupo.querySelector(".grupo-alarme-conteudo");
+        const botaoToggle = grupo.querySelector(".btn-toggle-grupo");
+
+        if (botaoToggle) {
+            botaoToggle.onclick = () => {
+                const fechado = conteudo.classList.contains("fechado");
+
+                if (fechado) {
+                    conteudo.classList.remove("fechado");
+                    conteudo.classList.add("aberto");
+                    botaoToggle.textContent = "Ocultar";
+                } else {
+                    conteudo.classList.remove("aberto");
+                    conteudo.classList.add("fechado");
+                    botaoToggle.textContent = "Mostrar";
+                }
+            };
+        }
 
         if (alarmes.length === 0) {
-            grupo.innerHTML += `<p class="sem-alarmes">Nenhum lembrete nesta seção.</p>`;
+            conteudo.innerHTML = `<p class="sem-alarmes">Nenhum lembrete nesta seção.</p>`;
             lista.appendChild(grupo);
             return;
         }
@@ -194,7 +229,7 @@ function iniciarAlarmes() {
                 removerAlarme(alarme.id);
             };
 
-            grupo.appendChild(div);
+            conteudo.appendChild(div);
         });
 
         lista.appendChild(grupo);
@@ -213,11 +248,14 @@ function iniciarAlarmes() {
             );
 
             if (!resposta.ok) {
+                console.error("Erro ao marcar como tomado:", resposta.status);
                 alert("Erro ao marcar como tomado");
                 return;
             }
 
-            carregarAlarmes();
+            await carregarAlarmes();
+
+            alert("Alarme marcado como tomado!");
 
         } catch (erro) {
             console.log(erro);

@@ -143,7 +143,7 @@ public class AlarmeService {
     }
 
     public List<Alarme> listar(Usuario usuario) {
-        return repository.findByUsuario(usuario);
+        return repository.findByUsuarioAndMedicamentoAtivoTrue(usuario);
     }
 
     public Alarme buscar(Long id, Usuario usuario) {
@@ -170,8 +170,9 @@ public class AlarmeService {
     }
 
     public void deletarPorMedicamento(Medicamento medicamento) {
-        repository.deleteAll(
-                repository.findByMedicamento(medicamento)
+        repository.deleteByMedicamentoIdAndUsuarioId(
+                medicamento.getId(),
+                medicamento.getUsuario().getId()
         );
     }
 

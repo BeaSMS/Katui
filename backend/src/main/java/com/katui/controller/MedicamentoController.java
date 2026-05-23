@@ -91,7 +91,9 @@ public class MedicamentoController {
 
         Medicamento atualizado = service.atualizar(id, medicamento, usuario);
 
-        if (gerarAlarmes) {
+        if (Boolean.FALSE.equals(atualizado.getAtivo())) {
+            alarmeService.deletarPorMedicamento(atualizado);
+        } else if (gerarAlarmes) {
             alarmeService.gerarAlarmes(atualizado, usuario);
         }
 
@@ -110,6 +112,8 @@ public class MedicamentoController {
             usuario = cuidadorService.verificarAcesso(usuario, pacienteId);
         }
 
+        Medicamento medicamento = service.buscar(id, usuario);
+        alarmeService.deletarPorMedicamento(medicamento);
         service.deletar(id, usuario);
     }
 

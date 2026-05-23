@@ -1447,3 +1447,32 @@ body {
 .card-notificacao button:hover {
     background: #27877f;
 }
+
+.grupo-alarme-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.btn-toggle-grupo {
+    background-color: #31a79d;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-toggle-grupo:hover {
+    background-color: #27877f;
+}
+
+.grupo-alarme-conteudo.fechado {
+    display: none;
+}
+
+.grupo-alarme-conteudo.aberto {
+    display: block;
+}
