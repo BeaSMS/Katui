@@ -27,8 +27,10 @@ function iniciarDashboard() {
 
             const medicamentos = await resposta.json();
 
+            const medicamentosAtivos = medicamentos.filter(med => med.ativo !== false);
+
             document.getElementById("qtdMedicamentos").textContent =
-                medicamentos.length;
+                medicamentosAtivos.length;
 
         } catch (erro) {
             console.log(erro);

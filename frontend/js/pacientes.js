@@ -4,7 +4,6 @@ function iniciarPacientes() {
 
     const lista = document.getElementById("listaPacientes");
     const btn = document.getElementById("btnAddPaciente");
-    const pacienteSelecionado = document.getElementById("pacienteSelecionado");
 
     if (!token) {
         alert("Você precisa fazer login");
@@ -17,7 +16,6 @@ function iniciarPacientes() {
     }
 
     carregarPacientes();
-    mostrarPacienteSelecionado();
 
     btn.onclick = async () => {
 
@@ -113,9 +111,9 @@ function iniciarPacientes() {
                     localStorage.setItem("pacienteSelecionadoNome", paciente.nome);
 
                     mostrarMenuSistema();
-                    mostrarPacienteSelecionado();
+                    mostrarAvisoPacienteSelecionado();
 
-                    alert(`Paciente ${paciente.nome} selecionado!`);
+                    mostrarToast(`Paciente ${paciente.nome} selecionado!`);
 
                     carregarPagina('paginas/dashboard.html');
                 };
@@ -161,7 +159,7 @@ function iniciarPacientes() {
                 localStorage.removeItem("pacienteSelecionadoNome");
 
                 mostrarMenuSistema();
-                mostrarPacienteSelecionado();
+                mostrarAvisoPacienteSelecionado();
             }
 
             carregarPacientes();
@@ -169,24 +167,6 @@ function iniciarPacientes() {
         } catch (erro) {
             console.log(erro);
             alert("Erro ao conectar com backend");
-        }
-    }
-
-    function mostrarPacienteSelecionado() {
-
-        const nome = localStorage.getItem("pacienteSelecionadoNome");
-
-        if (nome) {
-
-            pacienteSelecionado.innerHTML = `
-                Paciente selecionado:
-                <strong>${nome}</strong>
-            `;
-
-        } else {
-
-            pacienteSelecionado.innerHTML =
-                "Nenhum paciente selecionado";
         }
     }
 }

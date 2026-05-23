@@ -63,16 +63,18 @@ function iniciarMedicamentos() {
             );
 
             if (!resposta.ok) {
-                alert("Erro ao salvar medicamento");
+                mostrarToast("Erro ao salvar medicamento");
                 return;
             }
+
+            mostrarToast("Medicamento salvo com sucesso!");
 
             limparCamposMedicamento();
             carregarMedicamentos();
 
         } catch (erro) {
             console.log(erro);
-            alert("Erro ao conectar com backend");
+            mostrarToast("Erro ao conectar com backend");
         }
     };
 
@@ -135,14 +137,22 @@ function iniciarMedicamentos() {
                     <p><strong>Observações:</strong> ${med.observacoes || "Nenhuma"}</p>
 
                     <div class="acoes-med">
-                        <button class="finalizar">Finalizar tratamento</button>
+                        ${
+                            !finalizado
+                                ? `<button class="finalizar">Finalizar tratamento</button>`
+                                : ""
+                        }
                         <button class="remover">Remover</button>
                     </div>
                 `;
 
-                div.querySelector(".finalizar").onclick = () => {
-                    finalizarMedicamento(med);
-                };
+                const btnFinalizar = div.querySelector(".finalizar");
+
+                if (btnFinalizar) {
+                    btnFinalizar.onclick = () => {
+                        finalizarMedicamento(med);
+                    };
+                }
 
                 div.querySelector(".remover").onclick = () => {
                 const confirmar = confirm(
@@ -186,16 +196,17 @@ function iniciarMedicamentos() {
             );
 
             if (!resposta.ok) {
-                alert("Erro ao finalizar tratamento");
+                mostrarToast("Erro ao finalizar tratamento");
                 return;
             }
 
-            alert("Tratamento finalizado e alarmes removidos.");
+            mostrarToast("Tratamento finalizado e alarmes removidos!");
+
             carregarMedicamentos();
 
         } catch (erro) {
             console.log(erro);
-            alert("Erro ao conectar com backend");
+            mostrarToast("Erro ao conectar com backend");
         }
     }
 
@@ -214,15 +225,17 @@ function iniciarMedicamentos() {
             );
 
             if (!resposta.ok) {
-                alert("Erro ao remover medicamento");
+                mostrarToast("Erro ao remover medicamento");
                 return;
             }
+
+            mostrarToast("Medicamento removido!");
 
             carregarMedicamentos();
 
         } catch (erro) {
             console.log(erro);
-            alert("Erro ao conectar com backend");
+            mostrarToast("Erro ao conectar com backend");
         }
     }
 

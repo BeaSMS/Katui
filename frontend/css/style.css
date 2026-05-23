@@ -1,28 +1,113 @@
+:root {
+    --cor-principal: #31a79d;
+    --cor-principal-escura: #27877f;
+    --cor-secundaria: #2aa198;
+
+    --cor-fundo: #f6f8f8;
+    --cor-card: #ffffff;
+    --cor-card-claro: #f5f5f5;
+
+    --cor-texto: #263238;
+    --cor-texto-claro: #666666;
+    --cor-borda: #e5e7eb;
+
+    --cor-sucesso: #27ae60;
+    --cor-alerta: #f39c12;
+    --cor-erro: #e74c3c;
+    --cor-info: #3498db;
+
+    --sombra-card: 0 4px 14px rgba(0, 0, 0, 0.06);
+
+    --radius-card: 16px;
+    --radius-input: 10px;
+
+    --largura-pagina: 1050px;
+}
+
+/* GERAL */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--cor-fundo);
+    color: var(--cor-texto);
     margin: 0;
     padding: 0;
 }
 
-/*Header | Nav*/
+main {
+    min-height: 65vh;
+}
+
+h1,
+h2,
+h3,
+p {
+    margin-top: 0;
+}
+
+h2 {
+    color: var(--cor-principal);
+    font-size: 32px;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    font-weight: 700;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+input,
+select,
+textarea {
+    font-family: inherit;
+    min-width: 0;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--cor-secundaria);
+    outline: none;
+    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+}
+
+/* HEADER */
+
 .cabecalho {
-    background-color: #31a79d;
+    background-color: var(--cor-principal);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
+    padding: 24px 26px;
 }
 
 .cabecalhoKatui h1 {
     color: white;
     margin: 0;
     cursor: pointer;
+    font-size: 38px;
+    line-height: 1;
 }
+
 .cabecalhoKatui p {
     color: white;
-    margin: 0;
-    font-size: 18px;
+    margin: 8px 0 0;
+    font-size: 22px;
 }
 
 .cabecalhoMenu {
@@ -32,172 +117,128 @@ body {
 
 .cabecalhoMenu button {
     background-color: white;
+    color: var(--cor-texto);
     border: none;
-    padding: 15px 25px;
-    border-radius: 6px;
-    cursor: pointer;
+    padding: 13px 22px;
+    border-radius: 8px;
     font-weight: bold;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     font-size: 15px;
-} 
+}
+
 .cabecalhoMenu button:hover {
     background-color: #f0f0f0;
 }
+
 .cabecalhoMenu ul {
     display: none;
     position: absolute;
-    right: 20px;
-    top: 70px;
+    right: 0;
+    top: 60px;
     background-color: white;
     list-style: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    padding: 20px;
-
+    border-radius: 10px;
+    box-shadow: var(--sombra-card);
+    padding: 16px;
     z-index: 1001;
-    min-width: 180px;
+    min-width: 190px;
 }
+
 .cabecalhoMenu.ativo ul {
     display: block;
 }
+
 .cabecalhoMenu ul li {
     margin: 8px 0;
 }
+
 .cabecalhoMenu ul li a {
     text-decoration: none;
-    color: #333;
+    color: var(--cor-texto);
+    font-weight: 500;
 }
+
 .cabecalhoMenu ul li a:hover {
-    color: #31a79d;
+    color: var(--cor-principal);
 }
 
+/* RODAPÉ */
 
-/*Footer | Rodape/*/
 .rodape {
-    background-color: #f5f5f5;
-    padding: 40px 20px;
+    background-color: var(--cor-card-claro);
+    padding: 32px 20px 14px;
     text-align: center;
 }
 
 .rodapeSecoes {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    max-width: 1100px;
-    margin: 0 auto;
-    margin-bottom: 50px;
+    gap: 35px;
+    max-width: 1050px;
+    margin: 0 auto 25px;
+    align-items: start;
 }
+
 .rodapeSecoes h3 {
-    color: #31a79d;
+    color: var(--cor-principal);
     font-size: 22px;
+    margin: 0 0 12px;
 }
+
 .rodapeSecoes p {
     color: black;
+    font-size: 16px;
+    line-height: 1.4;
+    margin: 0 auto 6px;
+    max-width: 360px;
 }
+
 .rodapeSecoes a {
+    display: inline-block;
     text-decoration: none;
-    color: #6FCFC2;
-    
+    color: #6fcfc2;
+    font-size: 16px;
+    margin: 0 0 6px;
 }
+
 .rodapeSecoes a:hover {
-    color: #31a79d;
-    font-size: 17px;
+    color: var(--cor-principal);
 }
 
 .rodapeCopyright {
     text-align: center;
-    color: #666;
-    font-size: 13px
+    color: var(--cor-texto-claro);
+    font-size: 13px;
+    margin: 0;
 }
 
-/*Páginas Main*/
+/* CONTAINERS */
 
-/* LOGIN */
-
-.containerLogin {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 60px 20px;
+.dashboard,
+.medicamentos,
+.alarmes,
+.sintomas,
+.consultas,
+.exames,
+.receitas,
+.pacientes,
+.perfil {
+    max-width: var(--largura-pagina);
+    margin: 70px auto;
+    padding: 0 20px;
 }
 
-.cardLogin {
-    background: #f5f5f5;
-    padding: 35px;
-    border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    width: 100%;
-    max-width: 420px;
+.consultas,
+.exames,
+.receitas {
+    max-width: 900px;
 }
 
-.cardLogin h2 {
-    text-align: center;
-    color: #31a79d;
-    margin-bottom: 25px;
-}
+/* LOGIN E CADASTRO */
 
-.formLogin {
-    display: flex;
-    flex-direction: column;
-}
-
-.formLogin label {
-    margin-top: 12px;
-    margin-bottom: 5px;
-    font-size: 14px;
-    color: #333;
-}
-
-.formLogin input {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    transition: 0.2s;
-}
-
-.formLogin input:focus {
-    border-color: #2aa198;
-    outline: none;
-    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
-}
-
-.formLogin button {
-    margin-top: 25px;
-    padding: 12px;
-    background-color: #2aa198;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.formLogin button:hover {
-    background-color: #238b82;
-}
-
-.textoLogin {
-    text-align: center;
-    margin-top: 18px;
-    font-size: 14px;
-}
-
-.textoLogin a {
-    color: #31a79d;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.textoLogin a:hover {
-    text-decoration: underline;
-}
-
-
-/* CADASTRO */
-
+.containerLogin,
 .containerCadastro {
     display: flex;
     justify-content: center;
@@ -205,89 +246,77 @@ body {
     padding: 60px 20px;
 }
 
+.cardLogin,
 .cardCadastro {
-    background: #f5f5f5;
+    background: var(--cor-card);
     padding: 35px;
-    border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-radius: var(--radius-card);
+    box-shadow: var(--sombra-card);
     width: 100%;
     max-width: 420px;
 }
 
+.cardLogin h2,
 .cardCadastro h2 {
     text-align: center;
-    color: #31a79d;
     margin-bottom: 25px;
 }
 
+.formLogin,
 .formCadastro {
     display: flex;
     flex-direction: column;
 }
 
+.formLogin label,
 .formCadastro label {
     margin-top: 12px;
     margin-bottom: 5px;
     font-size: 14px;
-    color: #333;
+    color: var(--cor-texto);
 }
 
-.formCadastro input {
+.formLogin input,
+.formCadastro input,
+.formCadastro select {
     padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    transition: 0.2s;
+    border-radius: var(--radius-input);
+    border: 1px solid #cccccc;
 }
 
-.formCadastro input:focus {
-    border-color: #2aa198;
-    outline: none;
-    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
-}
-
+.formLogin button,
 .formCadastro button {
     margin-top: 25px;
     padding: 12px;
-    background-color: #2aa198;
+    background-color: var(--cor-secundaria);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-input);
     font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
 }
 
+.formLogin button:hover,
 .formCadastro button:hover {
-    background-color: #238b82;
+    background-color: var(--cor-principal-escura);
 }
 
+.textoLogin,
 .textoCadastro {
     text-align: center;
     margin-top: 18px;
     font-size: 14px;
 }
 
+.textoLogin a,
 .textoCadastro a {
-    color: #31a79d;
+    color: var(--cor-principal);
     text-decoration: none;
     font-weight: bold;
 }
 
+.textoLogin a:hover,
 .textoCadastro a:hover {
     text-decoration: underline;
-}
-
-.formCadastro select {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    transition: 0.2s;
-}
-
-.formCadastro select:focus {
-    border-color: #2aa198;
-    outline: none;
-    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
 }
 
 #camposPaciente {
@@ -299,151 +328,113 @@ body {
     display: none;
 }
 
-/*Perfil*/
+/* PERFIL */
 
 .perfil {
-    max-width: 500px;
-    margin: 60px auto;
-    background: #f5f5f5;
+    max-width: 520px;
+    background: var(--cor-card);
     padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-radius: var(--radius-card);
+    box-shadow: var(--sombra-card);
 }
+
 .perfil h2 {
     text-align: center;
-    color: #31a79d;
-    margin-bottom: 25px;
 }
 
 #visualizacao p {
     margin: 10px 0;
     font-size: 15px;
-    color: #333;
-}
-#visualizacao strong {
-    color: #333;
 }
 
 #edicao {
     display: flex;
     flex-direction: column;
 }
+
 #edicao label {
     margin-top: 10px;
     font-size: 14px;
-    color: #333;
 }
+
 #edicao input {
     padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+    border-radius: var(--radius-input);
+    border: 1px solid #cccccc;
     margin-top: 5px;
-    transition: 0.2s;
-}
-#edicao input:focus {
-    border-color: #2aa198;
-    outline: none;
-    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
 }
 
 .perfil button {
     margin-top: 15px;
     padding: 10px;
     border: none;
-    border-radius: 8px;
-    cursor: pointer;
+    border-radius: var(--radius-input);
     font-weight: bold;
-    transition: 0.2s;
 }
 
-/* Botão editar */
 #btnEditar {
-    background-color: #2aa198;
+    background-color: var(--cor-secundaria);
     color: white;
-}
-#btnEditar:hover {
-    background-color: #238b82;
 }
 
 #btnSalvar {
-    background-color: #27ae60;
+    background-color: var(--cor-sucesso);
     color: white;
-}
-#btnSalvar:hover {
-    background-color: #219150;
 }
 
 #btnCancelar {
-    background-color: #e74c3c;
+    background-color: var(--cor-erro);
     color: white;
 }
-#btnCancelar:hover {
-    background-color: #c0392b;
-}
 
-/* Mensagem */
 #msg {
     margin-top: 10px;
     font-size: 14px;
 }
 
-/* dashboard */
-
-/* dashboard */
-
-.dashboard {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
-
-.dashboard h2 {
-    color: #31a79d;
-    font-size: 34px;
-    margin-bottom: 25px;
-}
+/* DASHBOARD */
 
 .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+    gap: 20px;
     margin-bottom: 35px;
 }
 
 .card {
-    background: #f5f5f5;
+    background: var(--cor-card);
     padding: 22px 15px;
-    border-radius: 14px;
+    border-radius: var(--radius-card);
     text-align: center;
-    transition: 0.2s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    cursor: pointer;
+    box-shadow: var(--sombra-card);
+    border: 1px solid var(--cor-borda);
 }
 
 .card:hover {
     transform: translateY(-3px);
-    background-color: #eeeeee;
 }
 
 .card h3 {
-    color: #31a79d;
-    font-size: 20px;
+    color: var(--cor-principal);
+    font-size: 18px;
     margin-bottom: 10px;
 }
 
 .card p {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
-    color: #333;
+    color: var(--cor-texto);
+    margin: 0;
 }
 
-/* calendário */
+/* CALENDÁRIO */
 
 .calendario-dashboard {
-    background: #f5f5f5;
-    border-radius: 16px;
+    background: var(--cor-card);
+    border-radius: var(--radius-card);
     padding: 25px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    box-shadow: var(--sombra-card);
+    border: 1px solid var(--cor-borda);
 }
 
 .calendario-topo {
@@ -454,37 +445,39 @@ body {
 }
 
 .calendario-topo h3 {
-    color: #31a79d;
+    color: var(--cor-principal);
     font-size: 26px;
+    margin: 0;
 }
 
 .calendario-topo button {
     border: none;
-    background: #31a79d;
+    background: var(--cor-principal);
     color: white;
     width: 42px;
     height: 42px;
-    border-radius: 10px;
-    cursor: pointer;
+    border-radius: var(--radius-input);
     font-size: 18px;
 }
 
 .calendario-topo button:hover {
-    background: #27877f;
+    background: var(--cor-principal-escura);
 }
 
-.dias-semana {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    margin-bottom: 10px;
-    text-align: center;
-    font-weight: bold;
-    color: #666;
-}
-
+.dias-semana,
 .grid-calendario {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+}
+
+.dias-semana {
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--cor-texto-claro);
+}
+
+.grid-calendario {
     gap: 10px;
 }
 
@@ -493,21 +486,25 @@ body {
     background: white;
     border-radius: 12px;
     padding: 10px;
-    box-sizing: border-box;
-    border: 1px solid #e6e6e6;
+    border: 1px solid var(--cor-borda);
     display: flex;
     flex-direction: column;
     gap: 6px;
+    transition: 0.2s;
+}
+
+.dia-calendario:hover {
+    border-color: var(--cor-principal);
+    transform: translateY(-2px);
 }
 
 .numero-dia {
     font-weight: bold;
-    color: #333;
-    margin-bottom: 4px;
 }
 
 .evento-calendario {
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 600;
     padding: 6px 8px;
     border-radius: 8px;
     color: white;
@@ -515,15 +512,15 @@ body {
 }
 
 .evento-consulta {
-    background: #3498db;
+    background: var(--cor-info);
 }
 
 .evento-sintoma {
-    background: #e74c3c;
+    background: var(--cor-erro);
 }
 
 .evento-medicamento {
-    background: #27ae60;
+    background: var(--cor-sucesso);
 }
 
 .dia-vazio {
@@ -531,448 +528,98 @@ body {
     border: none;
 }
 
-@media (max-width: 900px) {
+/* FORMULÁRIOS SIMPLES */
 
-    .cards {
-        grid-template-columns: 1fr;
-    }
-
-    .grid-calendario {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .dias-semana {
-        display: none;
-    }
-}
-
-/* consultas */
-/* consultas */
-
-.consultas {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.consultas h2 {
-    color: #31a79d;
-    margin-bottom: 20px;
-}
-
-.form-consulta {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-
-.form-consulta input {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
-
-.form-consulta input:focus {
-    border-color: #2aa198;
-    outline: none;
-    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
-}
-
-#btnAddConsulta {
-    background-color: #2aa198;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-#btnAddConsulta:hover {
-    background-color: #238b82;
-}
-
-.lista-consultas {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.consulta {
-    background: #f5f5f5;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.consulta button {
-    margin-top: 10px;
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.consulta button:hover {
-    background: #c0392b;
-}
-
-/* exames */
-.exames {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.exames h2 {
-    color: #31a79d;
-    margin-bottom: 20px;
-}
-
-.form-exame {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-
-.form-exame input {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
-
-.form-exame input:focus {
-    border-color: #2aa198;
-    outline: none;
-}
-
-#btnAddExame {
-    background-color: #2aa198;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-#btnAddExame:hover {
-    background-color: #238b82;
-}
-
-.lista-exames {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.exame {
-    background: #f5f5f5;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.exame button {
-    margin-top: 10px;
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 6px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.exame button:hover {
-    background: #c0392b;
-}
-
-/* medicacao */
-.medicamentos {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.medicamentos h2 {
-    color: #31a79d;
-    margin-bottom: 20px;
-}
-
-.form-med {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-
-.form-med input {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
-
-.form-med input:focus {
-    border-color: #2aa198;
-    outline: none;
-}
-
-#btnAddMed {
-    background-color: #2aa198;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-#btnAddMed:hover {
-    background-color: #238b82;
-}
-
-.lista-meds {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.med {
-    background: #f5f5f5;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    transition: 0.2s;
-}
-
-.med button {
-    margin-top: 10px;
-    margin-right: 5px;
-    padding: 6px 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-/* botão finalizar*/
-.finalizar {
-    background: #f39c12;
-    color: white;
-}
-
-.finalizar:hover {
-    background: #d68910;
-}
-
-/* botão remover */
-.remover {
-    background: #e74c3c;
-    color: white;
-}
-
-.remover:hover {
-    background: #c0392b;
-}
-
-/* sintomas */
-.sintomas {
-    max-width: 950px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.sintomas h2 {
-    color: #31a79d;
-    margin-bottom: 20px;
-    font-size: 32px;
-}
-
-.form-sintoma {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-    margin-bottom: 25px;
-}
-
-.form-sintoma input,
-.form-sintoma select {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 14px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-    background-color: white;
-}
-
-.form-sintoma input:focus,
-.form-sintoma select:focus {
-    border-color: #2aa198;
-    outline: none;
-    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
-}
-
-#impactoSintoma,
-#fatoresSintoma,
-#padraoTempoSintoma {
-    grid-column: span 2;
-}
-
-#btnAddSintoma {
-    grid-column: span 2;
-    background-color: #2aa198;
-    color: white;
-    border: none;
-    padding: 14px 18px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 15px;
-}
-
-#btnAddSintoma:hover {
-    background-color: #238b82;
-}
-
-.lista-sintomas {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.sintoma {
-    background: #f5f5f5;
-    padding: 18px;
-    border-radius: 12px;
-    border-left: 6px solid gray;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.sintoma p {
-    margin: 7px 0;
-    color: #333;
-}
-
-.sintoma.leve {
-    border-left-color: #27ae60;
-}
-
-.sintoma.medio {
-    border-left-color: #f39c12;
-}
-
-.sintoma.grave {
-    border-left-color: #e74c3c;
-}
-
-.alerta {
-    color: #e74c3c;
-    font-weight: bold;
-}
-
-@media (max-width: 700px) {
-    .form-sintoma {
-        grid-template-columns: 1fr;
-    }
-
-    #impactoSintoma,
-    #fatoresSintoma,
-    #padraoTempoSintoma,
-    #btnAddSintoma {
-        grid-column: span 1;
-    }
-}
-
-/* receitas */
-
-.receitas {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.receitas h2 {
-    color: #31a79d;
-    margin-bottom: 20px;
-}
-
+.form-consulta,
+.form-exame,
 .form-receita {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    background: var(--cor-card);
+    padding: 22px;
+    border-radius: var(--radius-card);
+    box-shadow: var(--sombra-card);
+    border: 1px solid var(--cor-borda);
 }
 
+.form-consulta input,
+.form-exame input,
 .form-receita input {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+    padding: 13px;
+    min-height: 48px;
+    border-radius: var(--radius-input);
+    border: 1px solid #cccccc;
+    font-size: 15px;
 }
 
-.form-receita input:focus {
-    border-color: #2aa198;
-    outline: none;
-    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+.form-receita input[type="text"] {
+    min-width: 230px;
 }
 
-#btnAddReceita {
-    background-color: #2aa198;
+.form-receita input[type="file"] {
+    min-width: 260px;
+}
+
+#btnAddConsulta,
+#btnAddExame,
+#btnAddReceita,
+.btnDownloadReceita,
+.btnProcessarReceita,
+.btnAddMedicamentoReceita {
+    background-color: var(--cor-secundaria);
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
+    padding: 13px 16px;
+    border-radius: var(--radius-input);
     font-weight: bold;
+    min-height: 48px;
 }
 
-#btnAddReceita:hover {
-    background-color: #238b82;
+#btnAddConsulta:hover,
+#btnAddExame:hover,
+#btnAddReceita:hover,
+.btnDownloadReceita:hover,
+.btnProcessarReceita:hover,
+.btnAddMedicamentoReceita:hover {
+    background-color: var(--cor-principal-escura);
 }
 
+.lista-consultas,
+.lista-exames,
 .lista-receitas {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
+.consulta,
+.exame,
 .receita {
-    background: #f5f5f5;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    background: var(--cor-card);
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: var(--sombra-card);
+    border: 1px solid var(--cor-borda);
 }
 
+.consulta button,
+.exame button,
 .receita button {
     margin-top: 10px;
     margin-right: 5px;
-    padding: 6px 10px;
+    padding: 8px 12px;
     border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
 }
 
-.btnDownloadReceita,
-.btnProcessarReceita,
-.btnAddMedicamentoReceita {
-    background-color: #2aa198;
+.btnRemoverReceita,
+.consulta button,
+.exame button {
+    background: var(--cor-erro);
     color: white;
-}
-
-.btnDownloadReceita:hover,
-.btnProcessarReceita:hover,
-.btnAddMedicamentoReceita:hover {
-    background-color: #238b82;
-}
-
-.btnRemoverReceita {
-    background: #e74c3c;
-    color: white;
-}
-
-.btnRemoverReceita:hover {
-    background: #c0392b;
 }
 
 .medicamento-extraido {
@@ -980,89 +627,126 @@ body {
     padding: 10px;
     margin-top: 10px;
     border-radius: 8px;
-    border-left: 5px solid #31a79d;
+    border-left: 5px solid var(--cor-principal);
 }
 
-/* pacientes */
+/* PACIENTES */
 
 .pacientes {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
+    max-width: 1100px;
 }
 
-.pacientes h2 {
-    color: #31a79d;
-    margin-bottom: 20px;
+.aviso-paciente {
+    max-width: 1100px;
+    margin: 25px auto 0;
+    padding: 12px 16px;
+    background: #eafaf8;
+    border-left: 5px solid var(--cor-principal);
+    border-radius: 8px;
+    color: var(--cor-texto);
+    font-weight: 500;
+    box-shadow: none;
+}
+
+#pacienteSelecionado {
+    background: #eafaf8;
+    border-left: 5px solid var(--cor-principal);
+    border-radius: 8px;
+    color: var(--cor-texto);
+    font-weight: 600;
+    margin-bottom: 24px;
+    padding: 12px 16px;
+    box-shadow: none;
 }
 
 .form-paciente {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 28px;
+    background: var(--cor-card);
+    padding: 22px;
+    border-radius: var(--radius-card);
+    box-shadow: var(--sombra-card);
+    border: 1px solid var(--cor-borda);
 }
 
 .form-paciente input {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    flex: 1;
-}
-
-.form-paciente input:focus {
-    border-color: #2aa198;
-    outline: none;
-    box-shadow: 0 0 5px rgba(42, 161, 152, 0.3);
+    width: 100%;
+    padding: 14px 16px;
+    min-height: 52px;
+    border-radius: var(--radius-input);
+    border: 1px solid #cccccc;
+    font-size: 15px;
 }
 
 #btnAddPaciente {
-    background-color: #2aa198;
+    background-color: var(--cor-secundaria);
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
+    padding: 14px 22px;
+    border-radius: var(--radius-input);
     font-weight: bold;
+    min-height: 52px;
+    white-space: nowrap;
 }
 
 #btnAddPaciente:hover {
-    background-color: #238b82;
+    background-color: var(--cor-principal-escura);
 }
 
 .lista-pacientes {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
 }
 
 .paciente {
-    background: #f5f5f5;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    background: var(--cor-card);
+    padding: 22px;
+    border-radius: var(--radius-card);
+    box-shadow: var(--sombra-card);
+    border: 1px solid var(--cor-borda);
+    border-left: 6px solid var(--cor-principal);
+    transition: 0.2s;
+}
+
+.paciente:hover {
+    transform: translateY(-2px);
+    border-color: var(--cor-principal);
+}
+
+.paciente p {
+    margin: 8px 0;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.paciente strong {
+    color: var(--cor-texto);
 }
 
 .paciente button {
-    margin-top: 10px;
-    margin-right: 5px;
-    padding: 6px 10px;
+    margin-top: 14px;
+    margin-right: 8px;
+    padding: 10px 14px;
     border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
 }
 
 .btnSelecionarPaciente {
-    background-color: #2aa198;
+    background: var(--cor-principal);
     color: white;
 }
 
 .btnSelecionarPaciente:hover {
-    background-color: #238b82;
+    background: var(--cor-principal-escura);
 }
 
 .btnRemoverPaciente {
-    background: #e74c3c;
+    background: var(--cor-erro);
     color: white;
 }
 
@@ -1070,47 +754,28 @@ body {
     background: #c0392b;
 }
 
-#pacienteSelecionado {
-    margin-bottom: 20px;
-    padding: 10px;
-    background: #eafaf8;
-    border-left: 5px solid #31a79d;
-    border-radius: 8px;
-    font-weight: bold;
-}
-
-.aviso-paciente {
-    max-width: 800px;
-    margin: 25px auto 0 auto;
-    padding: 12px 16px;
-    background-color: #eafaf8;
-    border-left: 5px solid #31a79d;
-    border-radius: 8px;
-    color: #333;
-    font-weight: 500;
-}
-
-/* NOVO MEDICAMENTOS */
-
-.medicamentos {
-    max-width: 1000px;
-}
+/* MEDICAMENTOS */
 
 .form-med {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
     margin-bottom: 25px;
+    background: var(--cor-card);
+    padding: 22px;
+    border-radius: var(--radius-card);
+    box-shadow: var(--sombra-card);
+    border: 1px solid var(--cor-borda);
 }
 
 .form-med input,
 .form-med select,
 .form-med textarea {
     width: 100%;
-    box-sizing: border-box;
     padding: 14px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
+    min-height: 48px;
+    border-radius: var(--radius-input);
+    border: 1px solid #cccccc;
     font-size: 15px;
     background: white;
 }
@@ -1121,30 +786,33 @@ body {
     grid-column: span 2;
 }
 
-.form-med input:focus,
-.form-med select:focus,
-.form-med textarea:focus {
-    border-color: #2aa198;
-    outline: none;
-    box-shadow: 0 0 5px rgba(42,161,152,0.3);
-}
-
 .grupo-data {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-width: 0;
 }
 
 .grupo-data label {
     font-size: 14px;
-    color: #666;
+    color: var(--cor-texto-claro);
+    white-space: normal;
 }
 
 #btnAddMed {
     grid-column: span 2;
     padding: 14px;
+    min-height: 48px;
     font-size: 15px;
     font-weight: bold;
+    background-color: var(--cor-secundaria);
+    color: white;
+    border: none;
+    border-radius: var(--radius-input);
+}
+
+#btnAddMed:hover {
+    background-color: var(--cor-principal-escura);
 }
 
 .lista-meds {
@@ -1154,27 +822,30 @@ body {
 }
 
 .med {
-    background: #f5f5f5;
-    border-radius: 14px;
+    background: var(--cor-card);
+    border-radius: var(--radius-card);
     padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: var(--sombra-card);
+    border: 1px solid var(--cor-borda);
+    border-left: 6px solid var(--cor-principal);
 }
 
 .med-topo {
     display: flex;
     justify-content: space-between;
-    align-items: start;
+    align-items: flex-start;
     margin-bottom: 12px;
+    gap: 16px;
 }
 
 .med-topo h3 {
     margin: 0;
-    color: #31a79d;
+    color: var(--cor-principal);
     font-size: 22px;
 }
 
 .dosagem {
-    color: #666;
+    color: var(--cor-texto-claro);
     font-size: 14px;
 }
 
@@ -1183,6 +854,7 @@ body {
     border-radius: 30px;
     font-size: 13px;
     font-weight: bold;
+    white-space: nowrap;
 }
 
 .status-med.ativo {
@@ -1197,7 +869,8 @@ body {
 
 .med p {
     margin: 8px 0;
-    color: #333;
+    color: var(--cor-texto);
+    font-size: 14px;
 }
 
 .acoes-med {
@@ -1207,42 +880,117 @@ body {
 }
 
 .acoes-med button {
-    padding: 8px 12px;
+    padding: 10px 14px;
     border: none;
     border-radius: 8px;
-    cursor: pointer;
     font-weight: bold;
 }
 
-@media (max-width: 700px) {
-
-    .form-med {
-        grid-template-columns: 1fr;
-    }
-
-    .form-med textarea,
-    #btnAddMed {
-        grid-column: span 1;
-    }
-
-    .med-topo {
-        flex-direction: column;
-        gap: 10px;
-    }
+.acoes-med .finalizar {
+    background: var(--cor-sucesso);
+    color: white;
 }
 
-/* histórico diário de sintomas */
+.acoes-med .remover {
+    background: var(--cor-erro);
+    color: white;
+}
 
-.grupo-dia-sintoma {
-    background: #f5f5f5;
+/* SINTOMAS */
+
+.form-sintoma {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 25px;
+    background: var(--cor-card);
+    padding: 22px;
+    border-radius: var(--radius-card);
+    box-shadow: var(--sombra-card);
+    border: 1px solid var(--cor-borda);
+}
+
+.form-sintoma input,
+.form-sintoma select {
+    width: 100%;
+    padding: 14px;
+    min-height: 48px;
+    border-radius: var(--radius-input);
+    border: 1px solid #cccccc;
+    font-size: 15px;
+    background-color: white;
+}
+
+#impactoSintoma,
+#fatoresSintoma,
+#padraoTempoSintoma,
+#btnAddSintoma {
+    grid-column: span 2;
+}
+
+#btnAddSintoma {
+    background-color: var(--cor-secundaria);
+    color: white;
+    border: none;
+    padding: 14px 18px;
+    border-radius: var(--radius-input);
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.lista-sintomas {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sintoma,
+.grupo-dia-sintoma,
+.grupo-dia-exame {
+    background: var(--cor-card);
     padding: 18px;
-    border-radius: 14px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-radius: var(--radius-card);
+    box-shadow: var(--sombra-card);
+    border: 1px solid var(--cor-borda);
 }
 
-.grupo-dia-sintoma h3 {
-    color: #31a79d;
+.sintoma {
+    border-left: 6px solid gray;
+}
+
+.sintoma p,
+.sintoma-info p {
+    margin: 7px 0;
+}
+
+.sintoma.leve,
+.sintoma-historico.leve {
+    border-left-color: var(--cor-sucesso);
+}
+
+.sintoma.medio,
+.sintoma-historico.medio {
+    border-left-color: var(--cor-alerta);
+}
+
+.sintoma.grave,
+.sintoma-historico.grave {
+    border-left-color: var(--cor-erro);
+}
+
+.alerta {
+    color: var(--cor-erro);
+    font-weight: bold;
+}
+
+.grupo-dia-sintoma,
+.grupo-dia-exame {
+    margin-bottom: 20px;
+}
+
+.grupo-dia-sintoma h3,
+.grupo-dia-exame h3 {
+    color: var(--cor-principal);
     margin-bottom: 15px;
 }
 
@@ -1256,57 +1004,13 @@ body {
     border-left: 6px solid gray;
 }
 
-.sintoma-historico.leve {
-    border-left-color: #27ae60;
-}
-
-.sintoma-historico.medio {
-    border-left-color: #f39c12;
-}
-
-.sintoma-historico.grave {
-    border-left-color: #e74c3c;
-}
-
 .sintoma-hora {
     font-weight: bold;
-    color: #31a79d;
+    color: var(--cor-principal);
     min-width: 55px;
 }
 
-.sintoma-info p {
-    margin: 5px 0;
-    color: #333;
-}
-
-/* histórico diário de exames */
-
-.grupo-dia-exame {
-    background: #f5f5f5;
-    padding: 18px;
-    border-radius: 14px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.grupo-dia-exame h3 {
-    color: #31a79d;
-    margin-bottom: 15px;
-}
-
-/* lembretes / alarmes */
-
-.alarmes {
-    max-width: 950px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.alarmes h2 {
-    color: #31a79d;
-    font-size: 32px;
-    margin-bottom: 25px;
-}
+/* ALARMES */
 
 .lista-alarmes {
     display: flex;
@@ -1314,38 +1018,81 @@ body {
     gap: 20px;
 }
 
+.card-notificacao,
 .grupo-dia-alarme {
-    background: #f5f5f5;
+    background: var(--cor-card);
     padding: 18px;
-    border-radius: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-radius: var(--radius-card);
+    box-shadow: var(--sombra-card);
+    border: 1px solid var(--cor-borda);
 }
 
+.card-notificacao {
+    margin-bottom: 20px;
+    border-left: 6px solid var(--cor-principal);
+}
+
+.card-notificacao h3,
 .grupo-dia-alarme h3 {
-    color: #31a79d;
-    margin-bottom: 15px;
+    color: var(--cor-principal);
+    margin-top: 0;
+}
+
+.card-notificacao button,
+.btn-toggle-grupo {
+    background: var(--cor-principal);
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.card-notificacao button:hover,
+.btn-toggle-grupo:hover {
+    background: var(--cor-principal-escura);
+}
+
+.grupo-alarme-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.grupo-alarme-cabecalho h3 {
+    margin: 0;
+}
+
+.grupo-alarme-conteudo.fechado {
+    display: none;
+}
+
+.grupo-alarme-conteudo.aberto {
+    display: block;
 }
 
 .sem-alarmes {
-    color: #666;
+    color: var(--cor-texto-claro);
     margin: 0;
 }
 
 .alarme {
-    background: white;
+    background: var(--cor-card);
     padding: 18px;
     border-radius: 12px;
-    border-left: 6px solid #f39c12;
+    border: 1px solid var(--cor-borda);
+    border-left: 6px solid var(--cor-alerta);
     margin-bottom: 12px;
 }
 
 .alarme.tomado {
-    border-left-color: #27ae60;
+    border-left-color: var(--cor-sucesso);
     background: #eefaf2;
 }
 
 .alarme.atrasado {
-    border-left-color: #e74c3c;
+    border-left-color: var(--cor-erro);
     background: #fff5f5;
 }
 
@@ -1359,12 +1106,12 @@ body {
 
 .alarme-topo h3 {
     margin: 0;
-    color: #31a79d;
+    color: var(--cor-principal);
     font-size: 21px;
 }
 
 .horario-alarme {
-    color: #666;
+    color: var(--cor-texto-claro);
     font-size: 14px;
 }
 
@@ -1375,6 +1122,7 @@ body {
     font-weight: bold;
     background: #fff3cd;
     color: #856404;
+    white-space: nowrap;
 }
 
 .alarme.tomado .status-alarme {
@@ -1389,7 +1137,6 @@ body {
 
 .alarme p {
     margin: 7px 0;
-    color: #333;
 }
 
 .acoes-alarme {
@@ -1400,79 +1147,151 @@ body {
 
 .acoes-alarme button {
     border: none;
-    padding: 9px 13px;
+    padding: 10px 14px;
     border-radius: 8px;
-    cursor: pointer;
     font-weight: bold;
 }
 
 .btnTomado {
-    background: #27ae60;
+    background: var(--cor-sucesso);
     color: white;
 }
 
 .btnRemoverAlarme {
-    background: #e74c3c;
+    background: var(--cor-erro);
     color: white;
 }
 
-.card-notificacao {
-    background: #f5f5f5;
-    padding: 18px;
-    border-radius: 14px;
-    margin-bottom: 20px;
-    border-left: 6px solid #31a79d;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
+/* TOAST */
 
-.card-notificacao h3 {
-    color: #31a79d;
-    margin-top: 0;
-}
-
-.card-notificacao p {
-    color: #333;
-}
-
-.card-notificacao button {
-    background: #31a79d;
+#toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #263238;
     color: white;
-    border: none;
-    padding: 10px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
+    padding: 14px 18px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: 0.3s;
+    z-index: 9999;
+    font-weight: 500;
 }
 
-.card-notificacao button:hover {
-    background: #27877f;
+#toast.show {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.grupo-alarme-cabecalho {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
+/* RESPONSIVO */
+
+@media (max-width: 900px) {
+    .dashboard,
+    .medicamentos,
+    .alarmes,
+    .sintomas,
+    .consultas,
+    .exames,
+    .receitas,
+    .pacientes,
+    .perfil {
+        margin: 40px auto;
+    }
+
+    .cards,
+    .form-med,
+    .form-sintoma,
+    .lista-pacientes {
+        grid-template-columns: 1fr;
+    }
+
+    .form-paciente {
+        grid-template-columns: 1fr;
+    }
+
+    .form-med textarea,
+    #btnAddMed,
+    #impactoSintoma,
+    #fatoresSintoma,
+    #padraoTempoSintoma,
+    #btnAddSintoma {
+        grid-column: span 1;
+    }
+
+    .grid-calendario {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dias-semana {
+        display: none;
+    }
+
+    .acoes-med,
+    .acoes-alarme {
+        flex-direction: column;
+    }
+
+    .acoes-med button,
+    .acoes-alarme button,
+    #btnAddPaciente {
+        width: 100%;
+    }
+
+    .med-topo,
+    .alarme-topo {
+        flex-direction: column;
+    }
+
+    .form-receita input[type="text"],
+    .form-receita input[type="file"] {
+        min-width: 100%;
+    }
 }
 
-.btn-toggle-grupo {
-    background-color: #31a79d;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-}
+@media (max-width: 700px) {
+    .cabecalho {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
 
-.btn-toggle-grupo:hover {
-    background-color: #27877f;
-}
+    .cabecalhoKatui h1 {
+        font-size: 32px;
+    }
 
-.grupo-alarme-conteudo.fechado {
-    display: none;
-}
+    .cabecalhoKatui p {
+        font-size: 18px;
+    }
 
-.grupo-alarme-conteudo.aberto {
-    display: block;
+    .rodapeSecoes {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-calendario {
+        grid-template-columns: 1fr;
+    }
+
+    .form-consulta,
+    .form-exame,
+    .form-receita {
+        flex-direction: column;
+    }
+
+    .form-consulta input,
+    .form-exame input,
+    .form-receita input,
+    #btnAddConsulta,
+    #btnAddExame,
+    #btnAddReceita {
+        width: 100%;
+    }
+
+    #toast {
+        left: 16px;
+        right: 16px;
+        bottom: 18px;
+    }
 }
