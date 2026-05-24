@@ -74,7 +74,7 @@ async function enviarExame() {
             document.getElementById("nomeExame").value = "";
             document.getElementById("obsExame").value = "";
             document.getElementById("arquivoExame").value = "";
-            desabilitarFormularios();
+            
         } else {
             msg.className = "mensagem erro";
             msg.textContent = "Erro ao enviar exame. Token pode ter expirado.";
@@ -122,7 +122,7 @@ async function enviarReceita() {
             msg.textContent = "Receita enviada com sucesso!";
             document.getElementById("obsReceita").value = "";
             document.getElementById("arquivoReceita").value = "";
-            desabilitarFormularios();
+            
         } else {
             msg.className = "mensagem erro";
             msg.textContent = "Erro ao enviar receita. Token pode ter expirado.";
