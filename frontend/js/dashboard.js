@@ -2,6 +2,7 @@
 function iniciarDashboard() {
 
     const token = localStorage.getItem("token");
+    const tipoUsuario = localStorage.getItem("tipoUsuario");
 
     if (!token) return;
 
@@ -9,6 +10,25 @@ function iniciarDashboard() {
     carregarSintomas();
     carregarConsultas();
     iniciarCalendarioDashboard();
+
+    // QR code só aparece para PACIENTE
+    const qrcodeArea = document.getElementById("qrcodeArea");
+
+    if (qrcodeArea) {
+
+        if (tipoUsuario === "PACIENTE") {
+
+            qrcodeArea.style.display = "block";
+
+            document.getElementById("btnGerarQR").onclick = () => {
+                gerarQRCode();
+            };
+
+        } else {
+
+            qrcodeArea.style.display = "none";
+        }
+    }
 
     async function carregarMedicamentos() {
 
@@ -85,6 +105,52 @@ function iniciarDashboard() {
         } catch (erro) {
             console.log(erro);
         }
+    }
+}
+
+async function gerarQRCode() {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    const btn = document.getElementById("btnGerarQR");
+    btn.textContent = "Gerando...";
+    btn.disabled = true;
+
+    try {
+
+        const resposta = await fetch("http://localhost:8085/medico/token", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        if (!resposta.ok) {
+            alert("Erro ao gerar QR code");
+            return;
+        }
+
+        const dados = await resposta.json();
+
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(dados.url)}`;
+
+        document.getElementById("qrCodeImg").src = qrUrl;
+
+        const expiracao = new Date(dados.expiracao);
+        document.getElementById("qrExpiracao").textContent =
+            "Expira às: " + expiracao.toLocaleTimeString('pt-BR');
+
+        document.getElementById("qrCodeArea").style.display = "block";
+
+    } catch (erro) {
+        console.log(erro);
+        alert("Erro ao conectar com backend");
+
+    } finally {
+        btn.textContent = "Gerar QR Code";
+        btn.disabled = false;
     }
 }
 
@@ -249,7 +315,6 @@ function iniciarCalendarioDashboard() {
                 }
 
                 const dataDoDia = new Date(dataTexto + "T00:00:00");
-
                 const inicio = new Date(m.dataInicio + "T00:00:00");
 
                 let dentroPeriodo = false;
@@ -274,19 +339,14 @@ function iniciarCalendarioDashboard() {
 
                 let mostrarHoje = false;
 
-                // DIÁRIO
                 if (m.tipoFrequencia === "DIARIO") {
-
                     mostrarHoje = true;
                 }
 
-                // INTERVALO EM HORAS
                 else if (m.tipoFrequencia === "INTERVALO_HORAS") {
-
                     mostrarHoje = true;
                 }
 
-                // SEMANAL
                 else if (m.tipoFrequencia === "SEMANAL") {
 
                     const diffDias =
@@ -298,7 +358,6 @@ function iniciarCalendarioDashboard() {
                     mostrarHoje = diffDias % 7 === 0;
                 }
 
-                // MENSAL
                 else if (m.tipoFrequencia === "MENSAL") {
 
                     mostrarHoje =

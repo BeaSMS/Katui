@@ -1,10 +1,10 @@
 package com.katui.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.katui.dto.ReceitaProcessadaDTO.MedicamentoExtratoDTO;
 
-import com.katui.entity.Receita;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -25,16 +24,33 @@ public class OCRService {
     @Value("${gemini.api.key}")
     private String apiKey;
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    // Configuração para o Java não quebrar se o JSON vier com campos invisíveis ou inesperados
+    private final ObjectMapper mapper = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public List<MedicamentoExtratoDTO> extrairMedicamentos(Path caminhoImagem) {
 
-
         try {
             byte[] imageBytes = Files.readAllBytes(caminhoImagem);
             String base64 = Base64.getEncoder().encodeToString(imageBytes);
+
+            // Tenta adivinhar o tipo, mas protege contra retorno nulo
             String mediaType = Files.probeContentType(caminhoImagem);
+
+            if (mediaType == null) {
+                String nomeArquivo = caminhoImagem.getFileName().toString().toLowerCase();
+                if (nomeArquivo.endsWith(".pdf")) {
+                    mediaType = "application/pdf";
+                } else if (nomeArquivo.endsWith(".jpg") || nomeArquivo.endsWith(".jpeg")) {
+                    mediaType = "image/jpeg";
+                } else if (nomeArquivo.endsWith(".png")) {
+                    mediaType = "image/png";
+                } else {
+                    mediaType = "application/octet-stream";
+                }
+            }
 
             String prompt = "Leia esta receita médica e retorne SOMENTE um array JSON, sem nenhum texto adicional, sem markdown, sem blocos de código. " +
                     "Formato: [{\"nome\": \"nome do medicamento\", \"dias\": 7, \"tipoFrequencia\": \"INTERVALO_HORAS\", \"valorFrequencia\": 8, \"horarioInicial\": \"08:00\", \"diasSemana\": null}]. " +
@@ -47,7 +63,6 @@ public class OCRService {
                     "Para dias use numero inteiro ou null se nao informado. " +
                     "Se nao encontrar algum campo, use null.";
 
-            // Monta o body usando Map para evitar problemas de escape
             Map<String, Object> body = Map.of(
                     "contents", List.of(
                             Map.of("parts", List.of(
@@ -57,6 +72,10 @@ public class OCRService {
                                     )),
                                     Map.of("text", prompt)
                             ))
+                    ),
+                    // Força a API a devolver um JSON limpo
+                    "generationConfig", Map.of(
+                            "responseMimeType", "application/json"
                     )
             );
 
@@ -74,10 +93,16 @@ public class OCRService {
                     request, HttpResponse.BodyHandlers.ofString()
             );
 
-            System.out.println("Resposta Gemini: " + response.body());
+            System.out.println("Resposta Gemini Bruta: " + response.body());
 
-            var json = mapper.readTree(response.body());
-            String content = json
+            var jsonNode = mapper.readTree(response.body());
+
+            // Proteção caso a API retorne um erro mapeado
+            if (jsonNode.has("error")) {
+                throw new RuntimeException("Erro da API do Gemini: " + jsonNode.get("error").toString());
+            }
+
+            String content = jsonNode
                     .get("candidates").get(0)
                     .get("content")
                     .get("parts").get(0)
@@ -85,13 +110,18 @@ public class OCRService {
                     .asText()
                     .trim();
 
+            // Limpa formatações Markdown residuais caso existam
+            content = content.replaceAll("^```json\\s*", "").replaceAll("\\s*```$", "").trim();
+
             return mapper.readValue(
                     content,
                     new TypeReference<List<MedicamentoExtratoDTO>>() {}
             );
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao processar receita: " + e.getMessage());
+            // Esta linha garante que você veja o real motivo do erro vermelho no terminal
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao processar receita: " + e.getMessage(), e);
         }
     }
 }

@@ -5,18 +5,42 @@
     <div class="cards">
 
         <div class="card" onclick="carregarPagina('paginas/medicamentos.html')">
-            <h3>💊 Medicamentos</h3>
+            <h3>Medicamentos</h3>
             <p id="qtdMedicamentos">0</p>
         </div>
 
         <div class="card" onclick="carregarPagina('paginas/consultas.html')">
-            <h3>🩺 Consultas</h3>
+            <h3>Consultas</h3>
             <p id="qtdConsultas">0</p>
         </div>
 
         <div class="card" onclick="carregarPagina('paginas/sintomas.html')">
-            <h3>⚠️ Sintomas</h3>
+            <h3>Sintomas</h3>
             <p id="qtdSintomas">0</p>
+        </div>
+
+    </div>
+
+    <div class="qrcode-area" id="qrcodeArea">
+
+        <h3>Compartilhar com Médico</h3>
+
+        <p>Gere um QR code para o médico enviar exames e receitas diretamente para seu perfil.</p>
+
+        <button id="btnGerarQR">
+            Gerar QR Code
+        </button>
+
+        <div id="qrCodeArea" style="display:none;">
+
+            <img id="qrCodeImg" src="" alt="QR Code">
+
+            <p id="qrExpiracao"></p>
+
+            <p class="qr-aviso">
+                Este QR code é de uso único e expira em 30 minutos.
+            </p>
+
         </div>
 
     </div>

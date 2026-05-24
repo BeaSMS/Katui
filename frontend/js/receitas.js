@@ -157,18 +157,15 @@ function iniciarReceitas() {
 
     async function processarReceita(id, areaResultado) {
 
-        areaResultado.innerHTML = "<p>Processando receita...</p>";
+        areaResultado.innerHTML = "<p>Processando receita... Aguarde.</p>";
 
         try {
-
-            console.log("Token usado:", token);
-
-           const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/receitas/${id}/processar`), {
-            method: "POST",
-            headers: {
-            "Authorization": "Bearer " + token
-        }
-    });
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/receitas/${id}/processar`), {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
 
             if (!resposta.ok) {
                 const erro = await resposta.text();
@@ -178,86 +175,48 @@ function iniciarReceitas() {
             }
 
             const medicamentos = await resposta.json();
-
             areaResultado.innerHTML = "";
 
             if (medicamentos.length === 0) {
-                areaResultado.innerHTML = "<p>Nenhum medicamento identificado.</p>";
+                areaResultado.innerHTML = "<p>Nenhum medicamento identificado pela IA.</p>";
                 return;
             }
 
             medicamentos.forEach(med => {
-
                 const div = document.createElement("div");
                 div.classList.add("medicamento-extraido");
+                div.style.border = "1px solid #ccc"; // Apenas para destacar, pode tirar se já tiver CSS
+                div.style.padding = "10px";
+                div.style.marginTop = "10px";
 
-                const finalizado =
-                med.dataFim &&
-                new Date(med.dataFim) < new Date();
-
+                // Desenhando o card com os campos exatos do MedicamentoExtratoDTO
                 div.innerHTML = `
-
                     <div class="med-topo">
-
                         <div>
                             <h3>${med.nome}</h3>
-                            <span class="dosagem">
-                                ${med.dosagem || "Dosagem não informada"}
-                            </span>
+                            <span class="dosagem">Duração: ${med.dias ? med.dias + ' dias' : 'Não informada'}</span>
                         </div>
-
-                        <span class="status-med ${finalizado ? 'finalizado' : 'ativo'}">
-                            ${finalizado ? 'Finalizado' : 'Ativo'}
-                        </span>
-
                     </div>
 
                     <p>
-                        <strong>Finalidade:</strong>
-                        ${med.finalidade || "Não informado"}
-                    </p>
-
-                    <p>
-                        <strong>Horário:</strong>
-                        ${med.horario || "Não informado"}
+                        <strong>Horário Inicial:</strong>
+                        ${med.horarioInicial || "Não informado"}
                     </p>
 
                     <p>
                         <strong>Frequência:</strong>
-                        ${formatarFrequencia(
-                            med.tipoFrequencia,
-                            med.valorFrequencia
-                        )}
+                        ${med.tipoFrequencia === 'INTERVALO_HORAS' ? `A cada ${med.valorFrequencia} horas` : 
+                         med.tipoFrequencia === 'VEZES_DIA' ? `${med.valorFrequencia} vezes ao dia` : 'Uso contínuo/Específico'}
                     </p>
 
-                    <p>
-                        <strong>Início:</strong>
-                        ${formatarDataMed(med.dataInicio)}
-                    </p>
-
-                    <p>
-                        <strong>Término:</strong>
-                        ${formatarDataMed(med.dataFim)}
-                    </p>
-
-                    <p>
-                        <strong>Observações:</strong>
-                        ${med.observacoes || "Nenhuma"}
-                    </p>
-
-                    <div class="acoes-med">
-
-                        <button class="tomar">
-                            Tomado
+                    <div class="acoes-med" style="margin-top: 10px;">
+                        <button class="btnAddMedicamentoReceita">
+                            Salvar na minha rotina
                         </button>
-
-                        <button class="remover">
-                            Remover
-                        </button>
-
                     </div>
                 `;
 
+                // Agora o JavaScript vai encontrar o botão e o evento de clique vai funcionar
                 div.querySelector(".btnAddMedicamentoReceita").onclick = () => {
                     adicionarMedicamentoDaReceita(med);
                 };
@@ -266,8 +225,8 @@ function iniciarReceitas() {
             });
 
         } catch (erro) {
-            console.log(erro);
-            areaResultado.innerHTML = "<p>Erro ao conectar com backend.</p>";
+            console.log("Erro real do JS:", erro); 
+            areaResultado.innerHTML = "<p>Erro interno ao processar a resposta.</p>";
         }
     }
 

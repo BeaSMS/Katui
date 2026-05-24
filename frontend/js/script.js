@@ -163,3 +163,23 @@ function mostrarAvisoPacienteSelecionado() {
 
     conteudo.prepend(aviso);
 }
+
+async function gerarQRCode() {
+
+    const token = localStorage.getItem("token");
+
+    const resposta = await fetch("http://localhost:8085/medico/token", {
+        method: "POST",
+        headers: { "Authorization": "Bearer " + token }
+    });
+
+    const dados = await resposta.json();
+
+    // Usa a API do QR Server para gerar o QR code
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(dados.url)}`;
+
+    document.getElementById("qrCodeImg").src = qrUrl;
+    document.getElementById("qrCodeImg").style.display = "block";
+    document.getElementById("qrExpiracao").textContent =
+        "Expira em: " + new Date(dados.expiracao).toLocaleTimeString();
+}
