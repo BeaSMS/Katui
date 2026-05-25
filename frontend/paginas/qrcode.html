@@ -1,0 +1,29 @@
+<section class="qrcode-area" id="qrcodeArea">
+
+    <div class="qrcode-container">
+
+        <h2>Compartilhar com Médico</h2>
+
+        <p>Gere um QR code para o médico enviar exames e receitas diretamente para seu perfil.</p>
+
+        <button id="btnGerarQR" class="btn-primary">
+            Gerar QR Code
+        </button>
+
+        <div id="qrCodeArea" style="display:none;" class="qr-resultado">
+
+            <img id="qrCodeImg" src="" alt="QR Code">
+
+            <p id="qrExpiracao"></p>
+
+            <p class="qr-aviso">
+                Este QR code é de uso único e expira em 30 minutos.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<script src="../js/qrcode.js"></script>

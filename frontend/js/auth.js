@@ -183,6 +183,7 @@ function mostrarMenuSistema() {
     document.getElementById("itemConsultas").style.display = "none";
     document.getElementById("itemExames").style.display = "none";
     document.getElementById("itemReceitas").style.display = "none";
+    
 
     document.getElementById("itemPerfil").style.display = "block";
     document.getElementById("itemSair").style.display = "block";
@@ -204,6 +205,7 @@ function mostrarMenuSistema() {
         document.getElementById("itemConsultas").style.display = "block";
         document.getElementById("itemExames").style.display = "block";
         document.getElementById("itemReceitas").style.display = "block";
+        
     }
 
     // CUIDADOR

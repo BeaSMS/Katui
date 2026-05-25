@@ -21,30 +21,6 @@
 
     </div>
 
-    <div class="qrcode-area" id="qrcodeArea">
-
-        <h3>Compartilhar com Médico</h3>
-
-        <p>Gere um QR code para o médico enviar exames e receitas diretamente para seu perfil.</p>
-
-        <button id="btnGerarQR">
-            Gerar QR Code
-        </button>
-
-        <div id="qrCodeArea" style="display:none;">
-
-            <img id="qrCodeImg" src="" alt="QR Code">
-
-            <p id="qrExpiracao"></p>
-
-            <p class="qr-aviso">
-                Este QR code é de uso único e expira em 30 minutos.
-            </p>
-
-        </div>
-
-    </div>
-
     <div class="calendario-dashboard">
 
         <div class="calendario-topo">
@@ -72,5 +48,13 @@
         <div id="gridCalendario" class="grid-calendario"></div>
 
     </div>
-
+        <div id="modalResumo" class="modal">
+            <div class="modal-conteudo">
+                <div class="modal-header">
+                    <h2 id="tituloModal">Eventos do Dia</h2>
+                    <button class="fechar-modal" onclick="document.getElementById('modalResumo').style.display='none'">×</button>
+                </div>
+                <div id="listaResumo"></div>
+            </div>
+        </div>
 </section>

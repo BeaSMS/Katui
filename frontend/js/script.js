@@ -83,6 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pagina.includes('pacientes')) {
                 iniciarPacientes();
             }
+
+            if (pagina.includes('qrcode')) {
+                iniciarQRCode();
+            }
         })
         .catch(err => {
             conteudo.innerHTML = "<p>Erro ao carregar conteúdo</p>";
@@ -90,6 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // DISPARA A VERIFICAÇÃO ASSIM QUE O SITE ENTRA NO AR
+    verificarAutenticacaoInicial();
+    
     /*Deixa a função acessível no HTML*/
     window.carregarPagina = carregarPagina;
 
@@ -117,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarPagina('paginas/auth/login.html');
 
     }
+    voltarInicio();
 
 });    
 
@@ -182,4 +190,48 @@ async function gerarQRCode() {
     document.getElementById("qrCodeImg").style.display = "block";
     document.getElementById("qrExpiracao").textContent =
         "Expira em: " + new Date(dados.expiracao).toLocaleTimeString();
+}
+
+// FUNÇÃO DE VALIDAÇÃO DE LOGIN E TOKEN ATIVO
+async function verificarAutenticacaoInicial() {
+    const token = localStorage.getItem("token");
+    const tipoUsuario = localStorage.getItem("tipoUsuario");
+    const pacienteSelecionado = localStorage.getItem("pacienteSelecionadoId");
+
+    // Passagem 1: Se nem existe token salvo, vai direto para o Login
+    if (!token) {
+        carregarPagina('paginas/auth/login.html');
+        return;
+    }
+
+    // Passagem 2: Existe um token, mas precisamos saber se ele ainda é VÁLIDO no backend Java
+    try {
+        const resposta = await fetch("http://localhost:8085/usuarios/me", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        if (resposta.ok) {
+            // O token é válido! Monta o menu correto e redireciona para a home certa
+            if (typeof mostrarMenuSistema === "function") {
+                mostrarMenuSistema(); 
+            }
+            
+            if (tipoUsuario === "CUIDADOR" && !pacienteSelecionado) {
+                carregarPagina('paginas/pacientes.html');
+            } else {
+                carregarPagina('paginas/dashboard.html');
+            }
+        } else {
+            // O servidor respondeu que o token expirou ou é inválido (401/403)
+            localStorage.clear(); // Limpa lixo do localStorage
+            carregarPagina('paginas/auth/login.html');
+        }
+    } catch (erro) {
+        console.error("Erro ao conectar com o servidor para validar token:", erro);
+        // Se a API Java estiver offline ou falhar, por segurança, joga para o login
+        carregarPagina('paginas/auth/login.html');
+    }
 }

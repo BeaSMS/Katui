@@ -164,6 +164,35 @@ textarea:focus {
     color: var(--cor-principal);
 }
 
+.cabecalho-acoes {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    display: flex;
+    justify-content: flex-end; /* Alinha o botão à direita */
+    width: 100%;
+    margin-right: 20px;
+}
+
+.btn-qrcode-header {
+    background-color: white;
+    color: var(--cor-principal);
+    border: none;
+    padding: 5px 5px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items:flex;
+    justify-content: center;
+}
+
+.btn-qrcode-header:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
 /* RODAPÉ */
 
 .rodape {
@@ -224,7 +253,8 @@ textarea:focus {
 .exames,
 .receitas,
 .pacientes,
-.perfil {
+.perfil,
+.qrcode-area {
     max-width: var(--largura-pagina);
     margin: 70px auto;
     padding: 0 20px;
@@ -234,6 +264,85 @@ textarea:focus {
 .exames,
 .receitas {
     max-width: 900px;
+}
+
+/* QR CODE */
+
+.qrcode-area {
+    max-width: 900px;
+}
+
+.qrcode-container {
+    background: var(--cor-card);
+    padding: 40px;
+    border-radius: var(--radius-card);
+    box-shadow: var(--sombra-card);
+    text-align: center;
+}
+
+.qrcode-container h2 {
+    margin-bottom: 16px;
+    color: var(--cor-principal);
+}
+
+.qrcode-container p {
+    color: var(--cor-texto-claro);
+    font-size: 16px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+#btnGerarQR {
+    background-color: var(--cor-principal);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: var(--radius-input);
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#btnGerarQR:hover {
+    background-color: var(--cor-principal-escura);
+    transform: translateY(-2px);
+}
+
+#btnGerarQR:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.qr-resultado {
+    margin-top: 30px;
+    padding: 30px;
+    background-color: var(--cor-card-claro);
+    border-radius: var(--radius-input);
+}
+
+.qr-resultado img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.qr-resultado p {
+    margin: 12px 0;
+    color: var(--cor-texto);
+    font-weight: 500;
+}
+
+.qr-aviso {
+    color: var(--cor-alerta);
+    font-size: 14px;
+    margin-top: 16px;
+    padding: 12px;
+    background-color: rgba(243, 156, 18, 0.1);
+    border-left: 4px solid var(--cor-alerta);
+    border-radius: 4px;
 }
 
 /* LOGIN E CADASTRO */
@@ -1295,3 +1404,102 @@ textarea:focus {
         bottom: 18px;
     }
 }
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-conteudo {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: var(--radius-card);
+    width: 90%;
+    max-width: 400px;
+    box-shadow: var(--sombra-card);
+}
+
+.evento-calendario {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.evento-calendario:hover {
+    transform: scale(1.05);
+}
+
+.modal-header {
+    display: flex; /* Coloca o título e o botão lado a lado */
+    justify-content: space-between; /* Título à esquerda, Botão X à direita */
+    align-items: center; /* Alinha ambos verticalmente ao centro */
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.fechar-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    padding: 0 5px;
+}
+
+.fechar-modal:hover {
+    color: #e74c3c; /* Fica vermelho ao passar o mouse */
+}
+
+
+.info-paciente {
+    background: #E6F1FB;
+    border: 1px solid #185FA5;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+.form-grupo {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+input[type="text"], input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin: 6px 0 12px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+button {
+    background: #18a0a5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+button:disabled { background: #aaa; cursor: not-allowed; }
+.mensagem {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 6px;
+    display: none;
+}
+.mensagem.sucesso { background: #d5efe6; color: #0F6E56; display: block; }
+.mensagem.erro { background: #faece7; color: #993c1d; display: block; }
+.aviso {
+    background: #fff8e1;
+    border: 1px solid #f0c040;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+#tokenInvalido { text-align: center; color: #993c1d; }

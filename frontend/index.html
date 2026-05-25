@@ -13,6 +13,12 @@
                <h1 onclick="voltarInicio()">Katu'I</h1>
                 <p>Acompanhamento Inteligente de Tratamento e Sintomas</p>
             </div>
+            <div class="cabecalho-acoes">
+                <button id="btnQRCodeHeader" class="btn-qrcode-header" title="Gerar QR Code" onclick="carregarPagina('paginas/qrcode.html')">
+                    <img src="src/codigo-qr.png" alt="QR Code" class="icone-img" width="48" height="48">
+                </button>
+            </div>
+
             <nav class="cabecalhoMenu">
                 <button>
                     <span>☰</span>
@@ -87,6 +93,8 @@
                         </a>
                     </li>
 
+
+
                     <li id="itemSair" style="display:none;">
                         <a href="#" onclick="sair()">
                             Sair
@@ -129,6 +137,7 @@
     <script src="js/script.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/dashboard.js"></script>
+    <script src="js/qrcode.js"></script>
     <script src="js/alarmes.js"></script>
     <script src="js/perfil.js"></script>
     <script src="js/consultas.js"></script>

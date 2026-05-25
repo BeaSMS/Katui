@@ -4,74 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Envio de Documentos — Katui</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
-            background: #f8f7f3;
-            color: #2c2c2a;
-        }
-        h1 { color: #185FA5; }
-        h3 { margin-top: 2rem; border-bottom: 1px solid #ddd; padding-bottom: 8px; }
-        .info-paciente {
-            background: #E6F1FB;
-            border: 1px solid #185FA5;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 24px;
-        }
-        .form-grupo {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        input[type="text"], input[type="file"] {
-            width: 100%;
-            padding: 8px;
-            margin: 6px 0 12px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-        button {
-            background: #185FA5;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        button:disabled { background: #aaa; cursor: not-allowed; }
-        .mensagem {
-            margin-top: 12px;
-            padding: 10px;
-            border-radius: 6px;
-            display: none;
-        }
-        .mensagem.sucesso { background: #d5efe6; color: #0F6E56; display: block; }
-        .mensagem.erro { background: #faece7; color: #993c1d; display: block; }
-        .aviso {
-            background: #fff8e1;
-            border: 1px solid #f0c040;
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        #tokenInvalido { text-align: center; color: #993c1d; }
-    </style>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-
-    <h1>Katui — Envio de Documentos</h1>
+<header>
+        <div class="cabecalho">
+            <div class="cabecalhoKatui">
+               <h1 onclick="voltarInicio()">Katu'I</h1>
+                <p>Acompanhamento Inteligente de Tratamento e Sintomas</p>
+            </div>
+        </div>
+    </header>
+    <div class="exames">
+    <h2>Katui — Envio de Documentos</h2>
 
     <div id="tokenInvalido" style="display:none;">
-        <h2>Token inválido ou expirado.</h2>
+        <h3>Token inválido ou expirado.</h3>
         <p>Solicite um novo QR code ao paciente.</p>
     </div>
 
@@ -80,33 +28,77 @@
         <div class="info-paciente" id="infoPaciente"></div>
 
         <div class="aviso" id="avisoToken">
-            Este link é de <strong>uso único</strong>. Após enviar um documento, o link expira.
+            Este link é de <strong>uso único</strong>. Link expira após 30 minutos.
         </div>
+    </div>
+    <div class="exames">
 
-        <div class="form-grupo">
-            <h3>Enviar Exame</h3>
-            <label>Nome do exame</label>
-            <input id="nomeExame" type="text" placeholder="Ex: Hemograma completo">
-            <label>Observação</label>
-            <input id="obsExame" type="text" placeholder="Ex: Jejum de 8h">
-            <label>Arquivo</label>
-            <input id="arquivoExame" type="file" accept=".pdf,.jpg,.jpeg,.png">
-            <button id="btnExame">Enviar Exame</button>
-            <div id="msgExame" class="mensagem"></div>
-        </div>
+    <h2>Exames</h2>
 
-        <div class="form-grupo">
-            <h3>Enviar Receita</h3>
-            <label>Observação</label>
-            <input id="obsReceita" type="text" placeholder="Ex: Uso contínuo">
-            <label>Arquivo</label>
-            <input id="arquivoReceita" type="file" accept=".pdf,.jpg,.jpeg,.png">
-            <button id="btnReceita">Enviar Receita</button>
-            <div id="msgReceita" class="mensagem"></div>
-        </div>
+    <div class="form-grupo">
+        <h3>Enviar Exame</h3>
+        <label>Nome do exame</label>
+        <input id="nomeExame" type="text" placeholder="Ex: Hemograma completo">
+
+        <label>Observação</label>
+        <input id="obsExame" type="text" placeholder="Ex: Jejum de 8h">
+
+        <label>Arquivo</label>
+        <input id="arquivoExame" type="file" accept=".pdf,.jpg,.jpeg,.png">
+
+        <button id="btnExame" onclick="enviarExame()">Enviar Exame</button>
+
+        <div id="msgExame" class="mensagem"></div>
+    </div>
+    </div>
+
+    <div class="receitas">
+
+    <h2>Receitas</h2>
+
+    <div class="form-grupo">
+        <h3>Enviar Receita</h3>
+        <label>Observação</label>
+        <input id="obsReceita" type="text" placeholder="Ex: Tomar 2 vezes ao dia">
+
+        <label>Arquivo</label>
+        <input id="arquivoReceita" type="file" accept=".pdf,.jpg,.jpeg,.png">
+
+        <button id="btnReceita" onclick="enviarReceita()">Enviar Receita</button>
+
+        <div id="msgReceita" class="mensagem"></div>
+     </div>
 
     </div>
 
+</div>
+
+    <footer>
+        <div class="rodape">
+            <div class="rodapeSecoes">
+                <div class="rodapeSobre">
+                    <h3>Sobre</h3>
+                    <p>Katu'I é um sistema de acompanhamento inteligente de tratamento e sintomas desenvolvido para melhorar a qualidade de vida.</p>
+                </div>
+                <div class="rodapeSuporte">
+                    <h3>Suporte</h3>
+                    <a href="">Central de Ajuda</a><br>
+                    <a href="">Contate-nos</a><br>
+                    <a href="">Privacidade</a><br>
+                    <a href="">Termos de Uso</a><br>
+                </div>
+                <div class="rodapeAcessibilidade">
+                    <h3>Acessibilidade</h3>
+                    <p>Este site foi desenvolvido seguindo as diretrizes WCAG 2.1 Nível AA.</p>
+                </div>
+            </div>
+            <div class="rodapeCopyright">
+                <p>&copy; 2026 Katu'I. Desenvolvido com ♥️ para sua saúde.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="../js/auth.js"></script>
     <script src="../js/medico.js"></script>
 
 </body>
