@@ -1,19 +1,20 @@
 function iniciarAlarmes() {
-
     let timersAlarmes = [];
-
     const token = localStorage.getItem("token");
     const lista = document.getElementById("listaAlarmes");
-
     const btnAtivarNotificacao = document.getElementById("btnAtivarNotificacao");
     const statusNotificacao = document.getElementById("statusNotificacao");
+
+    
 
     if (!token) {
         alert("Você precisa fazer login");
         carregarPagina("paginas/auth/login.html");
         return;
     }
-
+    
+    window.salvarLembreteManual = salvarLembreteManual;
+    window.prepararEdicao = prepararEdicao;
     if (!lista) return;
 
     configurarNotificacoes();
@@ -32,9 +33,7 @@ function iniciarAlarmes() {
 
         btnAtivarNotificacao.onclick = async () => {
             const permissao = await Notification.requestPermission();
-
             atualizarStatusNotificacao();
-
             if (permissao === "granted") {
                 alert("Notificações ativadas com sucesso!");
                 carregarAlarmes();
@@ -49,7 +48,7 @@ function iniciarAlarmes() {
             statusNotificacao.textContent = "Notificações ativadas.";
             btnAtivarNotificacao.style.display = "none";
         } else if (Notification.permission === "denied") {
-            statusNotificacao.textContent = "Notificações bloqueadas no navegador.";
+            statusNotificacao.textContent = "Notificações bloqueadas.";
             btnAtivarNotificacao.style.display = "none";
         } else {
             statusNotificacao.textContent = "Ative para receber lembretes no PC.";
@@ -59,27 +58,16 @@ function iniciarAlarmes() {
 
     async function carregarAlarmes() {
         lista.innerHTML = "<p>Carregando lembretes...</p>";
-
         try {
-            const resposta = await fetch(
-                montarUrlComPaciente("http://localhost:8085/alarmes"),
-                {
-                    method: "GET",
-                    headers: {
-                        "Authorization": "Bearer " + token
-                    }
-                }
-            );
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/alarmes"), {
+                method: "GET",
+                headers: { "Authorization": "Bearer " + token }
+            });
 
-            if (!resposta.ok) {
-                lista.innerHTML = "<p>Erro ao carregar lembretes.</p>";
-                return;
-            }
-
+            if (!resposta.ok) throw new Error("Erro ao carregar");
             const alarmes = await resposta.json();
 
             lista.innerHTML = "";
-
             if (alarmes.length === 0) {
                 lista.innerHTML = "<p>Nenhum lembrete encontrado.</p>";
                 limparTimersAlarmes();
@@ -92,25 +80,16 @@ function iniciarAlarmes() {
             const proximosDias = [];
             const tomados = [];
 
-            const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
-
-            const amanha = new Date(hoje);
-            amanha.setDate(amanha.getDate() + 1);
+            const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+            const amanha = new Date(hoje); amanha.setDate(amanha.getDate() + 1);
 
             alarmes.forEach(alarme => {
                 const dataAlarme = new Date(alarme.horario);
+                const dataSemHora = new Date(dataAlarme); dataSemHora.setHours(0, 0, 0, 0);
 
-                const dataSemHora = new Date(dataAlarme);
-                dataSemHora.setHours(0, 0, 0, 0);
-
-                if (alarme.tomado) {
-                    tomados.push(alarme);
-                } else if (dataSemHora.getTime() === hoje.getTime()) {
-                    pendentesHoje.push(alarme);
-                } else if (dataSemHora >= amanha) {
-                    proximosDias.push(alarme);
-                }
+                if (alarme.tomado) tomados.push(alarme);
+                else if (dataSemHora.getTime() === hoje.getTime()) pendentesHoje.push(alarme);
+                else if (dataSemHora >= amanha) proximosDias.push(alarme);
             });
 
             criarGrupo("Hoje", pendentesHoje);
@@ -118,7 +97,6 @@ function iniciarAlarmes() {
             criarGrupo("Já tomados", tomados);
 
             agendarNotificacoes(alarmes);
-
         } catch (erro) {
             console.log(erro);
             lista.innerHTML = "<p>Erro ao conectar com backend.</p>";
@@ -128,22 +106,13 @@ function iniciarAlarmes() {
     function criarGrupo(titulo, alarmes) {
         const grupo = document.createElement("div");
         grupo.classList.add("grupo-dia-alarme");
-
-        const deveComecarAberto = titulo === "Hoje" || titulo === "Já tomados";
+        const deveComecarAberto = (titulo === "Hoje" || titulo === "Já tomados");
 
         grupo.innerHTML = `
             <div class="grupo-alarme-cabecalho">
                 <h3>${titulo} (${alarmes.length})</h3>
-
-                ${
-                    !deveComecarAberto
-                        ? `<button class="btn-toggle-grupo">
-                            Mostrar
-                        </button>`
-                        : ""
-                }
+                ${!deveComecarAberto ? `<button class="btn-toggle-grupo">Mostrar</button>` : ""}
             </div>
-
             <div class="grupo-alarme-conteudo ${deveComecarAberto ? "aberto" : "fechado"}"></div>
         `;
 
@@ -153,140 +122,72 @@ function iniciarAlarmes() {
         if (botaoToggle) {
             botaoToggle.onclick = () => {
                 const fechado = conteudo.classList.contains("fechado");
-
-                if (fechado) {
-                    conteudo.classList.remove("fechado");
-                    conteudo.classList.add("aberto");
-                    botaoToggle.textContent = "Ocultar";
-                } else {
-                    conteudo.classList.remove("aberto");
-                    conteudo.classList.add("fechado");
-                    botaoToggle.textContent = "Mostrar";
-                }
+                conteudo.className = `grupo-alarme-conteudo ${fechado ? "aberto" : "fechado"}`;
+                botaoToggle.textContent = fechado ? "Ocultar" : "Mostrar";
             };
         }
 
         if (alarmes.length === 0) {
             conteudo.innerHTML = `<p class="sem-alarmes">Nenhum lembrete nesta seção.</p>`;
-            lista.appendChild(grupo);
-            return;
-        }
-
-        alarmes.forEach(alarme => {
-            const div = document.createElement("div");
-            div.classList.add("alarme");
-
-            if (alarme.tomado) {
-                div.classList.add("tomado");
-            }
-
-            if (!alarme.tomado && alarmeAtrasado(alarme.horario)) {
-                div.classList.add("atrasado");
-            }
-
-            div.innerHTML = `
-                <div class="alarme-topo">
-                    <div>
-                        <h3>${alarme.medicamento?.nome || "Medicamento"}</h3>
-                        <span class="horario-alarme">
-                            ${formatarDataHoraAlarme(alarme.horario)}
-                        </span>
+        } else {
+            alarmes.forEach(alarme => {
+                const div = document.createElement("div");
+                div.className = `alarme ${alarme.tomado ? 'tomado' : ''} ${!alarme.tomado && alarmeAtrasado(alarme.horario) ? 'atrasado' : ''}`;
+                
+                div.innerHTML = `
+                    <div class="alarme-topo">
+                        <div><h3>${alarme.medicamento?.nome || "Medicamento"}</h3>
+                        <span class="horario-alarme">${formatarDataHoraAlarme(alarme.horario)}</span></div>
+                        <span class="status-alarme">${definirStatusAlarme(alarme)}</span>
                     </div>
+                    <p><strong>Dosagem:</strong> ${alarme.medicamento?.dosagem || "Não informada"}</p>
+                    <div class="acoes-alarme">
+                        ${!alarme.tomado ? `<button class="btnTomado">Marcar como tomado</button>` : ""}
+                        <button class="btnRemoverAlarme">Remover</button>
+                    </div>
+                `;
 
-                    <span class="status-alarme">
-                        ${definirStatusAlarme(alarme)}
-                    </span>
-                </div>
-
-                <p>
-                    <strong>Dosagem:</strong>
-                    ${alarme.medicamento?.dosagem || "Não informada"}
-                </p>
-
-                <p>
-                    <strong>Finalidade:</strong>
-                    ${alarme.medicamento?.finalidade || "Não informada"}
-                </p>
-
-                <div class="acoes-alarme">
-                    ${
-                        !alarme.tomado
-                            ? `<button class="btnTomado">Marcar como tomado</button>`
-                            : ""
-                    }
-
-                    <button class="btnRemoverAlarme">Remover</button>
-                </div>
-            `;
-
-            if (!alarme.tomado) {
-                div.querySelector(".btnTomado").onclick = () => {
-                    marcarTomado(alarme.id);
-                };
-            }
-
-            div.querySelector(".btnRemoverAlarme").onclick = () => {
-                removerAlarme(alarme.id);
-            };
-
-            conteudo.appendChild(div);
-        });
-
+                if (!alarme.tomado) div.querySelector(".btnTomado").onclick = () => marcarTomado(alarme.id);
+                div.querySelector(".btnRemoverAlarme").onclick = () => removerAlarme(alarme.id);
+                conteudo.appendChild(div);
+            });
+        }
         lista.appendChild(grupo);
     }
 
     async function marcarTomado(id) {
         try {
-            const resposta = await fetch(
-                montarUrlComPaciente(`http://localhost:8085/alarmes/${id}/tomado`),
-                {
-                    method: "PATCH",
-                    headers: {
-                        "Authorization": "Bearer " + token
-                    }
-                }
-            );
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/alarmes/${id}/tomado`), {
+                method: "PATCH",
+                headers: { "Authorization": "Bearer " + token }
+            });
 
-            if (!resposta.ok) {
-                console.error("Erro ao marcar como tomado:", resposta.status);
-                alert("Erro ao marcar como tomado");
-                return;
+            if (resposta.ok) {
+                mostrarToast("Alarme marcado como tomado!");
+                carregarAlarmes();
+            } else {
+                alert("Erro ao atualizar status do alarme.");
             }
-
-            await carregarAlarmes();
-
-            alert("Alarme marcado como tomado!");
-
         } catch (erro) {
-            console.log(erro);
-            alert("Erro ao conectar com backend");
+            console.error(erro);
+            alert("Erro ao conectar com servidor.");
         }
     }
 
     async function removerAlarme(id) {
         try {
-            const resposta = await fetch(
-                montarUrlComPaciente(`http://localhost:8085/alarmes/${id}`),
-                {
-                    method: "DELETE",
-                    headers: {
-                        "Authorization": "Bearer " + token
-                    }
-                }
-            );
-
-            if (!resposta.ok) {
-                alert("Erro ao remover lembrete");
-                return;
-            }
-
-            carregarAlarmes();
-
+            const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/alarmes/${id}`), {
+                method: "DELETE",
+                headers: { "Authorization": "Bearer " + token }
+            });
+            if (resposta.ok) carregarAlarmes();
+            else alert("Erro ao remover lembrete");
         } catch (erro) {
             console.log(erro);
-            alert("Erro ao conectar com backend");
         }
     }
+
+    
 
     function agendarNotificacoes(alarmes) {
         limparTimersAlarmes();
@@ -361,5 +262,46 @@ function iniciarAlarmes() {
             dateStyle: "short",
             timeStyle: "short"
         });
+    }
+// 1. Salvar ou Editar (POST ou PUT)
+async function salvarLembreteManual() {
+        const nome = document.getElementById("nomeLembrete").value;
+        const horario = document.getElementById("dataHoraLembrete").value;
+        const id = document.getElementById("editId") ? document.getElementById("editId").value : "";
+
+        if (!nome || !horario) {
+            alert("Preencha o nome e o horário!");
+            return;
+        }
+
+        const payload = { 
+            horario: horario + ":00", // Garante o formato LocalDateTime
+            medicamento: { nome: nome } 
+        };
+
+        const url = id ? `http://localhost:8085/alarmes/${id}` : `http://localhost:8085/alarmes/manual`;
+        const method = id ? "PUT" : "POST";
+
+        try {
+            const res = await fetch(montarUrlComPaciente(url), {
+                method: method,
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                mostrarToast(id ? "Lembrete editado!" : "Lembrete criado!");
+                document.getElementById("nomeLembrete").value = "";
+                document.getElementById("dataHoraLembrete").value = "";
+                document.getElementById("editId").value = "";
+                carregarAlarmes();
+            }
+        } catch (e) { console.error(e); }
+    }
+
+    function prepararEdicao(alarme) {
+        document.getElementById("nomeLembrete").value = alarme.medicamento.nome;
+        document.getElementById("dataHoraLembrete").value = alarme.horario.substring(0, 16);
+        document.getElementById("editId").value = alarme.id;
     }
 }

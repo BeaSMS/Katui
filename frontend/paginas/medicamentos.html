@@ -12,15 +12,14 @@
 
         <input id="horarioMed" type="time">
 
-        <select id="tipoFreq">
+        <select id="tipoFreq" onchange="toggleValorFreq()">
             <option value="">Frequência de uso</option>
             <option value="DIARIO">Diário</option>
             <option value="INTERVALO_HORAS">A cada X horas</option>
             <option value="SEMANAL">Semanal</option>
             <option value="MENSAL">Mensal</option>
         </select>
-
-        <input id="valorFreq" type="number" placeholder="Valor da frequência">
+        <input id="valorFreq" type="number" placeholder="Ex: 6 (para 6 horas)" style="display:none;">    
 
         <div class="grupo-data">
             <label>Início do tratamento</label>
@@ -42,7 +41,29 @@
         </button>
 
     </div>
-
+    <div id="containerEdicao" style="display:none; border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+        <h3>Confirme os dados antes de gerar os alarmes:</h3>
+        <input id="editIdMed" type="hidden">
+        
+        <input id="editNome" type="text" placeholder="Nome">
+        <input id="editDosagem" type="text" placeholder="Dosagem">
+        <input id="editFinalidade" type="text" placeholder="Finalidade">
+        <input id="editHorario" type="time">
+        
+        <select id="editTipoFreq">
+            <option value="DIARIO">Diário</option>
+            <option value="INTERVALO_HORAS">A cada X horas</option>
+            <option value="SEMANAL">Semanal</option>
+            <option value="MENSAL">Mensal</option>
+        </select>
+        
+        <input id="editValorFreq" type="number" placeholder="Valor frequência (se aplicável)">
+        <input id="editDataInicio" type="date">
+        <input id="editDataFim" type="date">
+        <textarea id="editObs" placeholder="Observações"></textarea>
+        
+        <button id="btnConfirmarImportacao" class="btn-confirmar">Confirmar e Gerar Alarmes</button>
+        </div>
     <div id="listaMedicamentos" class="lista-meds"></div>
 
 </div>

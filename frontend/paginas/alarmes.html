@@ -6,10 +6,20 @@
         <h3>Notificações no computador</h3>
         <p id="statusNotificacao">Verificando permissão...</p>
         <button id="btnAtivarNotificacao">
-            Ativar lembretes no PC
+            Ativar notificações no PC
         </button>
     </div>
 
+    <div class="alarmes">
+    <h2>Lembretes</h2>
+    <div class="card-cadastro-alarme">
+        <h3>Novo Lembrete</h3>
+        <input id="nomeLembrete" type="text" placeholder="Nome do remédio/lembrete">
+        <input id="dataHoraLembrete" type="datetime-local">
+        <button id="btnSalvarLembrete" onclick="salvarLembreteManual()">Salvar Lembrete</button>
+    </div>
+
+    </div>
     <div id="listaAlarmes" class="lista-alarmes"></div>
 
 </div>

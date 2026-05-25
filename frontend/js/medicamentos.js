@@ -275,7 +275,77 @@ function iniciarMedicamentos() {
 
         return "Não informado";
     }
+
+
 }
+
+function exibirDadosParaEdicao(medData) {
+    document.getElementById("containerEdicao").style.display = "block";
+    
+    // Preenche o formulário com o que a IA leu
+    document.getElementById("editIdMed").value = medData.id; 
+    document.getElementById("editNome").value = medData.nome;
+    document.getElementById("editHorario").value = medData.horario;
+    document.getElementById("editTipoFreq").value = medData.tipoFrequencia;
+}
+
+function toggleValorFreq() {
+    const tipo = document.getElementById("tipoFreq").value;
+    const campoValor = document.getElementById("valorFreq");
+
+    // Mostra o campo apenas se for "A cada X horas"
+    if (tipo === "INTERVALO_HORAS") {
+        campoValor.style.display = "block";
+    } else {
+        campoValor.style.display = "none";
+        campoValor.value = ""; // Limpa o valor se o usuário trocar de opção
+    }
+}
+
+document.getElementById("btnConfirmarImportacao").onclick = async () => {
+    const medId = document.getElementById("editIdMed").value;
+    const token = localStorage.getItem("token");
+
+    // 1. Prepara o objeto com as edições do usuário
+    const medicamentoEditado = {
+        nome: document.getElementById("editNome").value,
+        horario: document.getElementById("editHorario").value,
+        tipoFrequencia: document.getElementById("editTipoFreq").value,
+        ativo: true
+        // Adicione aqui outros campos se necessário (ex: dosagem, finalidade)
+    };
+
+    try {
+        // 2. Primeiro: Salva as alterações (PUT)
+        const resPut = await fetch(montarUrlComPaciente(`http://localhost:8085/medicamentos/${medId}`), {
+            method: "PUT",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token 
+            },
+            body: JSON.stringify(medicamentoEditado)
+        });
+
+        if (!resPut.ok) throw new Error("Erro ao salvar edições");
+
+        // 3. Segundo: Agora que o dado está correto no banco, gera os alarmes
+        const resPost = await fetch(montarUrlComPaciente(`http://localhost:8085/medicamentos/${medId}/alarmes`), {
+            method: "POST",
+            headers: { "Authorization": "Bearer " + token }
+        });
+
+        if (resPost.ok) {
+            alert("Tratamento confirmado e alarmes atualizados!");
+            document.getElementById("containerEdicao").style.display = "none";
+            carregarMedicamentos();
+        } else {
+            alert("Erro ao gerar alarmes.");
+        }
+    } catch (e) {
+        console.error(e);
+        alert("Erro ao processar confirmação.");
+    }
+};
 
 function formatarDataMed(data) {
 
