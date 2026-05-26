@@ -957,7 +957,7 @@ textarea:focus {
 /* FORMULÁRIOS SIMPLES */
 
 .form-consulta,
-.form-exame,
+.form-exame,.card-cadastro-alarme,
 .form-receita {
     display: flex;
     gap: 12px;
@@ -969,7 +969,7 @@ textarea:focus {
     box-shadow: var(--sombra-card);
     border: 1px solid var(--cor-borda);
 }
-
+.card-cadastro-alarme input,
 .form-consulta input,
 .form-exame input,
 .form-receita input {
