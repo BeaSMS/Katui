@@ -204,7 +204,7 @@ textarea:focus {
 
 .rodapeSecoes {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 35px;
     max-width: 1050px;
     margin: 0 auto 25px;
