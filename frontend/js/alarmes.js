@@ -13,7 +13,7 @@ function iniciarAlarmes() {
 
     carregarAlarmes();
 
-    async function carregarAlarmes() {
+async function carregarAlarmes() {
         lista.innerHTML = "<p>Carregando lembretes...</p>";
         try {
             const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/alarmes"), {
@@ -31,22 +31,57 @@ function iniciarAlarmes() {
                 return;
             }
 
-            // 1. Agrupar os alarmes pelo NOME do medicamento
-            const alarmesPorRemedio = {};
+            // --- SEPARAÇÃO DE LÓGICA ---
+            const alarmesMedicamentos = alarmes.filter(a => a.medicamento != null);
+            const lembretesManuais = alarmes.filter(a => a.medicamento == null);
 
-            alarmes.forEach(alarme => {
-                const nomeMed = alarme.medicamento?.nome || "Medicamento Desconhecido";
-                if (!alarmesPorRemedio[nomeMed]) {
-                    alarmesPorRemedio[nomeMed] = [];
+            // 1. Processar Alarmes de Medicamentos (Com Sanfona)
+            if (alarmesMedicamentos.length > 0) {
+                const alarmesPorRemedio = {};
+                alarmesMedicamentos.forEach(alarme => {
+                    const nomeMed = alarme.medicamento.nome;
+                    if (!alarmesPorRemedio[nomeMed]) alarmesPorRemedio[nomeMed] = [];
+                    alarmesPorRemedio[nomeMed].push(alarme);
+                });
+
+                for (const nomeMed in alarmesPorRemedio) {
+                    let alarmesDoMed = alarmesPorRemedio[nomeMed];
+
+                    // REGRA NOVA 2: Ocultar o card se TODOS os alarmes do remédio já foram tomados
+                    const todosTomados = alarmesDoMed.every(alarme => alarme.tomado === true);
+                    if (todosTomados) {
+                        continue; // Ignora o remédio e não renderiza ele na tela
+                    }
+
+                    // REGRA NOVA 1: Doses tomadas vão pro final da fila
+                    alarmesDoMed.sort((a, b) => {
+                        // Se "a" foi tomado e "b" não, "a" vai pro final (retorna 1)
+                        if (a.tomado && !b.tomado) return 1;
+                        // Se "b" foi tomado e "a" não, "a" sobe na fila (retorna -1)
+                        if (!a.tomado && b.tomado) return -1;
+                        
+                        // Desempate cronológico
+                        return new Date(a.horario) - new Date(b.horario);
+                    });
+
+                    criarGrupoRemedio(nomeMed, alarmesDoMed);
                 }
-                alarmesPorRemedio[nomeMed].push(alarme);
-            });
+            }
 
-            // 2. Para cada remédio, criar o card (sanfona/accordion)
-            for (const nomeMed in alarmesPorRemedio) {
-                // Ordena os alarmes desse remédio cronologicamente
-                const alarmesDoMed = alarmesPorRemedio[nomeMed].sort((a, b) => new Date(a.horario) - new Date(b.horario));
-                criarGrupoRemedio(nomeMed, alarmesDoMed);
+            // 2. Processar Lembretes Avulsos (Sem Sanfona)
+            if (lembretesManuais.length > 0) {
+                if (alarmesMedicamentos.length > 0) {
+                    const divisor = document.createElement("h3");
+                    divisor.style.marginTop = "30px";
+                    divisor.style.color = "var(--cor-principal)";
+                    divisor.textContent = "Outros Lembretes";
+                    lista.appendChild(divisor);
+                }
+
+                // Ordena e cria os cards individuais
+                lembretesManuais.sort((a, b) => new Date(a.horario) - new Date(b.horario)).forEach(lembrete => {
+                    criarCardLembreteIndividual(lembrete);
+                });
             }
 
             agendarNotificacoes(alarmes);
@@ -57,6 +92,48 @@ function iniciarAlarmes() {
         }
     }
 
+    window.salvarLembreteManual = async function() {
+        const nome = document.getElementById("nomeLembrete").value;
+        const horario = document.getElementById("dataHoraLembrete").value;
+
+        if (!nome || !horario) {
+            alert("Por favor, preencha o nome e o horário do lembrete!");
+            return;
+        }
+
+        try {
+            const url = montarUrlComPaciente("http://localhost:8085/alarmes/lembrete"); 
+
+            const resposta = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                    titulo: nome, // CORREÇÃO: Enviando o valor da variável 'nome' para a propriedade 'titulo' que o Java espera
+                    horario: horario
+                })
+            });
+
+            if (!resposta.ok) {
+                throw new Error("Falha ao salvar no banco de dados.");
+            }
+
+            alert("Lembrete salv com sucesso!");
+            
+            // Limpa os campos após salvar
+            document.getElementById("nomeLembrete").value = "";
+            document.getElementById("dataHoraLembrete").value = "";
+            
+            // Recarrega a tela para exibir o novo alarme imediatamente
+            carregarAlarmes();
+
+        } catch (erro) {
+            console.error("Erro ao salvar lembrete:", erro);
+            alert("Erro ao conectar com o backend. Verifique o console.");
+        }
+    };
     function criarGrupoRemedio(nomeMed, alarmes) {
         const grupo = document.createElement("div");
         grupo.classList.add("grupo-dia-alarme");
@@ -131,6 +208,44 @@ function iniciarAlarmes() {
         lista.appendChild(grupo);
     }
 
+    function criarCardLembreteIndividual(alarme) {
+        const div = document.createElement("div");
+        div.className = `alarme ${alarme.tomado ? 'tomado' : ''} ${!alarme.tomado && alarmeAtrasado(alarme.horario) ? 'atrasado' : ''}`;
+        
+        div.style.padding = "18px";
+        div.style.border = "1px solid var(--cor-borda)";
+        div.style.borderLeft = alarme.tomado ? "6px solid var(--cor-sucesso)" : (alarmeAtrasado(alarme.horario) ? "6px solid var(--cor-erro)" : "6px solid var(--cor-alerta)");
+        div.style.display = "flex";
+        div.style.justifyContent = "space-between";
+        div.style.alignItems = "center";
+        div.style.marginBottom = "15px";
+        div.style.backgroundColor = alarme.tomado ? "#eefaf2" : (alarmeAtrasado(alarme.horario) ? "#fff5f5" : "var(--cor-card)");
+        div.style.borderRadius = "12px";
+        div.style.boxShadow = "var(--sombra-card)";
+
+        div.innerHTML = `
+            <div>
+                <h3 style="margin: 0 0 5px 0; color: var(--cor-principal); font-size: 1.2em;">📌 ${alarme.titulo || 'Lembrete'}</h3>
+                <span style="color: var(--cor-texto-claro); font-size: 0.95em;">📅 ${formatarDataHoraAlarme(alarme.horario)}</span>
+                <span style="margin-left: 10px; font-size: 0.85em; font-weight: bold; color: ${alarme.tomado ? '#1e8449' : (alarmeAtrasado(alarme.horario) ? '#c0392b' : '#856404')}; background: ${alarme.tomado ? '#d4edda' : (alarmeAtrasado(alarme.horario) ? '#f8d7da' : '#fff3cd')}; padding: 4px 8px; border-radius: 12px;">
+                    ${definirStatusAlarme(alarme, true)}
+                </span>
+            </div>
+            <div class="acoes-alarme" style="margin-top: 0;">
+                ${!alarme.tomado ? `<button class="btnTomado" style="background-color: var(--cor-sucesso); color: white; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: bold;">✔ Resolvido</button>` : ""}
+                <button class="btnRemoverAlarme" style="background-color: var(--cor-erro); color: white; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: bold;">✖ Excluir</button>
+            </div>
+        `;
+
+        if (!alarme.tomado) {
+            // Reaproveita a mesma rota de API, pois no banco a coluna chama "tomado" (booleano)
+            div.querySelector(".btnTomado").onclick = () => marcarTomado(alarme.id);
+        }
+        div.querySelector(".btnRemoverAlarme").onclick = () => removerAlarme(alarme.id);
+
+        lista.appendChild(div);
+    }
+
     async function marcarTomado(id) {
         try {
             const resposta = await fetch(montarUrlComPaciente(`http://localhost:8085/alarmes/${id}/tomado`), {
@@ -182,8 +297,8 @@ function iniciarAlarmes() {
 
     function alarmeAtrasado(horario) { return new Date(horario) < new Date(); }
     
-    function definirStatusAlarme(alarme) {
-        if (alarme.tomado) return "Tomado";
+    function definirStatusAlarme(alarme, isLembreteAvulso = false) {
+        if (alarme.tomado) return isLembreteAvulso ? "Resolvido" : "Tomado";
         if (alarmeAtrasado(alarme.horario)) return "Atrasado";
         return "Pendente";
     }

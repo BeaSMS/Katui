@@ -6,6 +6,8 @@ import com.katui.entity.Usuario;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import jakarta.transaction.Transactional;
@@ -19,7 +21,8 @@ public interface AlarmeRepository extends JpaRepository<Alarme, Long> {
 
     List<Alarme> findByMedicamento(Medicamento medicamento);
 
-    List<Alarme> findByUsuarioAndMedicamentoAtivoTrue(Usuario usuario);
+    @Query("SELECT a FROM Alarme a LEFT JOIN a.medicamento m WHERE a.usuario = :usuario AND (m IS NULL OR m.ativo = true)")
+    List<Alarme> findAlarmesValidosPorUsuario(@Param("usuario") Usuario usuario);
 
     @Transactional
     @Modifying

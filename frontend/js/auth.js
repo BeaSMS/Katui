@@ -241,7 +241,7 @@ function sair() {
 
     document.getElementById("itemLogin").style.display = "block";
     document.getElementById("itemCadastro").style.display = "block";
-
+    document.getElementById("itemAlarme").style.display = "none";
     document.getElementById("itemDashboard").style.display = "none";
     document.getElementById("itemMedicamentos").style.display = "none";
     document.getElementById("itemSintomas").style.display = "none";

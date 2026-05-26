@@ -19,6 +19,8 @@ public class Alarme {
 
     private LocalDateTime horario;
 
+    private String titulo;
+
     private Boolean tomado;
 
     @ManyToOne

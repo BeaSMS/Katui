@@ -94,4 +94,19 @@ public class AlarmeController {
 
         service.deletar(id, usuario);
     }
+    
+    @PostMapping("/lembrete")
+    public Alarme criarLembrete(
+            @RequestBody Alarme alarme,
+            @RequestParam(value = "pacienteId", required = false) Long pacienteId,
+            Authentication authentication
+    ) {
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+
+        if (pacienteId != null) {
+            usuario = cuidadorService.verificarAcesso(usuario, pacienteId);
+        }
+
+        return service.criarLembrete(alarme, usuario);
+    }
 }

@@ -143,7 +143,14 @@ public class AlarmeService {
     }
 
     public List<Alarme> listar(Usuario usuario) {
-        return repository.findByUsuarioAndMedicamentoAtivoTrue(usuario);
+        return repository.findAlarmesValidosPorUsuario(usuario);
+    }
+
+    public Alarme criarLembrete(Alarme alarme, Usuario usuario) {
+        alarme.setUsuario(usuario);
+        alarme.setTomado(false);
+        // medicamento fica null de propósito, pois é um lembrete avulso
+        return repository.save(alarme);
     }
 
     public Alarme buscar(Long id, Usuario usuario) {
