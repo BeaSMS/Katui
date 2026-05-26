@@ -87,11 +87,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pagina.includes('qrcode')) {
                 iniciarQRCode();
             }
+            if (pagina.includes('ajuda')) {
+                iniciarAjuda();
+            }
         })
         .catch(err => {
             conteudo.innerHTML = "<p>Erro ao carregar conteúdo</p>";
             console.log(err);
         });
+        controlarVisibilidadeMenu();
     }
 
     // DISPARA A VERIFICAÇÃO ASSIM QUE O SITE ENTRA NO AR
@@ -100,31 +104,26 @@ document.addEventListener('DOMContentLoaded', () => {
     /*Deixa a função acessível no HTML*/
     window.carregarPagina = carregarPagina;
 
-        const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     if (token) {
-
         mostrarMenuSistema();
-
+        controlarVisibilidadeMenu(); // Garante que o menu está certo
+        
         const tipoUsuario = localStorage.getItem("tipoUsuario");
         const pacienteSelecionado = localStorage.getItem("pacienteSelecionadoId");
 
-        if (tipoUsuario === "CUIDADOR" && !pacienteSelecionado) {
-
-            carregarPagina('paginas/pacientes.html');
-
-        } else {
-
-            carregarPagina('paginas/dashboard.html');
-
+        // AQUI: Apenas redireciona se for o carregamento inicial (se estiver no index)
+        if (window.location.pathname === '/' || window.location.pathname.includes('index.html')) {
+            if (tipoUsuario === "CUIDADOR" && !pacienteSelecionado) {
+                carregarPagina('paginas/pacientes.html');
+            } else {
+                carregarPagina('paginas/dashboard.html');
+            }
         }
-
     } else {
-
         carregarPagina('paginas/auth/login.html');
-
     }
-    voltarInicio();
 
 });    
 
@@ -172,24 +171,47 @@ function mostrarAvisoPacienteSelecionado() {
     conteudo.prepend(aviso);
 }
 
-async function gerarQRCode() {
-
+async function iniciarQRCode() {
+    console.log("Iniciando lógica de QR Code..."); // Isso vai aparecer no F12 se funcionar
+    
     const token = localStorage.getItem("token");
+    const pacienteId = localStorage.getItem("pacienteSelecionadoId");
+    
+    // URL dinâmica: se tem paciente, pega o dele, se não, pega o do cuidador
+    const urlBase = pacienteId 
+        ? `http://localhost:8085/usuarios/qrcode?pacienteId=${pacienteId}` 
+        : "http://localhost:8085/usuarios/qrcode";
 
-    const resposta = await fetch("http://localhost:8085/medico/token", {
-        method: "POST",
-        headers: { "Authorization": "Bearer " + token }
-    });
+    try {
+        const resposta = await fetch(urlBase, {
+            method: "GET",
+            headers: { "Authorization": "Bearer " + token }
+        });
 
-    const dados = await resposta.json();
+        if (!resposta.ok) {
+            console.error("Erro na resposta do servidor:", resposta.status);
+            throw new Error("Erro ao buscar dados do QR");
+        }
 
-    // Usa a API do QR Server para gerar o QR code
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(dados.url)}`;
+        const dados = await resposta.json();
+        
+        // Verifica se os elementos existem antes de tentar acessar
+        const imgElement = document.getElementById("qrCodeImg");
+        const expElement = document.getElementById("qrExpiracao");
 
-    document.getElementById("qrCodeImg").src = qrUrl;
-    document.getElementById("qrCodeImg").style.display = "block";
-    document.getElementById("qrExpiracao").textContent =
-        "Expira em: " + new Date(dados.expiracao).toLocaleTimeString();
+        if (imgElement) {
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(dados.url)}`;
+            imgElement.src = qrUrl;
+            imgElement.style.display = "block";
+        }
+        
+        if (expElement) {
+            expElement.textContent = "Expira em: " + new Date(dados.expiracao).toLocaleTimeString();
+        }
+    } catch (e) {
+        console.error("Erro no QR Code:", e);
+        alert("Erro ao gerar QR Code. Verifique o console.");
+    }
 }
 
 // FUNÇÃO DE VALIDAÇÃO DE LOGIN E TOKEN ATIVO
@@ -218,7 +240,9 @@ async function verificarAutenticacaoInicial() {
             if (typeof mostrarMenuSistema === "function") {
                 mostrarMenuSistema(); 
             }
-            
+            if (typeof controlarVisibilidadeMenu === "function") {
+                controlarVisibilidadeMenu(); 
+            }
             if (tipoUsuario === "CUIDADOR" && !pacienteSelecionado) {
                 carregarPagina('paginas/pacientes.html');
             } else {
@@ -233,5 +257,22 @@ async function verificarAutenticacaoInicial() {
         console.error("Erro ao conectar com o servidor para validar token:", erro);
         // Se a API Java estiver offline ou falhar, por segurança, joga para o login
         carregarPagina('paginas/auth/login.html');
+    }
+}
+function controlarVisibilidadeMenu() {
+    const token = localStorage.getItem("token");
+    const display = token ? "block" : "none";
+    const inverseDisplay = token ? "none" : "block";
+
+    // Ocultar/Mostrar itens de Auth
+    const itemLogin = document.getElementById("itemLogin");
+    const itemCadastro = document.getElementById("itemCadastro");
+    if(itemLogin) itemLogin.style.display = inverseDisplay;
+    if(itemCadastro) itemCadastro.style.display = inverseDisplay;
+    
+    // CORREÇÃO: Usando o ID correto do seu HTML: btnQRCodeHeader
+    const btnQr = document.getElementById("btnQRCodeHeader"); 
+    if(btnQr) {
+        btnQr.style.display = token ? "flex" : "none"; // flex para manter o alinhamento
     }
 }

@@ -3,15 +3,54 @@
     <h2>Meus Pacientes</h2>
 
     <div class="form-paciente">
-
-        <input id="emailPaciente" type="email" placeholder="Email do paciente">
-
-        <button id="btnAddPaciente">
-            Adicionar Paciente
+        <button id="btnNovaRegistro" class="btn-secundario">
+            Registrar Novo Paciente
         </button>
-
     </div>
 
     <div id="listaPacientes" class="lista-pacientes"></div>
 
+</div>
+
+<!-- Modal de Cadastro de Novo Paciente -->
+<div id="modalCadastroPaciente" class="modal">
+    <div class="modal-conteudo">
+        <div class="modal-header">
+            <h3>Registrar Novo Paciente</h3>
+            <button class="fechar-modal" onclick="fecharModalCadastroPaciente()">✕</button>
+        </div>
+        
+        <form id="formCadastroPaciente" class="formCadastro">
+            <label>Nome</label>
+            <input id="nomePacienteReg" type="text" required>
+
+            <label>Email</label>
+            <input id="emailPacienteReg" type="email" required>
+
+            <label>Telefone</label>
+            <input id="telefonePacienteReg" type="text" required>
+
+            <label>Altura (m)</label>
+            <input id="alturaPacienteReg" type="number" step="0.01" required>
+
+            <label>Peso (kg)</label>
+            <input id="pesoPacienteReg" type="number" step="0.1" required>
+
+            <label>Alergias</label>
+            <input id="alergiasPacienteReg" type="text">
+
+            <label>Senha</label>
+            <input id="senhaPacienteReg" type="password" required>
+
+            <div class="botoes-modal">
+                <button type="button" onclick="registrarNovoPaciente()" class="btn-primary">
+                    Registrar e Adicionar
+                </button>
+
+                <button type="button" onclick="fecharModalCadastroPaciente()" class="btn-cancelar">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
 </div>

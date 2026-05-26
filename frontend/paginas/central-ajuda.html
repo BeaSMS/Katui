@@ -1,0 +1,195 @@
+<div class="central-ajuda">
+
+    <h2>Central de Ajuda</h2>
+
+    <div class="ajuda-container">
+
+        <div class="busca-ajuda">
+            <input id="buscaAjuda" type="text" placeholder="Busque por uma pergunta ou tópico...">
+        </div>
+
+        <div class="categorias-ajuda">
+
+            <div class="categoria-ajuda">
+                <h3>🔐 Autenticação e Acesso</h3>
+                <div class="faqs">
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Como fazer login?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Para fazer login, acesse a página de login e insira seu email e senha. Se você ainda não possui conta, clique em "Cadastro" para criar uma.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Esqueci minha senha, como recuperá-la?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Clique em "Esqueci a senha" na página de login. Você receberá um email com instruções para recuperar sua senha.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Qual é a diferença entre Paciente e Cuidador?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p><strong>Paciente:</strong> É quem acompanha sua própria saúde, registrando sintomas, medicamentos e consultas.</p>
+                            <p><strong>Cuidador:</strong> Pode gerenciar múltiplos pacientes, acompanhando a saúde deles e recebendo alertas importantes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="categoria-ajuda">
+                <h3>📊 Dashboard e Acompanhamento</h3>
+                <div class="faqs">
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Como registrar um sintoma?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Acesse o menu "Sintomas" e clique em "Adicionar Sintoma". Preencha os detalhes do sintoma, como nome, intensidade, duração e fatores que o causaram.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Como gerenciar medicamentos?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Vá até "Medicamentos" para adicionar, editar ou remover medicamentos. Você pode definir horários de alarme para não esquecer de tomar.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Posso registrar alarmes para lembretes?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Sim! Na seção "Alarmes", você pode criar lembretes para medicamentos, consultas ou qualquer outra atividade importante. Você receberá notificações nos horários configurados.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="categoria-ajuda">
+                <h3>👥 Gerenciamento de Pacientes</h3>
+                <div class="faqs">
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Como adicionar um novo paciente?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Vá até "Meus Pacientes" e clique em "Registrar Novo Paciente". Preencha os dados do paciente e ele será adicionado à sua lista automaticamente.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Como visualizar dados de um paciente?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Na página "Meus Pacientes", clique em "Acessar Dados" do paciente desejado. Você será redirecionado ao dashboard desse paciente.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Como remover um paciente da minha lista?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Na página "Meus Pacientes", clique no botão "Remover" ao lado do paciente que deseja remover. A ação é irreversível.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="categoria-ajuda">
+                <h3>🏥 Consultas, Exames e Receitas</h3>
+                <div class="faqs">
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Como agendar uma consulta?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Acesse "Consultas" e clique em "Adicionar Consulta". Preencha os detalhes como médico, data, hora e motivo da consulta.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Como compartilhar meus dados com um médico?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Use o QR Code disponível no botão na barra superior. Seu médico pode escanear este código para acessar seus dados de forma segura.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Como adicionar resultados de exames?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Vá até "Exames" e clique em "Adicionar Exame". Você pode carregar imagens dos resultados e adicionar notas importantes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="categoria-ajuda">
+                <h3>♿ Acessibilidade</h3>
+                <div class="faqs">
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Como alterar o tamanho da fonte?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Acesse seu "Perfil" e vá até a seção "Acessibilidade". Lá você encontrará a opção para aumentar ou diminuir o tamanho da fonte.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            O site tem modo escuro?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Sim! Na seção "Acessibilidade" do seu "Perfil", você pode ativar o modo escuro para uma experiência mais confortável em ambientes com pouca luz.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-pergunta" onclick="toggleResposta(this)">
+                            Existe fonte específica para dislexia?
+                            <span>+</span>
+                        </button>
+                        <div class="faq-resposta" style="display: none;">
+                            <p>Sim! Na seção "Acessibilidade" do seu "Perfil", você pode ativar a "Fonte Dislexia Friendly", que foi especialmente projetada para melhorar a leitura.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="../js/ajuda.js"></script>

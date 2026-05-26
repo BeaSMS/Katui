@@ -84,7 +84,7 @@ async function fazerLogin() {
 
     const email = document.getElementById("emailLogin").value;
     const senha = document.getElementById("senhaLogin").value;
-
+    
     try {
 
         const resposta = await fetch("http://localhost:8085/auth/login", {
@@ -137,8 +137,9 @@ async function fazerLogin() {
 
         // salva tipo
         localStorage.setItem("tipoUsuario", usuario.tipo);
-
+        
         mostrarMenuSistema();
+        controlarVisibilidadeMenu();
 
         // cuidador vai para pacientes
         if (usuario.tipo === "CUIDADOR") {
@@ -250,6 +251,8 @@ function sair() {
     document.getElementById("itemReceitas").style.display = "none";
     document.getElementById("itemSair").style.display = "none";
 
+    controlarVisibilidadeMenu()
+
     const itemPacientes =
         document.getElementById("itemPacientes");
 
@@ -280,4 +283,19 @@ function mostrarCamposCadastro() {
         document.getElementById("pesoCadastro").value = "";
         document.getElementById("alergiasCadastro").value = "";
     }
+}
+function controlarVisibilidadeMenu() {
+    const token = localStorage.getItem("token");
+    const display = token ? "block" : "none";
+    const inverseDisplay = token ? "none" : "block";
+
+    // Ocultar/Mostrar itens de Auth
+    const itemLogin = document.getElementById("itemLogin");
+    const itemCadastro = document.getElementById("itemCadastro");
+    if(itemLogin) itemLogin.style.display = inverseDisplay;
+    if(itemCadastro) itemCadastro.style.display = inverseDisplay;
+    
+    // Oculta o botão QR Code do Header se não estiver logado
+    const btnQrHeader = document.getElementById("btnQRCodeHeader"); 
+    if(btnQrHeader) btnQrHeader.style.display = display;
 }

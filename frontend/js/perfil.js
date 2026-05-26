@@ -141,4 +141,114 @@ async function iniciarPerfil() {
             alert("Erro ao conectar com backend");
         }
     };
+
+    // Carrega preferências de acessibilidade
+    carregarPreferenciasAcessibilidade();
+}
+
+// Funções de Acessibilidade
+function carregarPreferenciasAcessibilidade() {
+    // Carrega tamanho da fonte
+    const tamanhoSalvo = localStorage.getItem("tamanhoFonte") || "normal";
+    document.getElementById("tamanhoFonte").value = tamanhoSalvo;
+    aplicarTamanhFonte(tamanhoSalvo);
+
+    // Carrega modo escuro
+    const modoEscuroSalvo = localStorage.getItem("modoEscuro") === "true";
+    document.getElementById("modoEscuro").checked = modoEscuroSalvo;
+    if (modoEscuroSalvo) {
+        aplicarModoEscuro();
+    }
+
+    // Carrega fonte dislexia
+    const fonteDislexiaSalva = localStorage.getItem("fonteDislexia") === "true";
+    document.getElementById("fonteDislexia").checked = fonteDislexiaSalva;
+    if (fonteDislexiaSalva) {
+        aplicarFonteDislexia();
+    }
+}
+
+function alterarTamanhFonte() {
+    const tamanho = document.getElementById("tamanhoFonte").value;
+    localStorage.setItem("tamanhoFonte", tamanho);
+    aplicarTamanhFonte(tamanho);
+}
+
+function aplicarTamanhFonte(tamanho) {
+    let raiz = document.documentElement;
+
+    switch (tamanho) {
+        case "pequeno":
+            raiz.style.fontSize = "12px";
+            break;
+        case "normal":
+            raiz.style.fontSize = "16px";
+            break;
+        case "grande":
+            raiz.style.fontSize = "18px";
+            break;
+        case "extragrande":
+            raiz.style.fontSize = "20px";
+            break;
+    }
+}
+
+function alterarModoEscuro() {
+    const ativo = document.getElementById("modoEscuro").checked;
+    localStorage.setItem("modoEscuro", ativo);
+    
+    if (ativo) {
+        aplicarModoEscuro();
+    } else {
+        removerModoEscuro();
+    }
+}
+
+function aplicarModoEscuro() {
+    document.documentElement.style.setProperty("--cor-fundo", "#1e1e1e");
+    document.documentElement.style.setProperty("--cor-texto", "#e0e0e0");
+    document.documentElement.style.setProperty("--cor-card", "#2d2d2d");
+    document.body.style.backgroundColor = "#1e1e1e";
+    document.body.style.color = "#e0e0e0";
+}
+
+function removerModoEscuro() {
+    // Redefine as variáveis CSS para os valores padrão
+    document.documentElement.style.setProperty("--cor-fundo", "#f6f8f8");
+    document.documentElement.style.setProperty("--cor-texto", "#263238");
+    document.documentElement.style.setProperty("--cor-card", "#ffffff");
+    document.body.style.backgroundColor = "";
+    document.body.style.color = "";
+}
+
+function alterarFonteDislexia() {
+    const ativo = document.getElementById("fonteDislexia").checked;
+    localStorage.setItem("fonteDislexia", ativo);
+    
+    if (ativo) {
+        aplicarFonteDislexia();
+    } else {
+        removerFonteDislexia();
+    }
+}
+
+function aplicarFonteDislexia() {
+    // Importa a fonte OpenDyslexic do Google Fonts
+    const link = document.createElement("link");
+    link.href = "https://fonts.googleapis.com/css2?family=OpenDyslexic:wght@400;700&display=swap";
+    link.rel = "stylesheet";
+    
+    if (!document.querySelector('link[href*="OpenDyslexic"]')) {
+        document.head.appendChild(link);
+    }
+
+    document.body.style.fontFamily = "'OpenDyslexic', cursive";
+    document.body.style.letterSpacing = "0.1em";
+    document.body.style.lineHeight = "1.8";
+}
+
+function removerFonteDislexia() {
+    document.body.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif";
+    document.body.style.letterSpacing = "normal";
+    document.body.style.lineHeight = "normal";
 }

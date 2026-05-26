@@ -156,7 +156,6 @@ function iniciarReceitas() {
     }
 
     async function processarReceita(id, areaResultado) {
-
         areaResultado.innerHTML = "<p>Processando receita... Aguarde.</p>";
 
         try {
@@ -169,7 +168,6 @@ function iniciarReceitas() {
 
             if (!resposta.ok) {
                 const erro = await resposta.text();
-                console.log("Erro ao processar receita:", erro);
                 areaResultado.innerHTML = `<p>Erro ao processar receita: ${erro}</p>`;
                 return;
             }
@@ -182,43 +180,62 @@ function iniciarReceitas() {
                 return;
             }
 
-            medicamentos.forEach(med => {
+            medicamentos.forEach((med, index) => {
                 const div = document.createElement("div");
                 div.classList.add("medicamento-extraido");
-                div.style.border = "1px solid #ccc"; // Apenas para destacar, pode tirar se já tiver CSS
-                div.style.padding = "10px";
+                div.style.border = "1px solid #ccc";
+                div.style.padding = "15px";
                 div.style.marginTop = "10px";
+                div.style.borderRadius = "8px";
 
-                // Desenhando o card com os campos exatos do MedicamentoExtratoDTO
+                // Desenhando o card com INPUTS para edição
                 div.innerHTML = `
-                    <div class="med-topo">
+                    <h3 style="color: #2da79d; margin-bottom: 10px;">
+                        <input type="text" id="ocr_nome_${index}" value="${med.nome || ''}" style="font-size: 1.2em; font-weight: bold; width: 100%; border: none; border-bottom: 1px solid #ccc;">
+                    </h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
                         <div>
-                            <h3>${med.nome}</h3>
-                            <span class="dosagem">Duração: ${med.dias ? med.dias + ' dias' : 'Não informada'}</span>
+                            <label style="font-size: 0.85em; color: #666;">Duração (dias):</label>
+                            <input type="number" id="ocr_dias_${index}" value="${med.dias || ''}" style="width: 100%; padding: 5px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85em; color: #666;">Horário Inicial:</label>
+                            <input type="time" id="ocr_horario_${index}" value="${med.horarioInicial || '08:00'}" style="width: 100%; padding: 5px;">
                         </div>
                     </div>
 
-                    <p>
-                        <strong>Horário Inicial:</strong>
-                        ${med.horarioInicial || "Não informado"}
-                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                        <div>
+                            <label style="font-size: 0.85em; color: #666;">Frequência:</label>
+                            <select id="ocr_tipoFreq_${index}" style="width: 100%; padding: 5px;" onchange="document.getElementById('ocr_valorFreq_${index}').style.display = this.value === 'INTERVALO_HORAS' ? 'block' : 'none'">
+                                <option value="DIARIO" ${med.tipoFrequencia === 'DIARIO' ? 'selected' : ''}>Diário</option>
+                                <option value="INTERVALO_HORAS" ${med.tipoFrequencia === 'INTERVALO_HORAS' ? 'selected' : ''}>A cada X horas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85em; color: #666;">Intervalo (Horas):</label>
+                            <input type="number" id="ocr_valorFreq_${index}" value="${med.valorFrequencia || ''}" style="width: 100%; padding: 5px; display: ${med.tipoFrequencia === 'INTERVALO_HORAS' ? 'block' : 'none'};">
+                        </div>
+                    </div>
 
-                    <p>
-                        <strong>Frequência:</strong>
-                        ${med.tipoFrequencia === 'INTERVALO_HORAS' ? `A cada ${med.valorFrequencia} horas` : 
-                         med.tipoFrequencia === 'VEZES_DIA' ? `${med.valorFrequencia} vezes ao dia` : 'Uso contínuo/Específico'}
-                    </p>
-
-                    <div class="acoes-med" style="margin-top: 10px;">
-                        <button class="btnAddMedicamentoReceita">
+                    <div class="acoes-med" style="margin-top: 10px; display: flex; gap: 10px;">
+                        <button class="btnAddMedicamentoReceita" style="background-color: #2da79d; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">
                             Salvar na minha rotina
                         </button>
                     </div>
                 `;
 
-                // Agora o JavaScript vai encontrar o botão e o evento de clique vai funcionar
+                // Ação de salvar lendo os dados recém-editados nos inputs
                 div.querySelector(".btnAddMedicamentoReceita").onclick = () => {
-                    adicionarMedicamentoDaReceita(med);
+                    const dadosValidados = {
+                        nome: document.getElementById(`ocr_nome_${index}`).value,
+                        dias: document.getElementById(`ocr_dias_${index}`).value ? Number(document.getElementById(`ocr_dias_${index}`).value) : null,
+                        horarioInicial: document.getElementById(`ocr_horario_${index}`).value,
+                        tipoFrequencia: document.getElementById(`ocr_tipoFreq_${index}`).value,
+                        valorFrequencia: document.getElementById(`ocr_valorFreq_${index}`).value ? Number(document.getElementById(`ocr_valorFreq_${index}`).value) : null
+                    };
+                    adicionarMedicamentoDaReceita(dadosValidados, div);
                 };
 
                 areaResultado.appendChild(div);
@@ -230,24 +247,25 @@ function iniciarReceitas() {
         }
     }
 
-    async function adicionarMedicamentoDaReceita(med) {
-
-        if (!med.nome) {
-            alert("Medicamento sem nome identificado");
+    async function adicionarMedicamentoDaReceita(medValidado, divCard) {
+        if (!medValidado.nome) {
+            alert("O medicamento precisa de um nome.");
             return;
         }
 
         const medicamento = {
-            nome: med.nome,
-            horario: med.horarioInicial || "08:00",
-            tipoFrequencia: med.tipoFrequencia || "dias",
-            valorFrequencia: med.valorFrequencia || null,
-            dias: med.dias || null
+            nome: medValidado.nome,
+            horario: medValidado.horarioInicial,
+            tipoFrequencia: medValidado.tipoFrequencia,
+            valorFrequencia: medValidado.valorFrequencia,
+            dias: medValidado.dias,
+            ativo: true,
+            dataInicio: new Date().toISOString().split("T")[0]
         };
 
         try {
-
-            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/medicamentos"), {
+            // O Segredo: A URL envia ?gerarAlarmes=true para já configurar o tratamento
+            const resposta = await fetch(montarUrlComPaciente("http://localhost:8085/medicamentos?gerarAlarmes=true"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -261,7 +279,10 @@ function iniciarReceitas() {
                 return;
             }
 
-            alert("Medicamento adicionado com sucesso!");
+            alert("Medicamento salvo e alarmes configurados na sua rotina!");
+            
+            // Remove o card da tela, já que foi salvo com sucesso
+            divCard.remove(); 
 
         } catch (erro) {
             console.log(erro);

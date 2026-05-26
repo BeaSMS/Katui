@@ -3,7 +3,6 @@ function iniciarPacientes() {
     const token = localStorage.getItem("token");
 
     const lista = document.getElementById("listaPacientes");
-    const btn = document.getElementById("btnAddPaciente");
 
     if (!token) {
         alert("Você precisa fazer login");
@@ -11,51 +10,11 @@ function iniciarPacientes() {
         return;
     }
 
-    if (!lista || !btn) {
+    if (!lista) {
         return;
     }
 
     carregarPacientes();
-
-    btn.onclick = async () => {
-
-        const email = document.getElementById("emailPaciente").value;
-
-        if (!email) {
-            alert("Digite o email do paciente!");
-            return;
-        }
-
-        try {
-
-            const resposta = await fetch(
-                "http://localhost:8085/usuarios/me/pacientes",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + token
-                    },
-                    body: JSON.stringify({
-                        email: email
-                    })
-                }
-            );
-
-            if (!resposta.ok) {
-                alert("Erro ao adicionar paciente");
-                return;
-            }
-
-            document.getElementById("emailPaciente").value = "";
-
-            carregarPacientes();
-
-        } catch (erro) {
-            console.log(erro);
-            alert("Erro ao conectar com backend");
-        }
-    };
 
     async function carregarPacientes() {
 
@@ -168,5 +127,107 @@ function iniciarPacientes() {
             console.log(erro);
             alert("Erro ao conectar com backend");
         }
+    }
+
+    // Evento do botão para abrir modal de cadastro
+    const btnNovaRegistro = document.getElementById("btnNovaRegistro");
+    if (btnNovaRegistro) {
+        btnNovaRegistro.onclick = abrirModalCadastroPaciente;
+    }
+}
+
+// Funções para gerenciar o modal
+function abrirModalCadastroPaciente() {
+    const modal = document.getElementById("modalCadastroPaciente");
+    if (modal) {
+        modal.style.display = "flex";
+        modal.style.justifyContent = "center";
+        modal.style.alignItems = "center";
+    }
+}
+
+function fecharModalCadastroPaciente() {
+    const modal = document.getElementById("modalCadastroPaciente");
+    if (modal) {
+        modal.style.display = "none";
+        document.getElementById("formCadastroPaciente").reset();
+    }
+}
+
+// Função para registrar um novo paciente
+async function registrarNovoPaciente() {
+    const token = localStorage.getItem("token");
+    
+    const nome = document.getElementById("nomePacienteReg").value;
+    const email = document.getElementById("emailPacienteReg").value;
+    const telefone = document.getElementById("telefonePacienteReg").value;
+    const altura = parseFloat(document.getElementById("alturaPacienteReg").value);
+    const peso = parseFloat(document.getElementById("pesoPacienteReg").value);
+    const alergias = document.getElementById("alergiasPacienteReg").value || null;
+    const senha = document.getElementById("senhaPacienteReg").value;
+
+    // Validações
+    if (!nome || !email || !telefone || !altura || !peso || !senha) {
+        alert("Preencha todos os campos obrigatórios!");
+        return;
+    }
+
+    try {
+        // 1. Registrar o novo paciente
+        const respostaRegistro = await fetch(
+            "http://localhost:8085/auth/register",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nome,
+                    email,
+                    senha,
+                    tipo: "PACIENTE",
+                    telefone,
+                    altura,
+                    peso,
+                    alergias
+                })
+            }
+        );
+
+        if (!respostaRegistro.ok) {
+            alert("Erro ao registrar paciente");
+            return;
+        }
+
+        // 2. Adicionar o paciente registrado à lista do cuidador
+        const respostaAdicionar = await fetch(
+            "http://localhost:8085/usuarios/me/pacientes",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                    email: email
+                })
+            }
+        );
+
+        if (!respostaAdicionar.ok) {
+            alert("Paciente registrado, mas não foi possível adicionar à sua lista. Tente adicionar pelo email.");
+            return;
+        }
+
+        // 3. Sucesso! Fecha o modal e atualiza a lista
+        mostrarToast(`Paciente ${nome} registrado com sucesso!`);
+        fecharModalCadastroPaciente();
+        
+        // Recarrega a lista de pacientes
+        iniciarPacientes();
+
+    } catch (erro) {
+        console.log(erro);
+        alert("Erro ao conectar com backend");
     }
 }

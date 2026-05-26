@@ -2,9 +2,22 @@ function iniciarQRCode() {
 
     const token = localStorage.getItem("token");
     const tipoUsuario = localStorage.getItem("tipoUsuario");
+    const pacienteSelecionado = localStorage.getItem("pacienteSelecionadoId");
 
-    if (!token || tipoUsuario !== "PACIENTE") {
-        carregarPagina('paginas/dashboard.html');
+    // Paciente sempre pode acessar
+    if (tipoUsuario === "PACIENTE" && token) {
+        // Permite acesso
+    }
+    // Cuidador só pode acessar se estiver gerenciando um paciente
+    else if (tipoUsuario === "CUIDADOR" && token && pacienteSelecionado) {
+        // Permite acesso
+    }
+    // Qualquer outro caso redireciona
+    else {
+        const destino = tipoUsuario === "CUIDADOR" 
+            ? 'paginas/pacientes.html' 
+            : 'paginas/dashboard.html';
+        carregarPagina(destino);
         return;
     }
 
