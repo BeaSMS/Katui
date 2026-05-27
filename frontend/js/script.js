@@ -261,18 +261,19 @@ async function verificarAutenticacaoInicial() {
 }
 function controlarVisibilidadeMenu() {
     const token = localStorage.getItem("token");
-    const display = token ? "block" : "none";
+    const tipoUsuario = localStorage.getItem("tipoUsuario");
+    const pacienteSelecionado = localStorage.getItem("pacienteSelecionadoId");
     const inverseDisplay = token ? "none" : "block";
 
-    // Ocultar/Mostrar itens de Auth
     const itemLogin = document.getElementById("itemLogin");
     const itemCadastro = document.getElementById("itemCadastro");
-    if(itemLogin) itemLogin.style.display = inverseDisplay;
-    if(itemCadastro) itemCadastro.style.display = inverseDisplay;
-    
-    // CORREÇÃO: Usando o ID correto do seu HTML: btnQRCodeHeader
-    const btnQr = document.getElementById("btnQRCodeHeader"); 
-    if(btnQr) {
-        btnQr.style.display = token ? "flex" : "none"; // flex para manter o alinhamento
+    if (itemLogin) itemLogin.style.display = inverseDisplay;
+    if (itemCadastro) itemCadastro.style.display = inverseDisplay;
+
+    const btnQrHeader = document.getElementById("btnQRCodeHeader");
+    if (btnQrHeader) {
+
+        const deveExibir = token && (tipoUsuario === "PACIENTE" || (tipoUsuario === "CUIDADOR" && pacienteSelecionado));
+        btnQrHeader.style.display = deveExibir ? "flex" : "none";
     }
 }

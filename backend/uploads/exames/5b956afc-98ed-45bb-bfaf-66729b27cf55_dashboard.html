@@ -1,0 +1,76 @@
+<section class="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="cards">
+
+        <div class="card" onclick="carregarPagina('paginas/medicamentos.html')">
+            <h3>💊 Medicamentos</h3>
+            <p id="qtdMedicamentos">0</p>
+        </div>
+
+        <div class="card" onclick="carregarPagina('paginas/consultas.html')">
+            <h3>🩺 Consultas</h3>
+            <p id="qtdConsultas">0</p>
+        </div>
+
+        <div class="card" onclick="carregarPagina('paginas/sintomas.html')">
+            <h3>⚠️ Sintomas</h3>
+            <p id="qtdSintomas">0</p>
+        </div>
+
+    </div>
+
+    <div class="qrcode-area" id="qrcodeArea">
+
+        <h3>📋 Compartilhar com Médico</h3>
+
+        <p>Gere um QR code para o médico enviar exames e receitas diretamente para seu perfil.</p>
+
+        <button id="btnGerarQR">
+            Gerar QR Code
+        </button>
+
+        <div id="qrCodeArea" style="display:none;">
+
+            <img id="qrCodeImg" src="" alt="QR Code">
+
+            <p id="qrExpiracao"></p>
+
+            <p class="qr-aviso">
+                ⚠️ Este QR code é de uso único e expira em 30 minutos.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="calendario-dashboard">
+
+        <div class="calendario-topo">
+
+            <button id="btnMesAnterior">◀</button>
+
+            <h3 id="tituloCalendario">
+                Maio 2026
+            </h3>
+
+            <button id="btnProximoMes">▶</button>
+
+        </div>
+
+        <div class="dias-semana">
+            <div>Dom</div>
+            <div>Seg</div>
+            <div>Ter</div>
+            <div>Qua</div>
+            <div>Qui</div>
+            <div>Sex</div>
+            <div>Sáb</div>
+        </div>
+
+        <div id="gridCalendario" class="grid-calendario"></div>
+
+    </div>
+
+</section>

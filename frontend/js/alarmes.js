@@ -13,6 +13,38 @@ function iniciarAlarmes() {
 
     carregarAlarmes();
 
+    // --- LÓGICA DO BOTÃO DE NOTIFICAÇÃO ---
+    const btnNotif = document.getElementById("btnAtivarNotificacao");
+    const statusNotif = document.getElementById("statusNotificacao");
+
+    function atualizarStatusNotificacao() {
+        if (!("Notification" in window)) {
+            statusNotif.textContent = "Seu navegador não suporta notificações.";
+            btnNotif.style.display = "none";
+            return;
+        }
+        if (Notification.permission === "granted") {
+            statusNotif.textContent = "Notificações ativadas!";
+            btnNotif.style.display = "none";
+        } else if (Notification.permission === "denied") {
+            statusNotif.textContent = "Notificações bloqueadas. Clique no cadeado na barra de endereço do navegador para permitir.";
+            btnNotif.style.display = "none";
+        } else {
+            statusNotif.textContent = "Permissão pendente. Clique no botão para ativar.";
+            btnNotif.style.display = "block";
+        }
+    }
+
+atualizarStatusNotificacao();
+
+btnNotif.addEventListener("click", async () => {
+    const permissao = await Notification.requestPermission();
+    atualizarStatusNotificacao();
+    if (permissao === "granted") {
+        new Notification("Katu'I", { body: "Notificações ativadas com sucesso! 🎉" });
+    }
+});
+
 async function carregarAlarmes() {
         lista.innerHTML = "<p>Carregando lembretes...</p>";
         try {

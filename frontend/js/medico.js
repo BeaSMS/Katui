@@ -1,5 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const token = params.get("token");
+let pacienteId = params.get("pacienteId"); // Tenta obter do URL
 
 if (!token) {
     document.getElementById("tokenInvalido").style.display = "block";
@@ -16,6 +17,11 @@ async function carregarPaciente() {
         }
 
         const paciente = await resposta.json();
+        // Se não veio no URL, tenta usar o ID do paciente retornado
+        if (!pacienteId && paciente.id) {
+            pacienteId = paciente.id;
+        }
+        
         document.getElementById("infoPaciente").innerHTML = `
             <p><strong>Paciente:</strong> ${paciente.nome || "Não informado"}</p>
             <p><strong>Alergias:</strong> ${paciente.alergias || "Nenhuma registrada"}</p>
@@ -30,14 +36,16 @@ async function carregarPaciente() {
 
 async function enviarExame() {
     const nome = document.getElementById("nomeExame").value;
+    const data = document.getElementById("dataExame").value; // Captura a data
     const obs = document.getElementById("obsExame").value;
     const arquivo = document.getElementById("arquivoExame").files[0];
     const msg = document.getElementById("msgExame");
     const btn = document.getElementById("btnExame");
 
-    if (!nome || !arquivo) {
+    // Validação para garantir que os campos essenciais foram preenchidos
+    if (!nome || !data || !arquivo) {
         msg.className = "mensagem erro";
-        msg.textContent = "Preencha o nome e selecione um arquivo.";
+        msg.textContent = "Preencha o nome, a data e selecione um arquivo.";
         return;
     }
 
@@ -47,8 +55,17 @@ async function enviarExame() {
     const formData = new FormData();
     formData.append("token", token);
     formData.append("nome", nome);
-    formData.append("observacao", obs);
+    
+    // A MÁGICA AQUI: Concatenamos a data no formato que o exames.js espera.
+    // Se o médico escrever alguma observação, ela vai logo a seguir separada por um traço.
+    const observacaoFormatada = `Data do exame: ${data}${obs ? ' - ' + obs : ''}`;
+    formData.append("observacao", observacaoFormatada);
+    
     formData.append("arquivo", arquivo);
+    
+    if (pacienteId) {
+        formData.append("pacienteId", pacienteId);
+    }
 
     try {
         const resposta = await fetch("http://localhost:8085/medico/exame", {
@@ -59,7 +76,9 @@ async function enviarExame() {
         if (resposta.ok) {
             msg.className = "mensagem sucesso";
             msg.textContent = "Exame enviado com sucesso!";
+            // Limpa os campos
             document.getElementById("nomeExame").value = "";
+            document.getElementById("dataExame").value = "";
             document.getElementById("obsExame").value = "";
             document.getElementById("arquivoExame").value = "";
         } else {
@@ -94,6 +113,11 @@ async function enviarReceita() {
     formData.append("token", token);
     formData.append("observacao", obs);
     formData.append("arquivo", arquivo);
+    
+    // Se houver pacienteId, inclui na requisição para garantir associação correta
+    if (pacienteId) {
+        formData.append("pacienteId", pacienteId);
+    }
 
     try {
         const resposta = await fetch("http://localhost:8085/medico/receita", {

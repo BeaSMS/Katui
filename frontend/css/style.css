@@ -1436,6 +1436,23 @@ textarea:focus {
     gap: 20px;
 }
 
+input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--radius-input);
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--cor-texto);
+    background-color: var(--cor-card);
+    transition: border-color 0.3s ease;
+    outline: none;
+}
+
+input[type="date"]:focus {
+    border-color: var(--cor-principal);
+}
 .card-notificacao,
 .grupo-dia-alarme {
     background: var(--cor-card);
@@ -1926,4 +1943,68 @@ button:disabled { background: #aaa; cursor: not-allowed; }
 
 .links-criador img:hover {
     opacity: 1;                    /* Ficam opacos ao passar o mouse */
+}
+
+/* ==========================================================================
+   ESTILOS EXCLUSIVOS PARA A PÁGINA DO MÉDICO (medico.html)
+   ========================================================================== */
+
+/* Cartão com informações básicas do paciente */
+.info-paciente {
+    background-color: var(--cor-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--radius-card);
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: var(--sombra-card);
+}
+
+.info-paciente p {
+    margin: 8px 0;
+    font-size: 16px;
+    color: var(--cor-texto);
+}
+
+.info-paciente p strong {
+    color: var(--cor-principal-escura);
+}
+
+/* Caixa de Orientação / Aviso de Link Temporário */
+.aviso {
+    background-color: #fff9eb; /* Fundo âmbar bem suave */
+    border-left: 4px solid var(--cor-alerta); /* Barra lateral de atenção */
+    border-radius: 6px;
+    padding: 15px 20px;
+    margin-bottom: 30px;
+    color: #7d5108; /* Texto em tom marrom escuro para legibilidade */
+    font-size: 15px;
+    line-height: 1.6;
+    box-shadow: 0 2px 8px rgba(243, 156, 18, 0.05);
+}
+
+/* Destaque para termos críticos dentro do aviso */
+.aviso strong {
+    color: var(--cor-erro); /* Deixa o 'uso único' em vermelho de atenção */
+    font-weight: 700;
+}
+
+/* Estilo para as caixas de texto (textarea) de observações/orientações */
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--radius-input);
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--cor-texto);
+    background-color: var(--cor-card);
+    transition: border-color 0.3s ease;
+    outline: none;
+    resize: vertical; /* Permite redimensionar apenas para baixo */
+    min-height: 100px; /* Garante uma altura inicial boa para digitar */
+}
+
+textarea:focus {
+    border-color: var(--cor-principal);
 }

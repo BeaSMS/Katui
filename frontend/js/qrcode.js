@@ -37,6 +37,8 @@ function iniciarQRCode() {
 async function gerarQRCode() {
 
     const token = localStorage.getItem("token");
+    const tipoUsuario = localStorage.getItem("tipoUsuario");
+    const pacienteSelecionado = localStorage.getItem("pacienteSelecionadoId");
 
     if (!token) return;
 
@@ -45,8 +47,12 @@ async function gerarQRCode() {
     btn.disabled = true;
 
     try {
+        // Se for cuidador, passa o pacienteId como query param
+        const url = (tipoUsuario === "CUIDADOR" && pacienteSelecionado)
+            ? `http://localhost:8085/medico/token?pacienteId=${pacienteSelecionado}`
+            : "http://localhost:8085/medico/token";
 
-        const resposta = await fetch("http://localhost:8085/medico/token", {
+        const resposta = await fetch(url, {
             method: "POST",
             headers: {
                 "Authorization": "Bearer " + token
@@ -60,9 +66,16 @@ async function gerarQRCode() {
 
         const dados = await resposta.json();
 
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(dados.url)}`;
+        // Se for cuidador, inclui o pacienteId na URL do QR code
+        let qrUrl = dados.url;
+        if (tipoUsuario === "CUIDADOR" && pacienteSelecionado) {
+            const separador = qrUrl.includes("?") ? "&" : "?";
+            qrUrl = `${qrUrl}${separador}pacienteId=${pacienteSelecionado}`;
+        }
 
-        document.getElementById("qrCodeImg").src = qrUrl;
+        const qrCodeImg = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`;
+
+        document.getElementById("qrCodeImg").src = qrCodeImg;
 
         const expiracao = new Date(dados.expiracao);
         document.getElementById("qrExpiracao").textContent =

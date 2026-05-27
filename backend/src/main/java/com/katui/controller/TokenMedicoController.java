@@ -4,6 +4,7 @@ import com.katui.entity.Exame;
 import com.katui.entity.Receita;
 import com.katui.entity.TokenMedico;
 import com.katui.entity.Usuario;
+import com.katui.service.CuidadorService; // 1. IMPORTANTE: Adicione este import
 import com.katui.service.ExameService;
 import com.katui.service.ReceitaService;
 import com.katui.service.TokenMedicoService;
@@ -26,20 +27,28 @@ public class TokenMedicoController {
     private final TokenMedicoService tokenMedicoService;
     private final ExameService exameService;
     private final ReceitaService receitaService;
+    private final CuidadorService cuidadorService; // 2. NOVO: Injetar o serviço do cuidador
 
-    // Paciente gera o token/QR code
+    // Paciente ou Cuidador gera o token/QR code
     @PostMapping("/token")
     public Map<String, String> gerarToken(
+            @RequestParam(value = "pacienteId", required = false) Long pacienteId, // 3. NOVO: Receber o parâmetro do frontend
             Authentication authentication
     ) {
-        Usuario paciente = (Usuario) authentication.getPrincipal();
-        TokenMedico token = tokenMedicoService.gerarToken(paciente);
+        Usuario usuarioAlvo = (Usuario) authentication.getPrincipal();
+
+        // 4. NOVO: Se o Cuidador enviou o ID do paciente, validamos o acesso e o alvo passa a ser o Paciente!
+        if (pacienteId != null) {
+            usuarioAlvo = cuidadorService.verificarAcesso(usuarioAlvo, pacienteId);
+        }
+
+        // Agora o token será gerado e guardado no banco com o ID do paciente correto
+        TokenMedico token = tokenMedicoService.gerarToken(usuarioAlvo);
 
         // Retorna o token e a URL que vai no QR code
         String url = "http://localhost:5500/paginas/medico.html?token=" + token.getToken();
 
         return Map.of(
-                "token", token.getToken(),
                 "url", url,
                 "expiracao", token.getExpiracao().toString()
         );
@@ -54,6 +63,7 @@ public class TokenMedicoController {
             @RequestParam("arquivo") MultipartFile arquivo
     ) throws IOException {
 
+        // Como o token agora foi gerado para o Paciente, a validação vai retornar o Paciente corretamente
         Usuario paciente = tokenMedicoService.validarToken(token);
         return exameService.salvar(nome, observacao, arquivo, paciente);
     }
