@@ -1,122 +1,76 @@
 # Katui — Acompanhamento Inteligente de Tratamento e Sintomas
 
-Katu'I é um sistema completo de acompanhamento inteligente de tratamento e sintomas, desenvolvido para melhorar a qualidade de vida dos usuários através de uma interface intuitiva e funcionalidades robustas.
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+![Java](https://img.shields.io/badge/Java-21-blue)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.6-brightgreen)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791)
+![Docker](https://img.shields.io/badge/Docker-compatible-2496ED)
+
+Katu'I é um sistema completo de acompanhamento inteligente de tratamento e sintomas, desenvolvido para melhorar a qualidade de vida dos usuários através de uma interface intuitiva, tecnologia IA e funcionalidades robustas.
 
 ---
 
 ## 📋 Sumário
 
-- [Visão Geral](#visão-geral)
-- [Tecnologias](#tecnologias)
-- [Pré-requisitos](#pré-requisitos)
-- [Instalação e Setup](#instalação-e-setup)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Arquitetura](#arquitetura)
-- [Serviços](#serviços)
-- [API Endpoints](#api-endpoints)
-- [Funcionalidades](#funcionalidades)
-- [Configuração](#configuração)
-- [Desenvolvido Por](#desenvolvido-por)
+- [Visão Geral](#-visão-geral)
+- [Tecnologias](#-tecnologias)
+- [Estrutura do Projeto](#-estrutura-do-projeto)
+- [Pré-requisitos](#-pré-requisitos)
+- [Instalação Rápida](#-instalação-rápida)
+- [Serviços](#-serviços)
+- [Funcionalidades](#-funcionalidades)
+- [Documentação](#-documentação)
+- [Contribuindo](#-contribuindo)
+- [Licença](#-licença)
 
 ---
 
 ## 🎯 Visão Geral
 
-Katui é uma plataforma de saúde digital que permite aos usuários:
+**Katui** é uma plataforma de saúde digital que permite aos usuários e cuidadores:
 
-- 📊 **Dashboard Inteligente**: Visualizar um resumo completo do seu acompanhamento de saúde
-- 💊 **Gerenciamento de Medicamentos**: Registrar e acompanhar medicamentos prescritos
-- 🩺 **Monitoramento de Sintomas**: Rastrear sintomas e seus padrões
-- 📅 **Agendamento de Consultas**: Manter registro de consultas médicas
-- 🧪 **Histórico de Exames**: Armazenar e visualizar resultados de exames
-- 👤 **Perfil de Usuário**: Gerenciar informações pessoais e preferências
-- 🤖 **IA Integrada**: Utilizar inteligência artificial para análises e recomendações
+- 📊 **Dashboard Inteligente**: Visualizar um resumo completo do acompanhamento de saúde
+- 💊 **Gerenciamento de Medicamentos**: Registrar e acompanhar medicamentos com alarmes automáticos
+- 🩺 **Monitoramento de Sintomas**: Rastrear sintomas e seus padrões ao longo do tempo
+- 📅 **Agendamento de Consultas**: Manter registro centralizado de consultas médicas
+- 🧪 **Histórico de Exames**: Armazenar e visualizar resultados de exames com comparações
+- 👥 **Sistema de Cuidadores**: Permite que cuidadores gerenciem dados de pacientes
+- 🤖 **IA Integrada**: Google Gemini para leitura automática de receitas e análises inteligentes
+- 📱 **Acessível**: Desenvolvido com WCAG 2.1 Nível AA, totalmente responsivo
 
-O projeto foi desenvolvido como **Projeto Integrador - Semestre 2** e combina um backend robusto em Spring Boot com um frontend responsivo em HTML/CSS/JavaScript.
+### Tipos de Usuário
+
+| Tipo | Descrição |
+|------|-----------|
+| **PACIENTE** | Usuário padrão que gerencia seus próprios dados de saúde |
+| **CUIDADOR** | Pode ser vinculado a pacientes e gerenciar seus dados |
 
 ---
 
 ## 🛠️ Tecnologias
 
 ### Backend
-- **Java 21**: Linguagem de programação principal
-- **Spring Boot 4.0.6**: Framework web e injeção de dependências
-- **Spring Data JPA**: Persistência de dados e ORM
-- **Spring Security**: Autenticação e autorização
-- **PostgreSQL**: Banco de dados relacional
-- **JWT (JSON Web Tokens)**: Autenticação stateless
-- **OpenAI GPT-3**: Integração com IA para análises
+- **Java 21**: Linguagem principal com suporte a features modernas
+- **Spring Boot 4.0.6**: Framework web com auto-configuração
+- **Spring Data JPA**: ORM para persistência de dados
+- **Spring Security**: Autenticação segura com JWT
+- **PostgreSQL 16**: Banco de dados relacional robusto
+- **JWT (JSON Web Tokens)**: Autenticação stateless com expiração de 24h
+- **Google Gemini 2.5 Flash**: IA para processamento de receitas médicas
 - **Lombok**: Redução de boilerplate code
 - **Maven**: Gerenciador de dependências
-- **Docker**: Containerização
+- **Docker + Docker Compose**: Containerização e orquestração
 
 ### Frontend
-- **HTML5**: Estrutura semântica
-- **CSS3**: Estilização responsiva
-- **JavaScript Vanilla**: Interatividade e requisições dinâmicas
+- **HTML5**: Estrutura semântica e acessível
+- **CSS3**: Estilização responsiva e moderna
+- **JavaScript Vanilla**: Interatividade sem dependências externas
 - **Acessibilidade WCAG 2.1 Nível AA**: Compatibilidade com leitores de tela
 
 ### Infraestrutura
-- **Docker Compose**: Orquestração de containers
-- **pgAdmin**: Interface gráfica para PostgreSQL
-- **Insomnia**: Coleção de requisições para API testing
-
----
-
-## 📦 Pré-requisitos
-
-Antes de começar, certifique-se de ter instalado:
-
-- [Docker](https://www.docker.com/get-started) versão 20.10+
-- [Docker Compose](https://docs.docker.com/compose/install/) versão 1.29+
-- [Git](https://git-scm.com/) para clonar o repositório
-- (Opcional) [Insomnia](https://insomnia.rest/) para testar a API
-
----
-
-## 🚀 Instalação e Setup
-
-### 1. Clone o Repositório
-
-```bash
-git clone https://github.com/BeaSMS/Katui.git
-cd Katui
-```
-
-### 2. Configure as Variáveis de Ambiente (Opcional)
-
-Se desejar personalizar as credenciais ou portas, edite o arquivo `docker-compose.yml`:
-
-```yaml
-# Exemplo de customização
-environment:
-  POSTGRES_PASSWORD: sua_senha_postgres
-  PGADMIN_DEFAULT_PASSWORD: sua_senha_pgadmin
-```
-
-### 3. Inicie os Containers
-
-```bash
-docker-compose up --build
-```
-
-Este comando irá:
-- ✅ Fazer build da imagem do backend
-- ✅ Iniciar PostgreSQL
-- ✅ Iniciar pgAdmin
-- ✅ Iniciar o backend Spring Boot
-- ✅ Criar volumes persistentes para dados
-
-**Aguarde o build finalizar**. A primeira execu��ão pode levar alguns minutos.
-
-### 4. Acesse a Aplicação
-
-Após a inicialização, a aplicação estará disponível em:
-
-```
-Frontend:  http://localhost:3000 (se houver servidor estático)
-Backend:   http://localhost:8086
-```
+- **Docker Compose**: Orquestração simplificada
+- **pgAdmin 4**: Interface gráfica para gerenciamento do banco
+- **Insomnia**: Coleção de requisições para testes de API
 
 ---
 
@@ -124,42 +78,42 @@ Backend:   http://localhost:8086
 
 ```
 Katui/
-├── backend/                          # Aplicação Spring Boot
+├── backend/                              # Aplicação Spring Boot
 │   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/com/fateccotia/pi/
-│   │   │   │   ├── controllers/      # REST Controllers
-│   │   │   │   ├── services/         # Lógica de negócio
-│   │   │   │   ├── repositories/     # Acesso a dados (JPA)
-│   │   │   │   ├── models/           # Entidades JPA
-│   │   │   │   ├── security/         # Configuração de segurança
-│   │   │   │   ├── utils/            # Utilitários
-│   │   │   │   └── KatuiApplication.java
-│   │   │   └── resources/
-│   │   │       └── application.properties
-│   │   └── test/
-│   ├── Dockerfile                    # Docker image definition
-│   ├── pom.xml                       # Dependências Maven
-│   ├── mvnw                          # Maven Wrapper (Unix)
-│   └── mvnw.cmd                      # Maven Wrapper (Windows)
+│   │   ├── main/java/com/katui/
+│   │   │   ├── config/                  # Configuração JWT, Security
+│   │   │   ├── controller/              # REST Controllers (7 controllers)
+│   │   │   ├── dto/                     # Data Transfer Objects
+│   │   │   ├── entity/                  # Entidades JPA (7 entities)
+│   │   │   ├── repository/              # Acesso a dados
+│   │   │   ├── service/                 # Lógica de negócio
+│   │   │   └── KatuiApplication.java   # Classe principal
+│   │   ├── resources/
+│   │   │   └── application.properties   # Configurações do app
+│   │   └── test/                        # Testes unitários
+│   ├── Dockerfile                       # Build do backend
+│   ├── pom.xml                          # Dependências Maven
+│   ├── mvnw & mvnw.cmd                  # Maven Wrapper
+│   ├── uploads/                         # Armazenamento de arquivos
+│   └── README.md                        # Documentação detalhada
 │
-├── frontend/                         # Aplicação Web
-│   ├── index.html                    # Página principal
+├── frontend/                            # Aplicação Web
+│   ├── index.html                       # Página principal (SPA)
 │   ├── css/
-│   │   └── style.css                 # Estilos globais
+│   │   └── style.css                    # Estilos globais e responsivos
 │   ├── js/
-│   │   └── script.js                 # Lógica principal
-│   └── paginas/                      # Páginas da aplicação
-│       ├── dashboard.html
-│       ├── medicamentos.html
-│       ├── sintomas.html
-│       ├── consultas.html
-│       ├── perfil.html
-│       └── exames.html
+│   │   └── script.js                    # Lógica principal e AJAX
+│   └── paginas/                         # Páginas da aplicação
+│       ├── dashboard.html               # Dashboard principal
+│       ├── medicamentos.html            # Gerenciamento de medicamentos
+│       ├── sintomas.html                # Registro de sintomas
+│       ├── consultas.html               # Agendamento de consultas
+│       ├── perfil.html                  # Perfil do usuário
+│       └── exames.html                  # Histórico de exames
 │
-├── docker-compose.yml                # Composição de serviços
-├── Insomnia_Katui.yaml              # Coleção de testes da API
-└── README.md                        # Este arquivo
+├── docker-compose.yml                   # Composição de serviços
+├── Insomnia_Katui.yaml                  # Coleção de testes da API
+└── README.md                            # Este arquivo
 
 ```
 
@@ -170,64 +124,182 @@ Katui/
 ### Backend Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                  REST API (Port 8086)               │
-├─────────────────────────────────────────────────────┤
-│                Spring Boot Application              │
-├─────────────────────────────────────────────────────┤
-│  Controllers  │  Services  │  Repositories (JPA)   │
-├─────────────────────────────────────────────────────┤
-│              Spring Security + JWT Auth             │
-├─────────────────────────────────────────────────────┤
-│         PostgreSQL Database (Port 5435)             │
-└─────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────┐
+│                REST API (Port 8086)                       │
+├───────────────────────────────────────────────────────────┤
+│              Spring Boot Application                      │
+├────────────────────┬──────────────────┬──────────────────┤
+│ Controllers (7)    │ Services (9)     │ Repositories (6) │
+├────────────────────┼──────────────────┼──────────────────┤
+│ · Auth             │ · AuthService    │ · UsuarioRepo    │
+│ · Usuario          │ · UsuarioService │ · MedicamentoRepo│
+│ · Medicamento      │ · CuidadorServ.  │ · AlarmeRepo     │
+│ · Alarme           │ · MedicamentoS.  │ · SintomaRepo    │
+│ · Sintoma          │ · AlarmeService  │ · ExameRepo      │
+│ · Exame            │ · SintomaService │ · ReceitaRepo    │
+│ · Receita          │ · ExameService   │                  │
+│                    │ · ReceitaServ.   │                  │
+│                    │ · OCRService     │                  │
+├────────────────────┴──────────────────┴──────────────────┤
+│         Spring Security + JWT Auth (24h expiry)          │
+├───────────────────────────────────────────────────────────┤
+│          PostgreSQL Database (Port 5435)                  │
+└───────────────────────────────────────────────────────────┘
 ```
 
 ### Frontend Architecture
 
 ```
 ┌──────────────────────────────────────┐
-│        index.html (Main Entry)       │
+│    index.html (Single Page App)      │
 ├──────────────────────────────────────┤
-│   Navigation Component               │
+│  Navigation + Menu Responsivo        │
 ├──────────────────────────────────────┤
-│   Dynamic Content Loading (AJAX)     │
-│   └─ paginas/*.html                  │
+│  Dynamic Content Loading (AJAX)      │
+│  ├─ paginas/dashboard.html           │
+│  ├─ paginas/medicamentos.html        │
+│  ├─ paginas/sintomas.html            │
+│  ├─ paginas/consultas.html           │
+│  ├─ paginas/perfil.html              │
+│  └─ paginas/exames.html              │
 ├──────────────────────────────────────┤
-│   CSS Responsive Framework           │
+│  CSS3 Responsive Framework           │
 ├──────────────────────────────────────┤
-│   JavaScript Event Handlers          │
-│   └─ API Integration                 │
+│  JavaScript Event Handlers           │
+│  └─ API Integration (Fetch API)      │
 └──────────────────────────────────────┘
 ```
 
 ---
 
+## 📦 Pré-requisitos
+
+Antes de começar, certifique-se de ter instalado:
+
+| Ferramenta | Versão | Link |
+|-----------|--------|------|
+| **Docker** | 20.10+ | [docker.com](https://www.docker.com/get-started) |
+| **Docker Compose** | 1.29+ | [docs.docker.com/compose](https://docs.docker.com/compose/install/) |
+| **Git** | 2.0+ | [git-scm.com](https://git-scm.com/) |
+| **(Opcional) Insomnia** | latest | [insomnia.rest](https://insomnia.rest/) |
+
+---
+
+## 🚀 Instalação Rápida
+
+### 1. Clone o Repositório
+
+```bash
+git clone https://github.com/BeaSMS/Katui.git
+cd Katui
+```
+
+### 2. Inicie com Docker Compose
+
+```bash
+docker-compose up --build
+```
+
+Aguarde o build finalizar (2-5 minutos na primeira execução).
+
+### 3. Acesse a Aplicação
+
+| Serviço | URL | Credenciais |
+|---------|-----|-------------|
+| **Frontend** | http://localhost:3000 | N/A |
+| **Backend** | http://localhost:8086 | N/A |
+| **pgAdmin** | http://localhost:5055 | admin@katui.com / admin |
+
+---
+
 ## 🔧 Serviços
 
-| Serviço | URL | Protocolo | Credenciais | Status |
-|---------|-----|-----------|-------------|--------|
-| **Backend** | `http://localhost:8086` | HTTP/REST | N/A | ✅ API Principal |
-| **pgAdmin** | `http://localhost:5055` | HTTP | `admin@katui.com` / `admin` | 📊 Gerenciamento BD |
-| **PostgreSQL** | `localhost:5435` | TCP | `postgres` / `postgres` | 🗄️ Database |
-
-### Verificar Status dos Containers
+### Status dos Containers
 
 ```bash
+# Ver status
 docker-compose ps
+
+# Ver logs em tempo real
+docker-compose logs -f
+
+# Ver logs de um serviço específico
+docker-compose logs -f backend
 ```
 
-### Parar os Containers
+### Gerenciar Containers
 
 ```bash
+# Parar containers
 docker-compose down
-```
 
-### Parar e Remover Volumes (Limpar dados)
-
-```bash
+# Parar e remover volumes (CUIDADO: perderá dados)
 docker-compose down -v
+
+# Reiniciar um serviço específico
+docker-compose restart backend
 ```
+
+### Estrutura de Serviços
+
+| Serviço | URL | Porta | Credenciais | Status |
+|---------|-----|-------|-------------|--------|
+| **Backend** | http://localhost:8086 | 8086 | N/A | ✅ API REST |
+| **pgAdmin** | http://localhost:5055 | 5055 | admin@katui.com / admin | 📊 BD Management |
+| **PostgreSQL** | localhost | 5435 | postgres / postgres | 🗄️ Database |
+
+---
+
+## ✨ Funcionalidades
+
+### 📊 Dashboard
+- Resumo completo de saúde com estatísticas
+- Gráficos de evolução de sintomas
+- Próximas doses de medicamentos
+- Consultas agendadas
+
+### 💊 Medicamentos
+- Cadastro com múltiplos tipos de frequência
+- Geração automática de alarmes
+- Tipos de frequência:
+  - **INTERVALO_HORAS**: A cada X horas
+  - **VEZES_DIA**: X vezes ao dia
+  - **DIAS_ESPECIFICOS**: Dias da semana específicos
+- Histórico completo
+
+### 🩺 Sintomas
+- Registro com descrição, categoria, intensidade e tipo
+- Classificação automática
+- Análise de padrões com histórico
+- Recomendações personalizadas
+
+### 📅 Consultas
+- Agendamento e gerenciamento
+- Vinculação com médico/especialista
+- Notas de consulta
+- Histórico integrado
+
+### 🧪 Exames
+- Upload de arquivos (PDF, imagens)
+- Armazenamento seguro (até 400MB)
+- Download direto
+- Comparação de resultados ao longo do tempo
+
+### 👤 Perfil
+- Informações pessoais completas
+- Histórico médico
+- Alergias e condições pré-existentes
+- Contato de emergência
+
+### 👥 Sistema de Cuidadores
+- Vínculo entre cuidador e paciente
+- Gerenciamento de dados em nome do paciente
+- Suporte total com parâmetro `?pacienteId={id}`
+
+### 🤖 IA Integrada
+- Leitura automática de receitas com Google Gemini
+- Extração de medicamentos
+- Análise inteligente de padrões
 
 ---
 
@@ -239,229 +311,181 @@ http://localhost:8086/api/v1
 ```
 
 ### Autenticação
-Todos os endpoints (exceto login/registro) requerem um **JWT Token** no header:
+Todos os endpoints (exceto login/registro) requerem **JWT Bearer Token**:
 ```
 Authorization: Bearer {token}
 ```
 
+**Token válido por 24 horas**
+
 ### Principais Endpoints
 
+#### 🔐 Autenticação
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/auth/register` | Registrar novo usuário |
+| POST | `/auth/login` | Fazer login e obter token |
+
 #### 👤 Usuários
-- `POST /auth/register` - Registrar novo usuário
-- `POST /auth/login` - Fazer login
-- `GET /users/{id}` - Obter informações do usuário
-- `PUT /users/{id}` - Atualizar perfil
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/usuarios/me` | Dados do usuário logado |
+| PUT | `/usuarios/me` | Atualizar perfil |
+| DELETE | `/usuarios/me` | Deletar conta |
+| POST | `/usuarios/me/pacientes` | Vincular paciente (cuidador) |
+| GET | `/usuarios/me/pacientes` | Listar pacientes (cuidador) |
+| DELETE | `/usuarios/me/pacientes/{id}` | Desvincular paciente |
 
 #### 💊 Medicamentos
-- `GET /medications` - Listar medicamentos
-- `POST /medications` - Criar novo medicamento
-- `PUT /medications/{id}` - Atualizar medicamento
-- `DELETE /medications/{id}` - Deletar medicamento
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/medicamentos` | Listar medicamentos |
+| POST | `/medicamentos` | Criar medicamento |
+| GET | `/medicamentos/{id}` | Obter medicamento |
+| PUT | `/medicamentos/{id}` | Atualizar medicamento |
+| DELETE | `/medicamentos/{id}` | Deletar medicamento |
+| POST | `/medicamentos/{id}/alarmes` | Gerar alarmes |
+
+#### 🔔 Alarmes
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/alarmes` | Listar alarmes |
+| PATCH | `/alarmes/{id}/tomado` | Marcar como tomado |
 
 #### 🩺 Sintomas
-- `GET /symptoms` - Listar sintomas
-- `POST /symptoms` - Registrar novo sintoma
-- `GET /symptoms/history/{userId}` - Histórico de sintomas
-
-#### 📅 Consultas
-- `GET /appointments` - Listar consultas
-- `POST /appointments` - Agendar consulta
-- `PUT /appointments/{id}` - Atualizar consulta
-- `DELETE /appointments/{id}` - Cancelar consulta
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/sintomas` | Listar sintomas |
+| POST | `/sintomas` | Registrar sintoma |
+| GET | `/sintomas/{id}` | Obter sintoma |
+| DELETE | `/sintomas/{id}` | Deletar sintoma |
 
 #### 🧪 Exames
-- `GET /exams` - Listar exames
-- `POST /exams` - Registrar exame
-- `GET /exams/{id}` - Obter detalhes do exame
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/exames` | Listar exames |
+| POST | `/exames` | Cadastrar exame com upload |
+| GET | `/exames/{id}/download` | Download do arquivo |
 
-#### 📊 Dashboard
-- `GET /dashboard` - Dados consolidados do dashboard
+#### 📄 Receitas
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/receitas` | Listar receitas |
+| POST | `/receitas` | Cadastrar receita com upload |
+| POST | `/receitas/{id}/processar` | Processar com Google Gemini |
+| GET | `/receitas/{id}/download` | Download da receita |
 
-**Para documentação completa da API**, importe o arquivo `Insomnia_Katui.yaml` no Insomnia.
-
----
-
-## ✨ Funcionalidades
-
-### Dashboard
-- 📈 Resumo de saúde do último período
-- 📊 Gráficos de evolução de sintomas
-- 💊 Próximas doses de medicamentos
-- 📅 Consultas próximas
-
-### Medicamentos
-- ➕ Adicionar novos medicamentos prescritos
-- ✏️ Editar dosagem e frequência
-- 🔔 Lembretes automáticos (integração futura)
-- 📋 Histórico completo de medicações
-
-### Sintomas
-- 📝 Registrar sintomas diários
-- 🩺 Classificação por tipo e intensidade
-- 📊 Análise de padrões com IA
-- 🧠 Recomendações personalizadas
-
-### Consultas
-- 📅 Agendar e gerenciar consultas
-- 👨‍⚕️ Informações do médico/especialista
-- 📄 Notas de consulta
-- 🔗 Integração com histórico médico
-
-### Perfil
-- 👤 Informações pessoais
-- 🏥 Histórico médico
-- ⚠️ Alergias e condições pré-existentes
-- 📱 Contato de emergência
-
-### Exames
-- 🧪 Registrar resultados de exames
-- 📊 Comparação de resultados ao longo do tempo
-- 📈 Interpretação com IA
-- 📥 Upload de documentos
-
-### Inteligência Artificial
-- 🤖 Análise inteligente de padrões de sintomas
-- 💡 Recomendações de saúde personalizadas
-- 🧠 Processamento de linguagem natural para consultas
+**Para documentação completa**: Importe `Insomnia_Katui.yaml` no Insomnia ou Postman.
 
 ---
 
-## ⚙️ Configuração
+## 📚 Documentação
 
-### Variáveis de Ambiente (Backend)
+### Frontend
+Veja a estrutura e funcionalidades no `frontend/` e importe a coleção de requisições.
 
-As variáveis são definidas no `docker-compose.yml`:
+### Backend
+Documentação detalhada em `backend/README.md` com:
+- Variáveis de ambiente
+- Tipos de frequência de medicamentos
+- Exemplos de requisições
+- Estrutura de código
+- Fluxos de alarmes
+
+---
+
+## ⚙️ Configuração Avançada
+
+### Variáveis de Ambiente
+
+Edite o `docker-compose.yml` para customizar:
 
 ```yaml
 environment:
+  # Banco de Dados
+  POSTGRES_DB: katui
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  
+  # Spring Boot
   SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/katui
   SPRING_DATASOURCE_USERNAME: postgres
   SPRING_DATASOURCE_PASSWORD: postgres
-  SPRING_JPA_HIBERNATE_DDL_AUTO: update
-  JWT_SECRET: sua_chave_secreta_jwt
-  OPENAI_API_KEY: sua_chave_openai
+  
+  # JWT
+  jwt.secret: sua_chave_secreta_jwt_aqui
+  
+  # Google Gemini (obrigatório para receitas)
+  gemini.api.key: sua_chave_api_gemini
 ```
 
-### Configuração do Banco de Dados
+### Obter Chaves de API
 
-O banco de dados é criado automaticamente. Para resetar:
-
-```bash
-# Parar containers e remover volumes
-docker-compose down -v
-
-# Reiniciar
-docker-compose up --build
-```
-
-### CORS (Cross-Origin Resource Sharing)
-
-Configure CORS no backend para permitir requisições do frontend:
-
-```java
-// Em SecurityConfig.java
-@Bean
-public WebSecurityCustomizer webSecurityCustomizer() {
-    return (web) -> web.ignoring()
-        .requestMatchers("/error", "/favicon.ico");
-}
-```
+**Google Gemini:**
+1. Acesse [aistudio.google.com](https://aistudio.google.com)
+2. Clique em "Get API Key"
+3. Crie uma chave e copie
+4. Adicione ao docker-compose.yml
 
 ---
 
 ## 🔐 Segurança
 
-- ✅ **JWT Authentication**: Tokens seguros para autenticação stateless
-- ✅ **Spring Security**: Proteção contra vulnerabilidades comuns
-- ✅ **HTTPS (Recomendado)**: Para produção, use HTTPS
-- ✅ **Password Hashing**: Senhas criptografadas com BCrypt
-- ✅ **CORS Protection**: Validação de origens permitidas
+- ✅ **JWT Authentication**: Tokens com expiração de 24h
+- ✅ **Spring Security**: Proteção contra CSRF, XSS, CORS
+- ✅ **Password Hashing**: BCrypt com salt automático
+- ✅ **SQL Injection Prevention**: JPA com queries parametrizadas
 - ✅ **Input Validation**: Validação em todas as entradas
-- ✅ **SQL Injection Prevention**: Uso de JPA com query parametrizadas
-
----
-
-## 📝 Logs e Debug
-
-### Ver Logs do Backend
-
-```bash
-docker-compose logs -f backend
-```
-
-### Ver Logs do PostgreSQL
-
-```bash
-docker-compose logs -f postgres
-```
-
-### Acessar Logs Persistentes
-
-```bash
-docker exec katui-backend tail -f /var/log/spring-boot/application.log
-```
+- ✅ **HTTPS Recomendado**: Para produção com certificados SSL
 
 ---
 
 ## 🧪 Testando a API
 
 ### Com Insomnia (Recomendado)
-
-1. Abra o Insomnia
-2. Importe o arquivo `Insomnia_Katui.yaml`
-3. Configure o ambiente com `http://localhost:8086`
+1. Instale [Insomnia](https://insomnia.rest/)
+2. Importe `Insomnia_Katui.yaml`
+3. Configure o ambiente: `http://localhost:8086`
 4. Execute as requisições
 
 ### Com cURL
-
 ```bash
 # Login
 curl -X POST http://localhost:8086/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"user@example.com","password":"password123"}'
+  -d '{"email":"user@example.com","senha":"password123"}'
 
-# Listar medicamentos (com token)
-curl -X GET http://localhost:8086/api/v1/medications \
+# Listar medicamentos
+curl -X GET http://localhost:8086/api/v1/medicamentos \
   -H "Authorization: Bearer {seu_token}"
 ```
 
 ### Com Postman
-
-Importe a coleção `Insomnia_Katui.yaml` (compatível com Postman também).
-
----
-
-## 🚀 Deploy em Produção
-
-### Build para Produção
-
-```bash
-# Build da imagem final
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-```
-
-### Configurações Recomendadas para Produção
-
-1. **Habilite HTTPS** com certificados SSL
-2. **Configure variáveis sensíveis** em arquivo `.env`
-3. **Use banco de dados gerenciado** (AWS RDS, Heroku Postgres, etc.)
-4. **Implemente Backups** automáticos
-5. **Configure Monitoramento** (DataDog, New Relic, etc.)
-6. **Use CDN** para servir assets estáticos
+Importe o arquivo `Insomnia_Katui.yaml` (compatível com Postman).
 
 ---
 
 ## 📱 Responsividade
 
-A aplicação é **totalmente responsiva** e funciona em:
+A aplicação é **100% responsiva** e testada em:
 
-- ✅ Desktop (1920px+)
-- ✅ Tablet (768px - 1024px)
-- ✅ Smartphones (320px - 767px)
+| Dispositivo | Resoluções | Status |
+|------------|-----------|--------|
+| Desktop | 1920px+ | ✅ Otimizado |
+| Tablet | 768px - 1024px | ✅ Responsivo |
+| Mobile | 320px - 767px | ✅ Mobile-first |
 
-Todas as páginas foram testadas com:
-- Chrome, Firefox, Safari, Edge
-- Accessibility: WCAG 2.1 Nível AA
+### Compatibilidade de Navegadores
+- ✅ Chrome 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ Edge 90+
+
+### Acessibilidade
+- ✅ WCAG 2.1 Nível AA
+- ✅ Compatível com leitores de tela
+- ✅ Contraste de cores adequado
+- ✅ Navegação por teclado
 
 ---
 
@@ -469,22 +493,53 @@ Todas as páginas foram testadas com:
 
 Contribuições são bem-vindas! Para contribuir:
 
-1. Faça um Fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
+1. **Faça um Fork** do projeto
+2. **Crie uma branch** para sua feature:
+   ```bash
+   git checkout -b feature/MinhaFeature
+   ```
+3. **Commit suas mudanças**:
+   ```bash
+   git commit -m 'feat: adicionar MinhaFeature'
+   ```
+4. **Push para a branch**:
+   ```bash
+   git push origin feature/MinhaFeature
+   ```
+5. **Abra um Pull Request** com descrição clara
+
+### Padrão de Commits
+- `feat:` Nova funcionalidade
+- `fix:` Correção de bug
+- `docs:` Documentação
+- `style:` Formatação
+- `refactor:` Refatoração
+- `test:` Testes
+- `chore:` Tarefas gerais
+
+---
+
+## 🐛 Reportar Bugs
+
+Encontrou um bug? Abra uma [issue](https://github.com/BeaSMS/Katui/issues) com:
+
+- ✅ Descrição clara do problema
+- ✅ Passos para reproduzir
+- ✅ Comportamento esperado vs atual
+- ✅ Screenshots/logs relevantes
+- ✅ Ambiente (SO, navegador, versão)
 
 ---
 
 ## 📚 Documentação Adicional
 
-- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
-- [Spring Data JPA Guide](https://spring.io/projects/spring-data-jpa)
-- [Docker Documentation](https://docs.docker.com/)
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-- [JWT Introduction](https://jwt.io/)
-- [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
+- [Spring Boot Docs](https://spring.io/projects/spring-boot)
+- [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
+- [Docker Docs](https://docs.docker.com/)
+- [PostgreSQL Docs](https://www.postgresql.org/docs/)
+- [JWT.io](https://jwt.io/)
+- [Google Gemini API](https://ai.google.dev/)
+- [WCAG 2.1](https://www.w3.org/WAI/WCAG21/quickref/)
 
 ---
 
@@ -499,30 +554,58 @@ Este projeto está licenciado sob a **MIT License** - veja o arquivo `LICENSE` p
 **Katu'I** foi desenvolvido como projeto integrador do **Semestre 2** por:
 
 - **BeaSMS** - [@BeaSMS](https://github.com/BeaSMS)
-- E membros da equipe de desenvolvimento
+- Equipe de desenvolvimento
 
 ---
 
 ## 🎓 Instituição
 
-Desenvolvido em parceria com a **FATEC Cotia** como projeto acadêmico.
+Desenvolvido em parceria com a **FATEC Cotia** como projeto acadêmico integrativo.
 
 ---
 
 ## 📊 Status do Projeto
 
-- ✅ Backend: Funcional
-- ✅ Frontend: Em desenvolvimento
-- ✅ API: Documentada
-- 🔄 Testes: Em andamento
-- 📋 Deploy: Pronto para produção
+| Componente | Status |
+|-----------|--------|
+| Backend (Spring Boot) | ✅ Funcional |
+| Frontend (Web) | ✅ Em desenvolvimento |
+| API REST | ✅ Documentada |
+| Autenticação JWT | ✅ Implementada |
+| Google Gemini | ✅ Integrado |
+| Sistema de Alarmes | ✅ Funcional |
+| Sistema de Cuidadores | ✅ Funcional |
+| Testes Unitários | 🔄 Em andamento |
+| Deploy Production | 📋 Pronto |
 
 ---
 
-**Última atualização:** 16 de Maio de 2026
+## 📞 Suporte e Contato
 
-**Versão:** 0.0.1-SNAPSHOT
+Para dúvidas ou suporte:
+
+- 📧 **Issues**: [GitHub Issues](https://github.com/BeaSMS/Katui/issues)
+- 📖 **Documentação**: Veja `backend/README.md` para detalhes técnicos
+- 💬 **Discussões**: [GitHub Discussions](https://github.com/BeaSMS/Katui/discussions)
 
 ---
 
-Feito com ♥️ para sua saúde
+## 🎉 Agradecimentos
+
+Agradecimentos especiais a:
+
+- Spring Boot Team
+- PostgreSQL Community
+- Docker Community
+- Google Gemini API
+- Todos os contribuidores
+
+---
+
+**Última atualização:** 27 de Maio de 2026
+
+**Versão:** 0.0.1-SNAPSHOT (Beta)
+
+---
+
+Feito com ♥️ para sua saúde.
